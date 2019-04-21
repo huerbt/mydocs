@@ -1,0 +1,262 @@
+
+核心文档，查阅列表
+
+https://blog.csdn.net/shuzhuchengfu/article/details/78293808
+http://python.jobbole.com/88367/
+https://blog.csdn.net/lym152898/article/details/51592387
+https://blog.csdn.net/q389797999/article/details/81262289
+https://www.jianshu.com/p/a087bc8f2e5a
+http://python.jobbole.com/88367/
+
+个人总结
+
+定义：
+ 魔术方法，指python中所有以”__”(双下划线)作为名字开头和结尾的方法。它们也被称为“dunders”。我们最常用到的应该就是“__init__”了。
+ 
+
+目的：
+  将复杂的逻辑封装成简单的方法。
+
+适用范围：
+  待研究
+  
+示例1：
+
+  魔法函数可以为你写的类增加一些额外功能，方便使用者理解。举个简单的例子，我们定义一个“人”的类People，当中有属性姓名name、年龄age。让你需要利用sorted函数对一个People的数组进行排序，排序规则是按照name和age同时排序，即name不同时比较name，相同时比较age。由于People类本身不具有比较功能，所以需要自定义，你可以这么定义People类：
+{{{!# python  
+  class People(object):
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+        return
+
+    def __str__(self):
+        return self.name + ":" + str(self.age)
+
+    def __lt__(self, other):
+        return self.name < other.name if self.name != other.name else self.age < other.age
+
+
+
+
+if __name__=="__main__":
+
+    print("\t".join([str(item) for item in sorted([People("abc", 18), People("abe", 19), People("abe", 12), People("abc", 17)])]))
+}}}
+例子中的__lt__函数即less than函数，即当比较两个People实例时自动调用
+
+
+示例2：
+    写一个矩形的类，那么这个类默认有长和宽两个参数，当传入一个叫square的属性时，值就等于边长，由于是正方形那么长和宽就等于边长。
+    
+{{{!# python
+   class Rectangle(object):
+ 
+    # init object
+    def __init__(self,width,height):
+        self.width = width
+        self.height = height
+ 
+ 
+    def getacreage(self):
+        return self.width * self.height
+ 
+    def __setattr__(self,name,value):
+        if name == 'square':
+            self.width = value
+            self.height = value
+ 
+        else:
+            super().__setattr__(name,value)
+
+}}}
+
+示例3：
+ 完成如下要求：
+
+　　- 定制一个计时器类
+
+　　- start和stop方法代表启动和停止计时
+
+　　- 假设计时器对象t1,定制t1对象直接执行和打印时的输出信息
+
+　　- 当计时器未启动或已经停止计时，调用stop方法会给予温馨提示
+
+　　- 两个计时器对象可以进行相加： t1 + t2
+
+{{{!# python 
+   import time
+ 
+class Mytimer():
+ 
+    # 初始化
+    def __init__(self):
+        self.prompt = 'Timer is not start'    # 提示信息
+        self.start_time = None  
+        self.stop_time = None
+     
+    # 启动定时器
+    def start(self):
+        if self.start_time:
+            print('Please Use Stop() to stop Timer')   # 属性存在，表示已经启动计时
+        else:
+            self.start_time = time.time()
+            print('The start of Timer')
+ 
+    # 关闭定时器
+    def stop(self):
+        if self.start_time:
+            self.stop_time = time.time()
+            print('The stop of Timer')
+            self._calc()
+        else:
+         print('Please Use Start() to start Timer')   # 没有执行start()，检测不到属性，进行提示
+ 
+    # 计算耗时
+    def _calc(self):
+        self.prompt = 'Total time : '
+        self.end_time = self.stop_time - self.start_time
+        self.prompt += str('{:.2f}'.format(self.end_time))
+        self.start_time = None
+        self.stop_time = None
+ 
+    # 直接执行对象时，打印提示信息
+    def __repr__(self):
+        return self.prompt
+ 
+    # 打印对象和执行对象相同
+    __str__ = __repr__
+ 
+    # 计时器相加
+    def __add__(self,other):
+        self.prompt = 'All Time : '
+        add_time = self.end_time + other.end_time
+        self.prompt += str('{:.2f}'.format(add_time))
+        return self.prompt
+
+
+}}}
+
+
+示例4
+当用户试图访问一个根本不存在（或者暂时不存在）的属性时，你可以通过这个魔法方法来定义类的行为。这个可以用于捕捉错误的拼写并且给出指引，使用废弃属性时给出警告（如果你愿意，仍然可以计算并且返回该属性）
+
+注意，只有在没有找到属性的情况下，才调用getattr，已有的属性，比如name，不会在getattr中查找。
+
+{{{!# python 
+class Person():
+    def __init__(self, name):
+        self.name = name
+    def __getattr__(self, attr):
+        if attr == 'age':
+            return '没有年龄啊！！！'
+        else:
+            return 'No This Attr'
+        
+        
+p = Person('zhang')
+print(p.name)
+print(p.age)
+
+
+}}}
+zhang
+没有年龄啊！！！
+
+print(p.address)
+
+No This Attr
+
+
+重点解释
+
+__contains__(self, item)
+定义了调用in和not in来测试成员是否存在的时候所产生的行为。你可能会问为什么这个不是序列协议的一部分？因为当__contains__没有被定义的时候，如果没有定义，那么Python会迭代容器中的元素来一个一个比较，从而决定返回True或者False
+
+__getitem__(self, key)
+ 定义当某一项被访问时，使用self[key]所产生的行为。这也是不可变容器和可变容器协议的一部分。如果键的类型错误将产生TypeError；如果key没有合适的值则产生KeyError。
+
+
+查找用的附录
+
+类的构造、删除：
+object.__new__(self, ...)
+object.__init__(self, ...)
+object.__del__(self)
+二元操作符：
++	object.__add__(self, other)
+-	object.__sub__(self, other)
+*	object.__mul__(self, other)
+//	object.__floordiv__(self, other)
+/	object.__div__(self, other)
+%	object.__mod__(self, other)
+**	object.__pow__(self, other[, modulo])
+<<	object.__lshift__(self, other)
+>>	object.__rshift__(self, other)
+&	object.__and__(self, other)
+^	object.__xor__(self, other)
+|	object.__or__(self, other)
+扩展二元操作符：
++=	object.__iadd__(self, other)
+-=	object.__isub__(self, other)
+*=	object.__imul__(self, other)
+/=	object.__idiv__(self, other)
+//=	object.__ifloordiv__(self, other)
+%=	object.__imod__(self, other)
+**=	object.__ipow__(self, other[, modulo])
+<<=	object.__ilshift__(self, other)
+>>=	object.__irshift__(self, other)
+&=	object.__iand__(self, other)
+^=	object.__ixor__(self, other)
+|=	object.__ior__(self, other)
+一元操作符：
+-	object.__neg__(self)
++	object.__pos__(self)
+abs()	object.__abs__(self)
+~	object.__invert__(self)
+complex()	object.__complex__(self)
+int()	object.__int__(self)
+long()	object.__long__(self)
+float()	object.__float__(self)
+oct()	object.__oct__(self)
+hex()	object.__hex__(self)
+round()	object.__round__(self, n)
+floor()	object__floor__(self)
+ceil()	object.__ceil__(self)
+trunc()	object.__trunc__(self)
+比较函数：
+<	object.__lt__(self, other)
+<=	object.__le__(self, other)
+==	object.__eq__(self, other)
+!=	object.__ne__(self, other)
+>=	object.__ge__(self, other)
+>	object.__gt__(self, other)
+类的表示、输出：
+str()	object.__str__(self) 
+repr()	object.__repr__(self)
+len()	object.__len__(self)
+hash()	object.__hash__(self) 
+bool()	object.__nonzero__(self) python3 改名为__bool__.
+dir()	object.__dir__(self)
+sys.getsizeof()	object.__sizeof__(self)
+类容器：
+len()	object.__len__(self)
+self[key]	object.__getitem__(self, key)
+self[key] = value	object.__setitem__(self, key, value)
+del[key] object.__delitem__(self, key)
+iter()	object.__iter__(self)
+reversed()	object.__reversed__(self)
+in操作	object.__contains__(self, item)
+字典key不存在时	object.__missing__(self, key)
+
+
+
+
+
+
+
+
+
+
+
+

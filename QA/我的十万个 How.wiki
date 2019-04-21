@@ -1,0 +1,66 @@
+ 我的十万个 How.wiki                                                    Oct 7, 2018
+ Author :   BuJiBuJi HuYi
+ Summary:
+         经常遇到一些具体的问题，如果通过分类检索不容易一下找到答案，通过这个 Q & A 就可快速查找到问题的解决方案。
+         
+ lastUpdate: Oct 14, 2018
+
+
+Q1:  如何快速找鼠标位置？
+A:  在 iTerm2 中使用 command + / 就可以显示鼠标位置
+
+Q2:  Vim 如何将文件另存为？
+A:  在 Vim 的命令模式下输入命令:w fileName  文件不存在则自动新建文件
+
+Q3:  创建一个项目的目录结构。
+A:  参考链接https://bitbucket.org/tarek/atomisator/src/70b09278b9b46f50d2f632062f645cd56bc44433?at=default
+  my_projects_root
+        |------Dockerfile
+        |--project1+
+        |          |---Makefile
+        |          |---source+
+        |          |         |----index.rst(sphinx 自动生成）
+        |          |         |----conf.py
+        |          |         |----developer_designDocs+ (开发者）
+        |          |         |          |----index.rst(包含文档列表)
+        |          |         |----user_operations+ （消费者）
+        |          |         |              |--index.rst (包含文档列表）
+        |          |         |----usageDocs+ （模块）
+        |          |         |         |---modules+
+        |          |         |---packages+
+        |          |         |           |--__init.py
+        |          |         |           |--Module1+
+        |          |         |           |         |--__init__.py
+        |          |         |           |         |--docsTest+
+        |          |         |           |         |          |--README.rst
+        |          |         |           |         |--tests+
+        |          |         |           |         |       |--__init__.py
+        |          |         |           |         |       |--test_docs.py
+        |          |         |           |         |       |--test_xxx.py
+        |          |         |           |         |--XxxXxx.py
+        |          |         |           |--Module2
+        
+备注：usage 的目录下的 index.txt 的内容:
+   Usage
+   =====
+   
+   .. toctree::
+   
+       cookbook/index
+       tutorial/index
+       modules/index
+ 
+Q4:  Vim 如何在粘贴时不错位
+A:   是因为自动缩进产生的错位，在准备粘贴（ctrl+ V) 时现在 Vim 中输入命令 :set paste  这样会关闭自动缩进，粘贴完成后再输入命令  :set nopaste 自动缩进就再次打开了。
+
+Q5:  tmux 中如何最大化一个 panel？
+A:   PREFIX-z
+
+Q6: 如何更改 Mac 键盘的大写键为 Control 键
+ A: 在设置里，键盘，键盘，修饰键里修改。
+ 
+Q7: 安装numpy pandas matplotlib
+A:
+sudo -H pip install pandas 
+sudo -H pip install matplotlib
+sudo -H pip install numpy

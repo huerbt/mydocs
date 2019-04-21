@@ -1,0 +1,84 @@
+VimWiki.wiki                                                                Oct 7, 2018
+Author:     BuJiBuJi HuYi
+About vimwiki
+    GitHub link: https://github.com/vimwiki/vimwiki.git
+    
+    Vimwiki  可以获得以下功能:
+        组织笔记或创意
+        
+        管理 TODO-List
+        
+        写文档
+        
+        记日记
+        
+        导出成 HTML
+        
+lastUpdate: Oct 25, 2018
+
+
+=======================================================================================
+== Content ==
+
+I. 创建一个 wiki
+=== 创建多个 wiki 项目===
+- 在 .vimrc中找到  vimwiki 的设置
+- 编写：
+      let g:vimwiki_list = [{'path': '/Users/hu/buji/my_docs/'},{'path':
+      '/Users/hu/my_job_docs/','auto_export': 1}]
+      
+      有两个 wiki 项目一个是在 buji 目录下的 my_docs 一个是 my_job_docs
+      my_job_docs 会自动在保存 wiki 时生成网页
+      
+- 切换不同的 wiki 项目
+    输入\ww 打开第一个 wiki
+    输入2\ww 打开第二个 wiki
+
+II. 创建链接
+- 内部链接
+    [[链接源地址|链接描述]]
+    或
+    [[链接源地址][链接描述]]
+    
+- 外部链接
+    [http://habamax.ru/blog habamax 的主页]  这是带描述的链接
+    也可以直接写春链接 www.baidu.com
+    
+- 本地图片链接
+    {{file:images/xxx.jpg}}    
+    *图片文件名不能超过6个汉字,路径中文件夹不能有下划线"_"
+  
+- 链接其他文件
+    可以使用绝对路径或相对路径，可以对路径做说明
+      [[file:~/a/b/c/music.mp3]]
+      [[file:../assets/data.csv|Important Data]]
+      [[local:C:/Users/somebody/d/e/f/music.mp3]]
+
+III. 编写日记
+
+
+IV. 语法规则                            
+    
+    
+V. 常用命令
+=== CheckBox ===
+ \tt  打开或关闭CheckBox
+* [ ] 使用CheckBox的前提是该行是列表
+* [ ] 使用g+l+空格删除CheckBox
+* [X] 使用g+l+n插入从。到done  
+* [X] 使用g+l+p插入从done到。
+
+    [ ] -- 0%
+    [.] -- 1-33%
+    [o] -- 34-66%
+    [O] -- 67-99%
+    [X] -- 100%
+
+
+=== 控制缩进 ===
+* [ ]使用g+L+l使得他所属的子列表都缩进
+* 使用 g+l+h 反向缩进
+
+=== 更换项目编号 ===
+1. 用g+l+1将项目编号换成数字1、
+-  g+l+-将列表项目符号换成-  

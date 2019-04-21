@@ -1,0 +1,16 @@
+
+1、使用 Homebrew安装 ctags
+brew insatll ctafs --HEAD
+
+2、下载 tagbar.vim文件
+https://vim.sourceforge.io/scripts/script.php?script_id=3465
+
+3、用 vim打开上述文件 vim tagbar.vmb
+
+4、在vimrc中添加以下配置：
+
+nmap <silent> <F7> :TagbarToggle<CR>
+let g:tagbar_ctags_bin = 'ctags'
+let g:tagbar_width = 60
+
+

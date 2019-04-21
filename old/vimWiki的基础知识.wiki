@@ -1,0 +1,81 @@
+:[[wawh]] vimwiki 查看wiki的帮助
+
+
+
+[[vimWiki的基础知识#Knitting projects]]
+
+[[vimWiki的基础知识#funy pig]]
+
+[[vimWiki的基础知识#todo-list]]
+
+\ww 这个命令 可以直接打开index wiki file
+
+\wt 这个命令 在新的标签页打开，前面可以加数字
+
+[count]\w\w 这个命令 可以打开今天第[count]个日记
+
+[count]\w\t 这个命令 可以在新窗口打开今天第几个日记
+
+[count]\w\y 这个命令 可以打开昨天的日记
+
+[count]\w\m 这个命令 可以打开明天的日记
+
+*在normal模式下:*
+
+\wh 转化当前wiki为html
+
+\whh 转化为html并在浏览器中打开
+
+<Tab> 查找下一个链接
+
+\wr wiki重命名
+
+\wd   删除wiki文件
+
+\tt  打开或关闭CheckBox
+* [ ] 使用CheckBox的前提是该行是列表
+* [ ] 使用g+l+空格删除CheckBox
+* [X] 使用g+l+n插入从。到done
+        * [ ]使用g+L+l使得他所属的子列表都缩进
+         1. 用g+l+1将项目编号换成数字1、
+         -  g+l+-将列表项目符号换成-
+         #  g+l+#将列表项目符号换成#
+
+*在插入模式下*
+
+== 日记==
+给vim安装calendar.vim
+
+[[https://github.com/mattn/calendar-vim]]
+
+
+    cd ~/.vim/bundle
+   
+     git clone git://github.com/mattn/calendar-vim
+
+在命令模式执行:Calendar，并按<Enter>键，会在diary目录创建以当前日期为名.Wiki文件。
+
+    " calendar
+    map <F8> :Calendar<cr>
+
+
+按 F8 调出日历窗口，按 q 退出。
+
+在日期上点回车，就可以编辑当天的日记了！
+
+PS: 按左右键在前后一个月里跳转，按上下键在前后一年跳转。按 t 回到当天。当然，Vim 默认的上下左右hjkl 也是能用的。
+
+
+
+== 锚==
+:todo-list:
+=== home ===
+    - [ ] bathe my dog
+=== work ===
+    - [ ] beg for *pay rise*
+=== Knitting club ===
+====Knitting projects ====
+    - [ ] a *funy pig*
+    - [ ] a *scary dog*
+锚链接的方法：file可以当前文件，也可以是其他文件
+[[file#锚的名字]]

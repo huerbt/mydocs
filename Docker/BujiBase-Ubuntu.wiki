@@ -1,0 +1,107 @@
+BujiBase-Ubuntu.wiki                                                    Oct 7, 2018
+Author:     BuJiBuJi HuYi
+Summary:
+     制作一个基于最新版的 Ubuntu 系统的开发环境, 该环境可被重复在不同项目里使用。其好处主要是快速在云服务器部署，开发测试均使用相同的环境。 该环境包含：
+     
+     1、Ubuntu 系统（撰写此文时 Docker 的最新 Ubuntu 系统是Ubuntu 18.04.1 LTS \n \l
+     
+     2、vim
+     
+     3、git
+     
+     4、wget
+     
+     5、python3.5
+     
+     6、pip3
+     
+     7、支持从 requirements.txt 中安装 python 项目需要的其他库
+     
+lastUpdate: Oct 7, 2018    
+    
+    
+==================================================================================
+
+== Content ==
+
+I.  操作步骤
+
+- 基础准备
+{{{!#bash
+
+docker pull ubuntu
+
+docker run -t -i ubuntu /bin/bash
+
+}}}
+- 备份源
+{{{!#bash
+
+cp /etc/apt/sources.list /etc/apt/sources.list_backup
+
+apt-get update
+
+}}}
+
+- 安装 vim git wget
+{{{!#bash
+
+apt-get install -y vim
+
+apt-get install -y git
+
+apt-get install -y wget
+
+}}}
+
+-  更新源 
+{{{!#bash vim
+
+vim /etc/apt/sources.list 替换为下面提供的源
+
+deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial main restricted universe multiverse
+deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial-updates main restricted universe multiverse
+deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial-backports main restricted universe multiverse
+deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial-security main restricted universe multiverse
+
+apt-get update
+
+}}}
+
+- 安装 python3.5 pip3 注意撰写此文时 Docker 安装 python3.6以上版本会早成某些 python 库不能安装，推荐用 python3.5
+{{{!#bash
+
+apt-get install -y python3.5 （命令行中输入 python3.5可运行）
+
+apt-get install -y python3-pip
+
+pip3 install --upgrade pip
+
+ln -sf /usr/bin/pip3 /usr/bin/pip（直接输入 pip 即可)
+
+ln -sf /usr/bin/python3.5 /usr/bin/python（直接输入 python 即可）
+
+}}}
+
+-  提交容器为新的镜像
+1. 退出 ：先按 CTRL+p，再按 CTRL+q（这样退出系统不会被关闭）
+2. 查看容器 id ： docker ps -a
+3. 提交生成新的镜像： docker commit <容器 id> 新的镜像名字
+
+-  从requirements.txt 中安装其他需要的库
+     相关内容需要参考 DockerFile 的 wiki TODO: 给出文档链接
+     1.  在系统内有个文件叫 requirements.txt。文件中列出了需要的第三方库
+     2. 使用 bash 命令：pip3 install -r requirements.txt  安装
+   
+   requirements.txt sample:
+        numpy
+        scipy
+        pandas 
+        matplotlib
+        scikit-learn
+        scikit-image
+        mock
+        Django==1.7.7
+        django-hitcount==1.1.0
+        django-nested-inline==0.3.4
+        pymysql

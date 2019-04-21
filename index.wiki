@@ -1,0 +1,244 @@
+Index.wiki                      编程工作站                      Oct 7, 2018
+Authors:    BuJiBuJi HuYi
+Summary:       
+                编程工作站提供纯命令行下的编程环境，在这个
+                在这个环境中提供了多种编辑工具的组合，多种
+                工具的使用文档，在这个 index 的 wiki 中可以
+                快速索引到相关的主题。
+
+LastUpDate: Oct 30, 2018
+
+============================================================================ 
+== Contents ==
+
+Zero:我的项目
+
+    创建一个新项目......................................:
+    [[Project/NewProject]]
+    
+    BujiStockProject_TODO ..............................: [[BujiStock/TODO]]
+
+I. QA
+                              === Q & A ===
+                             [[QA/我的十万个 How]]
+
+II. ToolsGuide
+
+                              === VIM ===
+                              
+          -   Vim  在 Mac 下的安装与配置................: [[Vim/setupForMac]]  
+              
+               Vundle 插件管理与安装....................: [[Vim/Vundle]] 
+                                                            
+               .vimrc 文件的撰写........................:  
+               
+               配置色彩主题.............................: [[Vim/ColorScheme]]
+                                                            
+                                                            
+          -   Vim  在 Ubuntu 下的安装与配置.............: [[VIM/vim-Ubuntu]] 
+                                                            
+               vimrc 路径的变更.........................:  
+                                                            
+               Vundle 路径的变更........................:  
+                                                                            
+          -   Vim  常用插件列表及使用方法...............:                  
+                                                                            
+               Plugin 'gyim-vim-boxdraw'................:                  
+                                                                            
+               Plugin 'gamrik/Vundle.vim'...............:                  
+                                                                            
+               Plugin 'vimwiki/vimwiki'.................: [[VIM/VimWiki]]                  
+               
+               UltiSnips 代码片段插件...................: [[VIM/UltiSnips]]
+                                                                            
+               Plugin 'Valloric/YouCompleteMe'..........:                  
+                                                                            
+               Plugin 'vim-airline/vim-airline'.........: [[Vim/airline]]                 
+                                                                            
+               Plugin 'Yggdroot/indentLine'.............:                   
+                                                                             
+               Plugin 'tomasr/molokai'..................:                   
+                                                                             
+               Plugin 'scrooloose/nerdtree'.............:                   
+                                                                             
+               Plugin 'majutsushi/tagbar'...............: [[Vim/installTagbar]]                  
+               
+               给 Vim 安装 Calendar 插件................: [[Vim/Calendar]]
+               
+               DrawIt Vim 画图插件......................:
+               
+          -   Vim  常用操作指令.........................: [[VIM/VimOrder]] 
+                                                            
+               Vim  在 Mac 系统下访问系统剪切板.........:  
+                    
+               Vim  的 buffer、windows、tab 的使用......:
+               
+                                                            
+                              === TMUX ===                              
+              
+          -   tmux 简介.................................: [[TMUX/introduction]]
+
+               tmux 在 Mac 系统下安装与配置.............:[[TMUX/SetupForMac]]
+               
+               tmux的使用以及 tmuxinator 的使用.........:[[TMUX/Guide]]
+               
+               
+                              === iTerm2 ===             
+          -   iTerm2的安装与设置........................:[[iTerm2/Setup]]                    
+                              
+                              
+                              === ZSH ===
+          -   ZSH的设置与使用...........................: [[ZSH/Guide]]                    
+                              
+                              === DOCKER ===
+                              
+          -   Docker 简介...............................:
+               
+               Docker 在 Mac 系统下的安装与配置.........:
+               
+               Docker 在CentOs下的安装..................: [[Docker/CentOS]]
+
+          -   镜像生成容器，容器修改镜像................:
+               
+               通过 DockerFile 制作镜像.................:
+              
+               制作一个BuJiBase-Ubuntu 的镜像...........: [[Docker/BujiBase-Ubuntu]]
+               
+                              
+                              
+                              === GitHub & Git ===
+        
+          -   GitGuide..................................: [[Git/GitGuide]]
+                              
+                              
+III. PYTHON
+
+          
+                              === 字符串 ===
+        
+          -   字符串去掉空格............................: [[Python/strip]]
+    
+    
+                              === 浮点数、小数、分数===
+                              
+          -   浮点数、小数、分数的区别..................: [[Python/Number]]
+
+          -   浮点数的比较 .............................:
+              [[Python/CompareFloat]]
+          
+          -   小数与货币值的计算........................: [[Python/Decimal]]
+      
+          -   分数的计算................................: [[Python/Fraction]]
+                              
+                              === 基本容器 ===
+                              
+                              === 流程控制 ===
+                              
+                              
+                              === 函数 ===
+                              
+                              
+                              === 面向对象 ===
+                              
+          -   类的实例化方法、类方法、静态方法的区别....: [[Python/class-method]]
+          
+          -   private protect public显示声明............: [[Python/访问控制]]
+
+		  -   多重继承中使用 super()函数................: [[Python/class-super]]
+          
+          -   魔术方法（双下划线开头结尾的方法）........: [[Python|magicmethod]]
+          
+          -   抽象基类 ABC(Abstract Base Class).........: [[Python/ABC]]
+                              
+                              
+							  === 装饰器 ===
+
+		  -   装饰器简介................................: [[Python/decorator-intro]]
+		  
+		  -   理解装饰器................................: [[Python/UnderstandDecorator]]
+ 
+		  -   带参数的装饰器
+
+          -   两个装饰器的执行顺序
+
+
+                              === 惰性求值 lazy ===
+                              
+                              
+                              === 异常处理 ===
+        
+          -   logging的使用.............................: [[Python/logging]]
+                              
+                              
+                              === 模块化打包部署 ===
+                              
+          -   import 的绝对导入与相对导入...............: [[Python/import]]
+                              
+                              
+                              === 文档 ===
+                              
+          -   构建自己的文档集..........................: [[Python/CreateMyDocs]]
+        
+          -   Sphinx 简介与安装.........................: [[Python/Sphinx-Setup]]
+               
+          -   通过 Sphinx 部署文档环境..................: [[Python/Sphinx-Run]]
+                              
+          -   撰写 API 级的文档（文档字符串）...........: [[Python/API-Doc]]
+      
+          -   reStructuredText语法......................: [[Python/rst]]
+    
+    
+                              === 测试 ===
+          -   安装nose..................................: [[Python/InstallNose]]
+          
+          -   测试目录的建立............................: [[Python/test-dir]]
+          
+          -   命令行调试(使用 pdb 进行调试).............: [[Python/debug-pdb]]
+          
+          -   利用测试实现DDD文档驱动开发...............: [[Python/DDD]]
+            
+          -   编写并运行一个测试套件....................: [[Python/test-suite]]
+          
+          -   Nose基础与使用............................: [[Python/Nose]]
+                              
+                              
+                              === 性能与重构 ===
+                              
+                              
+                              === 设计模式 ===
+                              
+                              
+                              === 图形界面 ===
+                              
+                              
+                              === NUMPY ===
+                              
+                              
+                              
+                              === PANDAS ===
+                              
+          -   Pandas基础................................: [[Python/PandasBasic]]
+                              
+                              === 数据可视化 ===
+                              
+                              === 网络 ===
+                              
+                              === 并发 ===
+                              
+                              === 数据存储 ===
+                              
+          -   文件操作..................................: [[Python/File]]
+                              
+                              
+IV. 统计
+
+V.  机器学习
+
+                              === 线性模型 ===
+                              
+          -   对数几率回归（分类问题）..................: [[ML/对数几率回归]]
+          
+          -   决策树....................................: [[ML/决策树]]
+          
+          -   支持向量机................................: [[ML/SVM支持向量机]]
+                              

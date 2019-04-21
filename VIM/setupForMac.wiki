@@ -1,0 +1,18 @@
+
+
+
+
+1. 安装Homebrew (包管理器，用来安装Vim)
+安装 Homebrew
+  
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+
+2.安装Vim（系统自带的Vim不是最新版）
+brew install wget
+brew install vim
+
+
+3.建立并编辑配置文件 （不使用任何插件情况下一些有用的配置）
+& cd ~
+& touch .vimrc

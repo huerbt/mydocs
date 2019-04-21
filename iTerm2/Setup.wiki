@@ -1,0 +1,26 @@
+
+1、下载
+在官网https://www.iterm2.com
+
+2、替换背景图片
+在 iterm2的 Preferences->Profiles->window->Background Image
+选择一张自己喜欢的壁纸即可
+
+3、修改为 ZSH
+chsh -s /bin/zsh
+
+4、安装 Oh my zsh
+
+5、安装 PowerFonts 字体和设置 iterm2的字体
+新建一个文件夹叫 PowerFonts，cd 到这个文件夹
+然后使用 git 下载打补丁的字体
+ git clone https://github.com/powerline/fonts.git --depth=1
+ 然后在 PowerFonts 中会有一个 fonts 的文件夹
+  cd 到 fonts文件夹里
+  ./install.sh
+  
+6、设置 iterm2的字体
+在 Preferences 的 Profiles -> Text 中找到 Change Font 然后找到 Meslo LG S for
+Powerline
+
+

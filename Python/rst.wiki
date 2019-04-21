@@ -1,0 +1,57 @@
+rst.wiki        reStructuredText语法                 Oct 30, 2018
+Author: BuJi HuYi
+summary:
+
+LastUpDate:Oct 30, 2018
+
+----
+
+== Content ==
+http://www.pythondoc.com/sphinx/rest.html
+
+https://www.jianshu.com/p/1885d5570b37#id1
+
+=== 章节 ===
+
+使用如下符号修饰章节，符号的数量要大于等于被修饰的文字长度
+
+通常，没有特定的字符指定给标题级别，因为结构是用从继承的标题来确定的。对于python文档，本公约您可以按照：
+
+ # with overline, for parts
+ * with overline, for chapters
+ =, for sections
+ -, for subsections
+ ^, for subsubsections
+ ", for paragraphs
+
+=== 行内标记===
+
+标准的行内标记相当简单：使用
+
+单星号： *text* 强调 (斜体),
+双星号： **text** 重点强调 (粗体)，以及
+双反引号： ``text`` 代码示例。
+
+文本不能以空格开始或者结束： * text* 是不正确的，
+
+* This is a bulleted list.
+* * It has two items, the second
+*   item uses two lines.
+1. This is a numbered list.
+2. 2. It has two items too.
+#. This is a numbered list.
+#. It has two items too.
+
+* this is
+* * a list
+  * with a nested list
+  *   * and some subitems
+* * and here the parent list continues
+
+注意有空格
+
+
+=== 图片===
+
+reST支持图片指令（标识符）
+.. image:: gnu.png

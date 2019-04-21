@@ -1,0 +1,35 @@
+1. DataCacheBuji
+对数据采集，存储 是个内部使用的接口
+数据采集分为从网络采集，从本地文件采集
+存储为本地 csv 文件
+
+2. DataFeedBuji
+数据源的接口，BDApi，扩展数据源也在这里
+
+3. DataParserBuji
+解析数据字段，不同数据源的解析也在这里
+
+4. DataSourceBuji
+对模块内部更大的数据源接口，定义了内置数据源的字典，调用上述三者是由环境变量的值来指定的数据源，而不是通过传递函数参数
+
+5. MarketBuji
+获取全部 A 股的股票代码（从本地 csv 文件，如何从网路获取？）
+切割市场（待明确）
+
+6. SymbolStockBuji
+貌似是为 MarketBuji 提供获取 A 股股票代码的实现，但也只是从 csv
+文件里获取不知道如何从网络获取
+
+需要知道 stock_code_CN.csv是如何生成的
+
+在阿布的代码中首先是在 ABuXqCrawl 中有个 update_all 函数，调用了 ABuXqFile 中的
+merge_stock_info_to_stock_list函数，在这个函数中，读取了本地
+g_project_data_dir目录下的所有 csv 文件，由这些文件生成了全部的 A 股股票代码
+
+**现在的问题是，通过哪个接口，直接请求全部股票数据的？**
+
+
+
+
+
+

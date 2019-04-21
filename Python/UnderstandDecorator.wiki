@@ -1,0 +1,95 @@
+UnderstandDecorator.wiki                    理解装饰器        Oct 19, 2018
+Author: BujiBuji HuYi
+Summay:
+        理解装饰器的工作原理
+        
+lastUpdate: Oct 19, 2018
+=============================================================================
+
+== Content ==
+    对装饰器的理解主要是对函数的本质要理解，函数的入下特性的组合使得装饰器可以不侵入原方程或类进行扩展。
+    
+    1. 理解函数的变量名
+    
+    {{{!#python
+    
+    def foo(num):
+        return num + 1
+    }}}
+    
+    变量名 foo 指向一个函数对象（函数也是对象） foo()这是调用（运行）函数
+    。单纯的 foo 是指向函数对象。
+    
+    foo 作为变量名也可以指向其他函数对象。
+    
+    
+    2. 理解函数如何作为另一个函数的返回值
+    
+    {{{!#python
+    
+    def bar():
+        return foo
+    }}}
+    
+    调用函数 bar() 就是运行函数 bar，返回的是一个函数对象。所以 bar()() == foo()
+    
+    
+    3. 理解函数作为另一函数的参数
+    
+    {{{!#python
+    
+    def bar(fun):
+        return fun(3)
+    
+    value = bar(foo) # 把 foo 函数对象作为 bar 函数的参数
+    }}}
+    
+    4. 理解函数的闭包
+    
+    在一个外函数中定义了一个内函数，内函数里运用了外函数的临时变量，并且外函数的返回值是内函数的引用。这样就构成了一个闭包。
+    {{{!#python
+    
+    def outer(x):
+        def inner():
+            print(x)
+        return inner
+        
+    closure = outer(1)
+    closure()
+    
+    }}}
+    闭包的主要作用就是用在装饰器上
+    
+    5. 装饰器 
+       
+    原业务函数是 foo，现在想不侵入 foo 函数，对其进行扩展
+    
+    {{{!#python
+    
+    def outer(func):
+        """扩展原 foo 函数新的功能"""
+        def inner():
+            print("记录日志开始")
+            func() # 原业务函数
+            print("记录日志结束")
+        return inner
+        
+    def foo():
+        print("foo")
+        
+    foo = outer(foo) # 这里需要 foo 重新赋值
+    foo() # 此时调用 foo 就是调用 inner() 实现了 inner()中的功能
+    }}}
+    
+    6. 省去手动给 foo 重新赋值的步骤的语法糖@
+    
+    python 为装饰器提供了语法糖@，它用在原业务函数的定义处：
+    
+    {{{!#python
+    
+    @out
+    def foo()
+        print("print")
+    
+    foo()
+    }}}

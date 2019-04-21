@@ -1,0 +1,43 @@
+
+
+vim 插件管理，即 Vundle 的安装与使用
+git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+
+ 我们在~/.vimrc中添加插件配置，在~/.vimrc_vundle中添加插件
+
+ "~/.vimrc_vundle文件"
+
+"将 Vundle 加入运行时路径中（Runtime Path）"
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+" let Vundle manage Vundle, required"
+Plugin 'VundleVim/Vundle.vim'
+
+" Vundle List Here"
+
+
+call vundle#end() 
+filetype plugin indent on
+
+
+" ~/.vimrc文件"
+set nocompatible 
+filetype off
+
+let $CONFIG_DIR = "~/"
+
+" vundle config"
+let $VUNDLE_CONFIG = $CONFIG_DIR.".vimrc_vundle"
+if filereadable(expand($VUNDLE_CONFIG))
+  source $VUNDLE_CONFIG
+endif                         
+
+
+如果进入 Vim，输入:PluginInstall安装失败，提示 fatal:could not create work tree
+dir 'XXX' Permission denied
+那么需要  在命令行里修改文件夹的权限
+ cd 到根目录（可以看到.vim文件夹）
+ sudo chmod -R 777 .vim
+ 
+然后在安装插件即可

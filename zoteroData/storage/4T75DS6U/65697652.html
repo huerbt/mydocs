@@ -1,0 +1,3022 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="canonical" href="https://blog.csdn.net/csqazwsxedc/article/details/65697652"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="renderer" content="webkit"/>
+    <meta name="force-rendering" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="referrer" content="always">
+    <meta http-equiv="Cache-Control" content="no-siteapp" /><link rel="alternate" media="handheld" href="#" />
+    <meta name="shenma-site-verification" content="5a59773ab8077d4a62bf469ab966a63b_1497598848">
+    <script src="https://csdnimg.cn/release/phoenix/vendor/tingyun/tingyun-rum-blog.js"></script>
+
+    <link href="https://csdnimg.cn/public/favicon.ico" rel="SHORTCUT ICON">
+    <title>决策树原理实例（python代码实现） - 程松 - CSDN博客</title>
+
+            <link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/detail-8e7c37444f.min.css">
+    
+            <script type="application/ld+json">{"@context":"https:\/\/ziyuan.baidu.com\/contexts\/cambrian.jsonld","@id":"https:\/\/blog.csdn.net\/csqazwsxedc\/article\/details\/65697652","appid":"1563894916825412","title":"\u51b3\u7b56\u6811\u539f\u7406\u5b9e\u4f8b\uff08python\u4ee3\u7801\u5b9e\u73b0\uff09 - \u7a0b\u677e","images":["https:\/\/img-blog.csdn.net\/20170325232900261?watermark\/2\/text\/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY3NxYXp3c3hlZGM=\/font\/5a6L5L2T\/fontsize\/400\/fill\/I0JBQkFCMA==\/dissolve\/70\/gravity\/SouthEast","https:\/\/img-blog.csdn.net\/20170325231929573?watermark\/2\/text\/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY3NxYXp3c3hlZGM=\/font\/5a6L5L2T\/fontsize\/400\/fill\/I0JBQkFCMA==\/dissolve\/70\/gravity\/SouthEast","https:\/\/img-blog.csdn.net\/20170326000203543?watermark\/2\/text\/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY3NxYXp3c3hlZGM=\/font\/5a6L5L2T\/fontsize\/400\/fill\/I0JBQkFCMA==\/dissolve\/70\/gravity\/SouthEast"],"pubDate":"2018-11-11T20:30:36"}</script>
+        
+    <link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/themes/skin-yellow/skin-yellow-2eefd34acf.min.css">
+
+    <script type="text/javascript">
+        var username = "csqazwsxedc";
+        var blog_address = "https://blog.csdn.net/csqazwsxedc";
+        var static_host = "https://csdnimg.cn/release/phoenix/";
+        var currentUserName = "";
+        var isShowAds = true;
+        var isOwner = false;
+        var loginUrl = "http://passport.csdn.net/account/login?from=https://blog.csdn.net/csqazwsxedc/article/details/65697652"
+        var blogUrl = "https://blog.csdn.net/";
+        //页面皮肤样式
+        var curSkin = "skin-yellow";
+        // 第四范式所需数据
+        var articleTitles = "决策树原理实例（python代码实现） - 程松";
+        var articleID = "65697652";
+
+        var nickName = "a_achengsong";
+    </script>
+    <script type="text/javascript">
+        // Traffic Stats of the entire Web site By baidu
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?6bcd52f51e9b3dce32bec4a3997715ac";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+        // Traffic Stats of the entire Web site By baidu end
+    </script>
+    <script src="https://csdnimg.cn/public/common/libs/jquery/jquery-1.9.1.min.js" type="text/javascript"></script>
+    <script src="https://csdnimg.cn/rabbit/exposure-click/main-1.0.6.js"></script>
+    <!-- 新版上报 -->
+    <script src="//g.csdnimg.cn/track/1.1.1/track.js" type="text/javascript"></script>
+    <!-- 新版上报end -->
+            <link rel="stylesheet" href="https://csdnimg.cn/public/sandalstrap/1.4/css/sandalstrap.min.css">
+    <style>
+        .MathJax, .MathJax_Message, .MathJax_Preview{
+            display: none
+        }
+    </style>
+</head>
+<!-- nodata 第三栏接口无数据时样式不变 -->
+<body class="nodata"> 
+    <link rel="stylesheet" href="https://csdnimg.cn/public/common/toolbar/content_toolbar_css/content_toolbar.css">
+    <script id="toolbar-tpl-scriptId" src="https://csdnimg.cn/public/common/toolbar/js/content_toolbar.js" type="text/javascript" domain="https://blog.csdn.net/"></script>
+<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/blog_code-c3a0c33d5c.css">
+<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/vendor/pagination/paging.css">
+<script type="text/javascript">
+	// 容错处理
+	var NEWS_FEED = function(){}
+</script>
+<script type="text/javascript" src="//static.mediav.com/js/mvf_news_feed.js"></script>
+<script type="text/javascript" src="//g.csdnimg.cn/copyright/1.0.3/copyright.js"></script>
+<div style="display:none;">
+	<img src="" onerror='setTimeout(function(){if(!/(csdn.net|iteye.com|baiducontent.com|googleusercontent.com|360webcache.com|sogoucdn.com|bingj.com|baidu.com)$/.test(window.location.hostname)){window.location.href="\x68\x74\x74\x70\x73\x3a\x2f\x2f\x77\x77\x77\x2e\x63\x73\x64\x6e\x2e\x6e\x65\x74"}},3000);'>
+</div>
+<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/chart-3456820cac.css" />
+
+
+
+<script src="https://dup.baidustatic.com/js/ds.js"></script>
+<div class="container clearfix" id="mainBox">
+		<div class="recommend-right">
+  <ul class="recommend-fixed-box">
+    
+  </ul>
+</div>
+    <main>
+        <div class="blog-content-box">
+	<div class="article-header-box">
+		<div class="article-header">
+			<div class="article-title-box">
+				<span class="article-type type-1 float-left">原</span>				<h1 class="title-article">决策树原理实例（python代码实现）</h1>
+			</div>
+			<div class="article-info-box">
+				<div class="article-bar-top">
+																				<span class="time">2017年03月26日 23:04:13</span>
+					<a class="follow-nickName" href="https://me.csdn.net/csqazwsxedc" target="_blank">a_achengsong</a>
+						<span class="read-count">阅读数：22761</span>
+						
+														<span class="tags-box artic-tag-box">
+								<span class="label">标签：</span>
+																<a data-track-click='{"mod":"popu_626","con":"python"}' data-track-view='{"mod":"popu_626","con":"python"}' class="tag-link" href="http://so.csdn.net/so/search/s.do?q=python&t=blog" target="_blank">python																<a data-track-click='{"mod":"popu_626","con":"机器学习"}' data-track-view='{"mod":"popu_626","con":"机器学习"}' class="tag-link" href="http://so.csdn.net/so/search/s.do?q=机器学习&t=blog" target="_blank">机器学习																<a data-track-click='{"mod":"popu_626","con":"算法"}' data-track-view='{"mod":"popu_626","con":"算法"}' class="tag-link" href="http://so.csdn.net/so/search/s.do?q=算法&t=blog" target="_blank">算法																</a>
+							</span>
+																					<div class="tags-box space">
+								<span class="label">个人分类：</span>
+																<a class="tag-link" href="https://blog.csdn.net/csqazwsxedc/article/category/6757743"  target="_blank">python																</a>
+							</div>
+																								</div>
+				<div class="operating">
+														</div>
+			</div>
+		</div>
+	</div>
+	<article>
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+					版权声明：本文为博主原创文章，转载请注明来源。					https://blog.csdn.net/csqazwsxedc/article/details/65697652				</div>
+								            <div class="markdown_views prism-atom-one-dark">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>决策数(Decision Tree)在机器学习中也是比较常见的一种算法，属于监督学习中的一种。看字面意思应该也比较容易理解，相比其他算法比如支持向量机(SVM)或神经网络，似乎决策树感觉“亲切”许多。</p>
+
+<ul>
+<li>优点：计算复杂度不高，输出结果易于理解，对中间值的缺失值不敏感，可以处理不相关特征数据。</li>
+<li>缺点：可能会产生过度匹配的问题。</li>
+<li>使用数据类型：数值型和标称型。</li>
+</ul>
+
+<p>简单介绍完毕，让我们来通过一个例子让决策树“原形毕露”。</p>
+
+<p>一天，老师问了个问题，只根据头发和声音怎么判断一位同学的性别。 <br>
+为了解决这个问题，同学们马上简单的统计了7位同学的相关特征，数据如下：</p>
+
+<table>
+<thead>
+<tr>
+  <th>头发</th>
+  <th>声音</th>
+  <th>性别</th>
+</tr>
+</thead>
+<tbody><tr>
+  <td>长</td>
+  <td>粗</td>
+  <td>男</td>
+</tr>
+<tr>
+  <td>短</td>
+  <td>粗</td>
+  <td>男</td>
+</tr>
+<tr>
+  <td>短</td>
+  <td>粗</td>
+  <td>男</td>
+</tr>
+<tr>
+  <td>长</td>
+  <td>细</td>
+  <td>女</td>
+</tr>
+<tr>
+  <td>短</td>
+  <td>细</td>
+  <td>女</td>
+</tr>
+<tr>
+  <td>短</td>
+  <td>粗</td>
+  <td>女</td>
+</tr>
+<tr>
+  <td>长</td>
+  <td>粗</td>
+  <td>女</td>
+</tr>
+<tr>
+  <td>长</td>
+  <td>粗</td>
+  <td>女</td>
+</tr>
+</tbody></table>
+
+
+<p>机智的同学A想了想，先根据头发判断，若判断不出，再根据声音判断，于是画了一幅图，如下： <br>
+<img src="https://img-blog.csdn.net/20170325232900261?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY3NxYXp3c3hlZGM=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="同学A" title=""> <br>
+于是，一个简单、直观的决策树就这么出来了。头发长、声音粗就是男生；头发长、声音细就是女生；头发短、声音粗是男生；头发短、声音细是女生。 <br>
+原来机器学习中决策树就这玩意，这也太简单了吧。。。 <br>
+这时又蹦出个同学B，想先根据声音判断，然后再根据头发来判断，如是大手一挥也画了个决策树： <br>
+<img src="https://img-blog.csdn.net/20170325231929573?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY3NxYXp3c3hlZGM=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="同学B" title=""> <br>
+同学B的决策树：首先判断声音，声音细，就是女生；声音粗、头发长是男生；声音粗、头发长是女生。</p>
+
+<p>那么问题来了：同学A和同学B谁的决策树好些？计算机做决策树的时候，面对多个特征，该如何选哪个特征为最佳的划分特征？</p>
+
+<p>划分数据集的大原则是：将无序的数据变得更加有序。 <br>
+我们可以使用多种方法划分数据集，但是每种方法都有各自的优缺点。于是我们这么想，如果我们能测量数据的复杂度，对比按不同特征分类后的数据复杂度，若按某一特征分类后复杂度减少的更多，那么这个特征即为最佳分类特征。 <br>
+Claude Shannon 定义了熵（entropy）和信息增益(information gain)。 <br>
+用熵来表示信息的复杂度，熵越大，则信息越复杂。公式如下： <br>
+<img src="https://img-blog.csdn.net/20170326000203543?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY3NxYXp3c3hlZGM=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="熵" title=""> <br>
+信息增益(information gain)，表示两个信息熵的差值。 <br>
+首先计算未分类前的熵，总共有8位同学，男生3位，女生5位。 <br>
+熵（总）=-3/8*log2(3/8)-5/8*log2(5/8)=0.9544 <br>
+接着分别计算同学A和同学B分类后信息熵。 <br>
+同学A首先按头发分类，分类后的结果为：长头发中有1男3女。短头发中有2男2女。 <br>
+熵（同学A长发）=-1/4*log2(1/4)-3/4*log2(3/4)=0.8113 <br>
+熵（同学A短发）=-2/4*log2(2/4)-2/4*log2(2/4)=1 <br>
+熵（同学A）=4/8*0.8113+4/8*1=0.9057 <br>
+信息增益（同学A）=熵（总）-熵（同学A）=0.9544-0.9057=0.0487 <br>
+同理，按同学B的方法，首先按声音特征来分，分类后的结果为：声音粗中有3男3女。声音细中有0男2女。 <br>
+熵（同学B声音粗）=-3/6*log2(3/6)-3/6*log2(3/6)=1 <br>
+熵（同学B声音粗）=-2/2*log2(2/2)=0 <br>
+熵（同学B）=6/8*1+2/8*0=0.75 <br>
+信息增益（同学B）=熵（总）-熵（同学A）=0.9544-0.75=0.2087</p>
+
+<p>按同学B的方法，先按声音特征分类，信息增益更大，区分样本的能力更强，更具有代表性。 <br>
+以上就是决策树ID3算法的核心思想。 <br>
+接下来用python代码来实现ID3算法：</p>
+
+<pre class="prettyprint"><code class=" hljs python"><span class="hljs-keyword">from</span> math <span class="hljs-keyword">import</span> log
+<span class="hljs-keyword">import</span> operator
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">calcShannonEnt</span><span class="hljs-params">(dataSet)</span>:</span>  <span class="hljs-comment"># 计算数据的熵(entropy)</span>
+    numEntries=len(dataSet)  <span class="hljs-comment"># 数据条数</span>
+    labelCounts={}
+    <span class="hljs-keyword">for</span> featVec <span class="hljs-keyword">in</span> dataSet:
+        currentLabel=featVec[-<span class="hljs-number">1</span>] <span class="hljs-comment"># 每行数据的最后一个字（类别）</span>
+        <span class="hljs-keyword">if</span> currentLabel <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> labelCounts.keys():
+            labelCounts[currentLabel]=<span class="hljs-number">0</span>
+        labelCounts[currentLabel]+=<span class="hljs-number">1</span>  <span class="hljs-comment"># 统计有多少个类以及每个类的数量</span>
+    shannonEnt=<span class="hljs-number">0</span>
+    <span class="hljs-keyword">for</span> key <span class="hljs-keyword">in</span> labelCounts:
+        prob=float(labelCounts[key])/numEntries <span class="hljs-comment"># 计算单个类的熵值</span>
+        shannonEnt-=prob*log(prob,<span class="hljs-number">2</span>) <span class="hljs-comment"># 累加每个类的熵值</span>
+    <span class="hljs-keyword">return</span> shannonEnt
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">createDataSet1</span><span class="hljs-params">()</span>:</span>    <span class="hljs-comment"># 创造示例数据</span>
+    dataSet = [[<span class="hljs-string">'长'</span>, <span class="hljs-string">'粗'</span>, <span class="hljs-string">'男'</span>],
+               [<span class="hljs-string">'短'</span>, <span class="hljs-string">'粗'</span>, <span class="hljs-string">'男'</span>],
+               [<span class="hljs-string">'短'</span>, <span class="hljs-string">'粗'</span>, <span class="hljs-string">'男'</span>],
+               [<span class="hljs-string">'长'</span>, <span class="hljs-string">'细'</span>, <span class="hljs-string">'女'</span>],
+               [<span class="hljs-string">'短'</span>, <span class="hljs-string">'细'</span>, <span class="hljs-string">'女'</span>],
+               [<span class="hljs-string">'短'</span>, <span class="hljs-string">'粗'</span>, <span class="hljs-string">'女'</span>],
+               [<span class="hljs-string">'长'</span>, <span class="hljs-string">'粗'</span>, <span class="hljs-string">'女'</span>],
+               [<span class="hljs-string">'长'</span>, <span class="hljs-string">'粗'</span>, <span class="hljs-string">'女'</span>]]
+    labels = [<span class="hljs-string">'头发'</span>,<span class="hljs-string">'声音'</span>]  <span class="hljs-comment">#两个特征</span>
+    <span class="hljs-keyword">return</span> dataSet,labels
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">splitDataSet</span><span class="hljs-params">(dataSet,axis,value)</span>:</span> <span class="hljs-comment"># 按某个特征分类后的数据</span>
+    retDataSet=[]
+    <span class="hljs-keyword">for</span> featVec <span class="hljs-keyword">in</span> dataSet:
+        <span class="hljs-keyword">if</span> featVec[axis]==value:
+            reducedFeatVec =featVec[:axis]
+            reducedFeatVec.extend(featVec[axis+<span class="hljs-number">1</span>:])
+            retDataSet.append(reducedFeatVec)
+    <span class="hljs-keyword">return</span> retDataSet
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">chooseBestFeatureToSplit</span><span class="hljs-params">(dataSet)</span>:</span>  <span class="hljs-comment"># 选择最优的分类特征</span>
+    numFeatures = len(dataSet[<span class="hljs-number">0</span>])-<span class="hljs-number">1</span>
+    baseEntropy = calcShannonEnt(dataSet)  <span class="hljs-comment"># 原始的熵</span>
+    bestInfoGain = <span class="hljs-number">0</span>
+    bestFeature = -<span class="hljs-number">1</span>
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(numFeatures):
+        featList = [example[i] <span class="hljs-keyword">for</span> example <span class="hljs-keyword">in</span> dataSet]
+        uniqueVals = set(featList)
+        newEntropy = <span class="hljs-number">0</span>
+        <span class="hljs-keyword">for</span> value <span class="hljs-keyword">in</span> uniqueVals:
+            subDataSet = splitDataSet(dataSet,i,value)
+            prob =len(subDataSet)/float(len(dataSet))
+            newEntropy +=prob*calcShannonEnt(subDataSet)  <span class="hljs-comment"># 按特征分类后的熵</span>
+        infoGain = baseEntropy - newEntropy  <span class="hljs-comment"># 原始熵与按特征分类后的熵的差值</span>
+        <span class="hljs-keyword">if</span> (infoGain&gt;bestInfoGain):   <span class="hljs-comment"># 若按某特征划分后，熵值减少的最大，则次特征为最优分类特征</span>
+            bestInfoGain=infoGain
+            bestFeature = i
+    <span class="hljs-keyword">return</span> bestFeature
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">majorityCnt</span><span class="hljs-params">(classList)</span>:</span>    <span class="hljs-comment">#按分类后类别数量排序，比如：最后分类为2男1女，则判定为男；</span>
+    classCount={}
+    <span class="hljs-keyword">for</span> vote <span class="hljs-keyword">in</span> classList:
+        <span class="hljs-keyword">if</span> vote <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> classCount.keys():
+            classCount[vote]=<span class="hljs-number">0</span>
+        classCount[vote]+=<span class="hljs-number">1</span>
+    sortedClassCount = sorted(classCount.items(),key=operator.itemgetter(<span class="hljs-number">1</span>),reverse=<span class="hljs-keyword">True</span>)
+    <span class="hljs-keyword">return</span> sortedClassCount[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>]
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">createTree</span><span class="hljs-params">(dataSet,labels)</span>:</span>
+    classList=[example[-<span class="hljs-number">1</span>] <span class="hljs-keyword">for</span> example <span class="hljs-keyword">in</span> dataSet]  <span class="hljs-comment"># 类别：男或女</span>
+    <span class="hljs-keyword">if</span> classList.count(classList[<span class="hljs-number">0</span>])==len(classList):
+        <span class="hljs-keyword">return</span> classList[<span class="hljs-number">0</span>]
+    <span class="hljs-keyword">if</span> len(dataSet[<span class="hljs-number">0</span>])==<span class="hljs-number">1</span>:
+        <span class="hljs-keyword">return</span> majorityCnt(classList)
+    bestFeat=chooseBestFeatureToSplit(dataSet) <span class="hljs-comment">#选择最优特征</span>
+    bestFeatLabel=labels[bestFeat]
+    myTree={bestFeatLabel:{}} <span class="hljs-comment">#分类结果以字典形式保存</span>
+    <span class="hljs-keyword">del</span>(labels[bestFeat])
+    featValues=[example[bestFeat] <span class="hljs-keyword">for</span> example <span class="hljs-keyword">in</span> dataSet]
+    uniqueVals=set(featValues)
+    <span class="hljs-keyword">for</span> value <span class="hljs-keyword">in</span> uniqueVals:
+        subLabels=labels[:]
+        myTree[bestFeatLabel][value]=createTree(splitDataSet\
+                            (dataSet,bestFeat,value),subLabels)
+    <span class="hljs-keyword">return</span> myTree
+
+
+<span class="hljs-keyword">if</span> __name__==<span class="hljs-string">'__main__'</span>:
+    dataSet, labels=createDataSet1()  <span class="hljs-comment"># 创造示列数据</span>
+    print(createTree(dataSet, labels))  <span class="hljs-comment"># 输出决策树模型结果</span></code></pre>
+
+<p>输出结果为：</p>
+
+<pre class="prettyprint"><code class=" hljs bash">{<span class="hljs-string">'声音'</span>: {<span class="hljs-string">'细'</span>: <span class="hljs-string">'女'</span>, <span class="hljs-string">'粗'</span>: {<span class="hljs-string">'头发'</span>: {<span class="hljs-string">'短'</span>: <span class="hljs-string">'男'</span>, <span class="hljs-string">'长'</span>: <span class="hljs-string">'女'</span>}}}}</code></pre>
+
+<p>这个结果的意思是：首先按声音分类，声音细为女生；然后再按头发分类：声音粗，头发短为男生；声音粗，头发长为女生。 <br>
+这个结果也正是同学B的结果。 <br>
+补充说明：判定分类结束的依据是，若按某特征分类后出现了最终类（男或女），则判定分类结束。使用这种方法，在数据比较大，特征比较多的情况下，很容易造成过拟合，于是需进行决策树枝剪，一般枝剪方法是当按某一特征分类后的熵小于设定值时，停止分类。</p>
+
+<p>ID3算法存在的缺点：  <br>
+1. ID3算法在选择根节点和内部节点中的分支属性时，采用信息增益作为评价标准。信息增益的缺点是倾向于选择取值较多是属性，在有些情况下这类属性可能不会提供太多有价值的信息。  <br>
+2. ID3算法只能对描述属性为离散型属性的数据集构造决策树 。</p>
+
+<p>为了改进决策树，又提出了ID4.5算法和CART算法。之后有时间会介绍这两种算法。</p>
+
+<p>参考： <br>
+ - <a href="https://book.douban.com/subject/6962285/" rel="nofollow">Machine Learning in Action</a> <br>
+ - <a href="https://book.douban.com/subject/10590856/" rel="nofollow">统计学习方法</a></p>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-7f770a53f2.css" rel="stylesheet">
+                </div>
+									<div class="hide-article-box text-center">
+						<a class="btn" id="btn-readmore" data-track-view='{"mod":"popu_376","con":",https://blog.csdn.net/csqazwsxedc/article/details/65697652,"}' data-track-click='{"mod":"popu_376","con":",https://blog.csdn.net/csqazwsxedc/article/details/65697652,"}'>阅读更多</a>
+					</div>
+					<script>
+						(function(){
+							function setArticleH(btnReadmore,posi){
+								var winH = $(window).height();
+								var articleBox = $("div.article_content");
+								var artH = articleBox.height();
+								if(artH > winH*posi){
+									articleBox.css({
+										'height':winH*posi+'px',
+										'overflow':'hidden'
+									})
+									btnReadmore.click(function(){
+										articleBox.removeAttr("style");
+										$(this).parent().remove();
+									})
+								}else{
+									btnReadmore.parent().remove();
+								}
+							}
+							var btnReadmore = $("#btn-readmore");
+							if(btnReadmore.length>0){
+								if(currentUserName){
+									setArticleH(btnReadmore,3);
+								}else{
+									setArticleH(btnReadmore,1.2);
+								}
+							}
+						})()
+					</script>
+					</article>
+	
+</div>
+<script>
+		$(".MathJax").remove();
+		if($('div.markdown_views pre.prettyprint code.hljs').length > 0 ){
+				$('div.markdown_views')[0].className = 'markdown_views';
+		}
+</script>
+        <div class="p4course_target" ></div><script>window.p4sdk_enable_courseBox=true</script>        <a id="commentBox"></a>
+<div class="comment-box">
+	
+	<div class="comment-edit-box d-flex">
+		<a id="commentsedit"></a>
+		<div class="user-img">
+			<a href="javascript:void(0);" target="_blank">
+				<img class="show_loginbox" src="//g.csdnimg.cn/static/user-img/anonymous-User-img.png">
+			</a>
+		</div>
+		<form id="commentform">
+			<input type="hidden" id="comment_replyId">
+			<textarea class="comment-content" name="comment_content" id="comment_content" placeholder="想对作者说点什么"></textarea>
+			<div class="opt-box"> <!-- d-flex -->
+				<div id="ubbtools" class="add_code">
+					<a href="#insertcode" code="code" target="_self"><i class="icon iconfont icon-daima"></i></a>
+				</div>
+				<input type="hidden" id="comment_replyId" name="comment_replyId">
+				<input type="hidden" id="comment_userId" name="comment_userId" value="">
+				<input type="hidden" id="commentId" name="commentId" value="">
+				<div style="display: none;" class="csdn-tracking-statistics tracking-click" data-mod="popu_384"><a href="#" target="_blank" class="comment_area_btn">发表评论</a></div>
+				<div class="dropdown" id="myDrap">
+					<a class="dropdown-face d-flex align-items-center" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+					<div class="txt-selected text-truncate">添加代码片</div>
+					<svg class="icon d-block" aria-hidden="true">
+						<use xlink:href="#csdnc-triangledown"></use>
+					</svg>
+					</a>
+					<ul class="dropdown-menu" id="commentCode" aria-labelledby="drop4">
+						<li><a data-code="html">HTML/XML</a></li>
+						<li><a data-code="objc">objective-c</a></li>
+						<li><a data-code="ruby">Ruby</a></li>
+						<li><a data-code="php">PHP</a></li>
+						<li><a data-code="csharp">C</a></li>
+						<li><a data-code="cpp">C++</a></li>
+						<li><a data-code="javascript">JavaScript</a></li>
+						<li><a data-code="python">Python</a></li>
+						<li><a data-code="java">Java</a></li>
+						<li><a data-code="css">CSS</a></li>
+						<li><a data-code="sql">SQL</a></li>
+						<li><a data-code="plain">其它</a></li>
+					</ul>
+				</div>  
+				<div class="right-box">
+					<span id="tip_comment" class="tip">还能输入<em>1000</em>个字符</span>
+					<input type="submit" class="btn btn-sm btn-red btn-comment" value="发表评论">
+				</div>
+			</div>
+		</form>
+	</div>
+
+		<div class="comment-list-container">
+		<a id="comments"></a>
+		<div class="comment-list-box">
+		</div>
+		<div id="commentPage" class="pagination-box d-none"></div>
+		<div class="opt-box text-center">
+			<button class="btn btn-sm btn-link-blue" id="btnMoreComment"></button>
+		</div>
+	</div>
+</div>
+        <div class="recommend-box">
+            		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/sinat_35512245/article/details/54927178,BlogCommendFromBaidu_0"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/sinat_35512245/article/details/54927178,BlogCommendFromBaidu_0"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/sinat_35512245/article/details/54927178" target="_blank" title="机器学习之决策树（Decision Tree）及其Python代码实现 - HuangQinJian">
+				<h4 class="text-truncate oneline">
+						机器学习之<em>决策树</em>（Decision Tree）及其<em>Python</em><em>代码实现</em> - HuangQinJian				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/9/F/4/3_sinat_35512245.jpg" alt="sinat_35512245" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">sinat_35512245</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">02-10</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							1万</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/sinat_35512245/article/details/54927178" target="_blank" title="机器学习之决策树（Decision Tree）及其Python代码实现 - HuangQinJian">
+							<span class="desc oneline">决策树是一个预测模型；他代表的是对象属性与对象值之间的一种映射关系。树中每个节点表示某个对象，而每个分叉路径则代表的某个可能的属性值，而每个叶结点则对应从根节点到该叶节点所经历的路径所表示的对象的值。...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/sinat_35512245">来自：	<span class="blog_title"> HuangQinJian</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/huminwudi/article/details/78477821,BlogCommendFromBaidu_4"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/huminwudi/article/details/78477821,BlogCommendFromBaidu_4"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/huminwudi/article/details/78477821" target="_blank" title="python3实现决策树算法 - huminwudi的博客">
+				<h4 class="text-truncate oneline">
+						<em>python</em>3实现<em>决策树</em>算法 - huminwudi的博客				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/0/4/0/3_huminwudi.jpg" alt="huminwudi" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">huminwudi</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">11-08</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							2301</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/huminwudi/article/details/78477821" target="_blank" title="python3实现决策树算法 - huminwudi的博客">
+							<span class="desc oneline">运行平台： Windows 
+Python版本： Python3.x 
+IDE： pycharm
+一、决策树
+
+
+        决策树是什么？决策树(decision tree)是一种基本的分类与回...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/huminwudi">来自：	<span class="blog_title"> huminwudi的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/c406495762/article/details/75663451,BlogCommendFromBaidu_1"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/c406495762/article/details/75663451,BlogCommendFromBaidu_1"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/c406495762/article/details/75663451" target="_blank" title="Python3《机器学习实战》学习笔记（二）：决策树基础篇之让我们从相亲说起 - Jack-Cui">
+				<h4 class="text-truncate oneline">
+						<em>Python</em>3《机器学习实战》学习笔记（二）：<em>决策树</em>基础篇之让我们从相亲说起 - Jack-Cui				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/F/1/C/3_c406495762.jpg" alt="c406495762" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">c406495762</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">07-21</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							2.6万</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/c406495762/article/details/75663451" target="_blank" title="Python3《机器学习实战》学习笔记（二）：决策树基础篇之让我们从相亲说起 - Jack-Cui">
+							<span class="desc oneline">有读者反映，说我上篇文章Python3《机器学习实战》学习笔记（一）：k-近邻算法(史诗级干货长文)，太长了。一看那么长，读的欲望都降低了。既然如此，决策树的内容，我就分开讲好了。本篇讨论决策树的原理...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/c406495762">来自：	<span class="blog_title"> Jack-Cui</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    <!-- 第四范式广告开关 -->
+				<div class="p4courset3_target _4paradigm_box recommend-item-box clearfix" ></div>
+				<script>window.p4sdk_enable_recommendBox=true</script>
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/alvine008/article/details/37760639,BlogCommendFromBaidu_2"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/alvine008/article/details/37760639,BlogCommendFromBaidu_2"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/alvine008/article/details/37760639" target="_blank" title="Python机器学习（三）--决策树算法 - alvine008的专栏">
+				<h4 class="text-truncate oneline">
+						<em>Python</em>机器学习（三）--<em>决策树</em>算法 - alvine008的专栏				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/3/B/B/3_alvine008.jpg" alt="alvine008" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">alvine008</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">07-14</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							4.6万</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/alvine008/article/details/37760639" target="_blank" title="Python机器学习（三）--决策树算法 - alvine008的专栏">
+							<span class="desc oneline">一、决策树原理  决策树是用样本的属性作为结点，用属性的取值作为分支的树结构。   决策树的根结点是所有样本中信息量最大的属性。树的中间结点是该结点为根的子树所包含的样本子集中信息量最大的属性。决策树...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/alvine008">来自：	<span class="blog_title"> alvine008的专栏</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/Yeoman92/article/details/73436632,BlogCommendFromBaidu_3"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/Yeoman92/article/details/73436632,BlogCommendFromBaidu_3"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/Yeoman92/article/details/73436632" target="_blank" title="Python机器学习算法库——决策树（scikit-learn学习 - 决策树） - Yeoman92的博客">
+				<h4 class="text-truncate oneline">
+						<em>Python</em>机器学习算法库——<em>决策树</em>（scikit-learn学习 - <em>决策树</em>） - Yeoman92的博客				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/8/5/A/3_yeoman92.jpg" alt="Yeoman92" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">Yeoman92</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">06-18</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							6540</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/Yeoman92/article/details/73436632" target="_blank" title="Python机器学习算法库——决策树（scikit-learn学习 - 决策树） - Yeoman92的博客">
+							<span class="desc oneline">决策树决策树(DTs)是一种用于分类和回归的非参数监督学习方法。目标是创建一个模型，通过从数据特性中推导出简单的决策规则来预测目标变量的值。 
+例如，在下面的例子中，决策树通过一组if-then-el...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/Yeoman92">来自：	<span class="blog_title"> Yeoman92的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/Flying_sfeng/article/details/62424225,BlogCommendFromBaidu_5"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/Flying_sfeng/article/details/62424225,BlogCommendFromBaidu_5"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/Flying_sfeng/article/details/62424225" target="_blank" title="决策树原理及Python代码实现 - Flying_sfeng的博客">
+				<h4 class="text-truncate oneline">
+						<em>决策树</em><em>原理</em>及<em>Python</em><em>代码实现</em> - Flying_sfeng的博客				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/1/D/1/3_flying_sfeng.jpg" alt="Flying_sfeng" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">Flying_sfeng</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">03-16</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							1.6万</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/Flying_sfeng/article/details/62424225" target="_blank" title="决策树原理及Python代码实现 - Flying_sfeng的博客">
+							<span class="desc oneline">决策树其实就是按节点分类数据集的一种方法。在本文中，我将讨论数学上如何使用信息论划分数据集，并编写代码构建决策树。
+创建决策树进行分类的流程如下：
+（1）    创建数据集
+（2）    计算数据集的...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/Flying_sfeng">来自：	<span class="blog_title"> Flying_sfeng的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident" data-track-view='{"mod":"popu_614","con":",https://edu.csdn.net/course/detail/7000?from=recdm&lessonid=139814,BlogCommendFromEdu_6"}' data-track-click='{"mod":"popu_614","con":",https://edu.csdn.net/course/detail/7000?from=recdm&lessonid=139814,BlogCommendFromEdu_6"}'>
+		<a href="https://edu.csdn.net/course/detail/7000?from=recdm&lessonid=139814" target="_blank">
+			<h4 class="text-truncate oneline">
+					<em>Python</em>教程—机器学习和数据分析			</h4>
+			<div class="info-box d-flex align-content-center">
+				<p>
+									<span class="read-num">学院</span>
+								</p>
+				<p>
+					<span class="date">01-01</span>
+				</p>
+			</div>
+			<p class="content oneline">
+					适合人群：Python有一定基础者,章节：决策树实例-2			</p>
+		</a>
+
+	</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/wzmsltw/article/details/51057311,BlogCommendFromBaidu_7"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/wzmsltw/article/details/51057311,BlogCommendFromBaidu_7"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/wzmsltw/article/details/51057311" target="_blank" title="机器学习算法的Python实现 (3)：决策树剪枝处理 - Will Lin的博客">
+				<h4 class="text-truncate oneline">
+						机器学习算法的<em>Python</em>实现 (3)：<em>决策树</em>剪枝处理 - Will Lin的博客				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/0/B/6/3_wzmsltw.jpg" alt="wzmsltw" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">wzmsltw</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">04-04</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							1.2万</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/wzmsltw/article/details/51057311" target="_blank" title="机器学习算法的Python实现 (3)：决策树剪枝处理 - Will Lin的博客">
+							<span class="desc oneline">本文数据参照 机器学习-周志华 一书中的决策树一章。可作为此章课后习题4的答案
+代码则参照《机器学习实战》一书的内容，并做了一些修改。
+
+
+CART决策树 使用基尼指数（Gini Index）来选择划...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/wzmsltw">来自：	<span class="blog_title"> Will Lin的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    <div class="recommend-item-box recommend-ad-box"><div id="kp_box_43" data-pid="60" data-track-view='{"mod":"kp_popu_43","con":",,"}'><div id="three_ad8" class="mediav_ad" ></div>
+<script type="text/javascript" src="//static.mediav.com/js/mvf_news_feed.js"></script>
+<script>
+                                               NEWS_FEED({
+                w: 900,
+                h : 84,
+                showid : 'Afihld',
+                placeholderId: "three_ad8",
+                inject : 'define',
+                define : {
+                    imagePosition : 'left',
+                    imageBorderRadius : 3,
+                    imageWidth: 90,
+                    imageHeight: 60,
+                    imageFill : 'clip',
+                    displayImage : true,
+                    displayTitle : true,
+                    titleFontSize: 16,
+                    titleFontColor: '#000',
+                    titleFontFamily : 'Microsoft Yahei',
+                    titleFontWeight: 'bold',
+                    titlePaddingTop : 0,
+                    titlePaddingRight : 0,
+                    titlePaddingBottom : 5,
+                    titlePaddingLeft : 16,
+                    displayDesc : true,
+                    descFontSize: 12,
+                    descFontColor: '#8e959a',
+                    descFontFamily : 'Microsoft Yahei',
+                    paddingTop : 10,
+                    paddingRight : 0,
+                    paddingBottom : 0,
+                    paddingLeft : 0,
+                    backgroundColor: '#fff',
+                    hoverColor: '#000'
+                      }
+                  })
+                                        </script></div><script>$(function(){csdn.track.viewCheck($("#kp_box_43"));});</script></div>
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/ruggier/article/details/78756447,BlogCommendFromBaidu_8"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/ruggier/article/details/78756447,BlogCommendFromBaidu_8"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/ruggier/article/details/78756447" target="_blank" title="详解决策树、python实现决策树 - 仍歌杨柳春风">
+				<h4 class="text-truncate oneline">
+						详解<em>决策树</em>、<em>python</em>实现<em>决策树</em> - 仍歌杨柳春风				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/A/3/B/3_ruggier.jpg" alt="ruggier" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">ruggier</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">12-10</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							6723</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/ruggier/article/details/78756447" target="_blank" title="详解决策树、python实现决策树 - 仍歌杨柳春风">
+							<span class="desc oneline">决策树模型
+定义
+决策过程
+决策树学习
+
+
+特征选择
+信息增益
+计算方法
+
+
+ID3算法
+python实现
+验证
+
+
+
+
+
+
+
+
+
+
+决策树模型
+
+
+
+定义
+
+分类决策树模型是一种描述对实例进行分类的...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/ruggier">来自：	<span class="blog_title"> 仍歌杨柳春风</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+			<div class="recommend-item-box type_hot_word">
+									<div class="content clearfix oneline">
+				<h5 class="float-left">相关热词</h5>
+				<div class="float-left">
+									<span>
+						<a href="https://blog.csdn.net/HerosOfEarth/article/details/52347820" target="_blank">
+						决策树和if</a>
+					</span>
+									<span>
+						<a href="https://blog.csdn.net/m0_38079848/article/details/71425557" target="_blank">
+						决策树 信息</a>
+					</span>
+									<span>
+						<a href="https://blog.csdn.net/jerry81333/article/details/53125197" target="_blank">
+						决策树 算法</a>
+					</span>
+									<span>
+						<a href="https://blog.csdn.net/m0_38079848/article/details/71425557" target="_blank">
+						决策树的信息熵</a>
+					</span>
+									<span>
+						<a href="https://blog.csdn.net/u012328159/article/details/79285214" target="_blank">
+						决策树简直</a>
+					</span>
+								</div>
+			</div>
+					</div>
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/aliceyangxi1987/article/details/71079490,BlogCommendFromBaidu_9"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/aliceyangxi1987/article/details/71079490,BlogCommendFromBaidu_9"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/aliceyangxi1987/article/details/71079490" target="_blank" title="决策树的python实现 - aliceyangxi1987的博客">
+				<h4 class="text-truncate oneline">
+						<em>决策树</em>的<em>python</em>实现 - aliceyangxi1987的博客				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/8/C/4/3_aliceyangxi1987.jpg" alt="aliceyangxi1987" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">aliceyangxi1987</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">05-02</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							4038</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/aliceyangxi1987/article/details/71079490" target="_blank" title="决策树的python实现 - aliceyangxi1987的博客">
+							<span class="desc oneline">本文结构：
+是什么？
+有什么算法？
+数学原理？
+编码实现算法？
+1. 是什么？简单地理解，就是根据一些 feature 进行分类，每个节点提一个问题，通过判断，将数据分为几类，再继续提问。这些问题是根...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/aliceyangxi1987">来自：	<span class="blog_title"> aliceyangxi1987的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+            <div class="recommend-item-box blog-expert-recommend-box">
+			<div class="d-flex">
+				<div class="blog-expert-recommend">
+					<div class="blog-expert">
+						<div class="blog-expert-flexbox"></div>
+					</div>
+				</div>
+				<div class="blog-expert-load-new" data-index="3">
+					<svg version="1.1" viewBox="0 0 200 200" style="enable-background:new 0 0 200 200;" xml:space="preserve">
+					<path d="M142.5,57.5c-1.3-1.2-2.1-3.3-2.1-5.4c0-4.2,3.3-7.5,7.5-7.5h19.6c4.2,0,7.5,3.3,7.5,7.5s-3.3,7.5-7.5,7.5h-4.2
+						C170.8,71.2,175,85,175,100c0,41.7-33.8,75-75,75c-4.2,0-7.5-3.3-7.5-7.5c0-4.2,3.3-7.5,7.5-7.5c33.3,0,60-27.1,60-60
+						C160,83.7,153.8,68.7,142.5,57.5L142.5,57.5z M57.5,142.5c1.2,1.2,2.1,3.3,2.1,5.4c0,4.2-3.3,7.5-7.5,7.5H32.5
+						c-4.2,0-7.5-3.3-7.5-7.5c0-4.2,3.3-7.5,7.5-7.5h4.2C29.2,128.8,25,115,25,100c0-41.7,33.7-75,75-75c4.2,0,7.5,3.3,7.5,7.5
+						S104.2,40,100,40c-33.3,0-60,27.1-60,60C40,116.2,46.2,131.2,57.5,142.5z"/>
+					</svg>
+					<span>换一批</span>
+				</div>
+			</div>
+        </div>
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/c406495762/article/details/76262487,BlogCommendFromBaidu_10"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/c406495762/article/details/76262487,BlogCommendFromBaidu_10"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/c406495762/article/details/76262487" target="_blank" title="Python3《机器学习实战》学习笔记（三）：决策树实战篇之为自己配个隐形眼镜 - Jack-Cui">
+				<h4 class="text-truncate oneline">
+						<em>Python</em>3《机器学习实战》学习笔记（三）：<em>决策树</em>实战篇之为自己配个隐形眼镜 - Jack-Cui				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/F/1/C/3_c406495762.jpg" alt="c406495762" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">c406495762</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">07-28</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							1.9万</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/c406495762/article/details/76262487" target="_blank" title="Python3《机器学习实战》学习笔记（三）：决策树实战篇之为自己配个隐形眼镜 - Jack-Cui">
+							<span class="desc oneline">上篇文章讲述了机器学习决策树的原理，以及如何选择最优特征作为分类特征。本篇文章将在此基础上进行介绍。主要内容包括：决策树构建、决策树可视化、使用决策树进行分类预测、决策树的存储和读取、sklearn实...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/c406495762">来自：	<span class="blog_title"> Jack-Cui</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/jerry81333/article/details/53125197,BlogCommendESEnWordWeight_11"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/jerry81333/article/details/53125197,BlogCommendESEnWordWeight_11"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/jerry81333/article/details/53125197" target="_blank" title="决策树 (Decision Tree) 原理简述及相关算法(ID3,C4.5) - 新手村">
+				<h4 class="text-truncate oneline">
+						<em>决策树</em> (Decision Tree) <em>原理</em>简述及相关算法(ID3,C4.5) - 新手村				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/1/3/C/3_jerry81333.jpg" alt="jerry81333" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">jerry81333</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">11-11</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							1.2万</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/jerry81333/article/details/53125197" target="_blank" title="决策树 (Decision Tree) 原理简述及相关算法(ID3,C4.5) - 新手村">
+							<span class="desc oneline">Decision Tree 决策树：
+决策树是属于机器学习监督学习分类算法中比较简单的一种，决策树是一个预测模型；他代表的是对象属性与对象值之间的一种映射关系。树中每个节点表示某个对象，而每个分叉路...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/jerry81333">来自：	<span class="blog_title"> 新手村</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/wsbxzz1/article/details/72979643,BlogCommendESEnWordWeight_12"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/wsbxzz1/article/details/72979643,BlogCommendESEnWordWeight_12"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/wsbxzz1/article/details/72979643" target="_blank" title="Python写一个简单的爬虫样例（不超过50行代码） - wsbxzz1的专栏">
+				<h4 class="text-truncate oneline">
+						<em>Python</em>写一个简单的爬虫样例（不超过50行代码） - wsbxzz1的专栏				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/B/0/D/3_wsbxzz1.jpg" alt="wsbxzz1" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">wsbxzz1</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">06-10</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							4.7万</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/wsbxzz1/article/details/72979643" target="_blank" title="Python写一个简单的爬虫样例（不超过50行代码） - wsbxzz1的专栏">
+							<span class="desc oneline">###写在题外的话
+爬虫，我还是大三的时候,第一次听说，当时我的学姐给我找的一个勤工俭学的项目，要求是在微博上爬出感兴趣的信息，结果很遗憾，第一次邂逅只是擦肩而过。然后，时间来到4年后的研二，在做信息...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/wsbxzz1">来自：	<span class="blog_title"> wsbxzz1的专栏</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    <div class="recommend-item-box recommend-ad-box"><div id="kp_box_622" data-pid="61" data-track-view='{"mod":"kp_popu_622","con":",,"}'><script type="text/javascript" src="//rabc1.iteye.com/production/res/source/xadxpv.js?jewb=dbwkm"></script></div><script>$(function(){csdn.track.viewCheck($("#kp_box_622"));});</script></div>
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/baimafujinji/article/details/51724371,BlogCommendESEnWordWeight_13"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/baimafujinji/article/details/51724371,BlogCommendESEnWordWeight_13"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/baimafujinji/article/details/51724371" target="_blank" title="数据挖掘十大算法之决策树详解（1） - 白马负金羁">
+				<h4 class="text-truncate oneline">
+						数据挖掘十大算法之<em>决策树</em>详解（1） - 白马负金羁				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/D/4/E/3_baimafujinji.jpg" alt="baimafujinji" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">baimafujinji</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">11-20</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							6.5万</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/baimafujinji/article/details/51724371" target="_blank" title="数据挖掘十大算法之决策树详解（1） - 白马负金羁">
+							<span class="desc oneline">在2006年12月召开的 IEEE 数据挖掘国际会议上，与会的各位专家选出了当时的十大数据挖掘算法（ top 10 data mining algorithms ）。本博客已经介绍过的位列十大算法之中...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/baimafujinji">来自：	<span class="blog_title"> 白马负金羁</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/kxcc_sx/article/details/5969121,BlogCommendESEnWordWeight_14"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/kxcc_sx/article/details/5969121,BlogCommendESEnWordWeight_14"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/kxcc_sx/article/details/5969121" target="_blank" title="决策树的典型案例 - kxcc_sx的专栏">
+				<h4 class="text-truncate oneline">
+						<em>决策树</em>的典型案例 - kxcc_sx的专栏				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/F/D/5/3_kxcc_sx.jpg" alt="kxcc_sx" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">kxcc_sx</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">10-27</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							1.4万</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/kxcc_sx/article/details/5969121" target="_blank" title="决策树的典型案例 - kxcc_sx的专栏">
+							<span class="desc oneline">   小王是一家著名高尔夫俱乐部的经理。但是他被雇员数量问题搞得心情十分不好。某些天好像所有人都來玩高尔夫，以至于所有员工都忙的团团转还是应付不过来，而有些天不知道什么原因却一个人也不来，俱乐部为雇员...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/kxcc_sx">来自：	<span class="blog_title"> kxcc_sx的专栏</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/ggwcr/article/details/78050684,BlogCommendESEnWordWeight_15"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/ggwcr/article/details/78050684,BlogCommendESEnWordWeight_15"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/ggwcr/article/details/78050684" target="_blank" title="决策树ID3算法的python实现 - ggwcr的博客">
+				<h4 class="text-truncate oneline">
+						<em>决策树</em>ID3算法的<em>python</em>实现 - ggwcr的博客				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/D/E/A/3_ggwcr.jpg" alt="ggwcr" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">ggwcr</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">09-21</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							250</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/ggwcr/article/details/78050684" target="_blank" title="决策树ID3算法的python实现 - ggwcr的博客">
+							<span class="desc oneline">决策树ID3算法的python实现环境：win7 64位 python3.5熵参考：http://blog.csdn.net/ggwcr/article/details/77964184import ...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/ggwcr">来自：	<span class="blog_title"> ggwcr的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/huahuazhu/article/details/73167610,BlogCommendFromBaidu_16"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/huahuazhu/article/details/73167610,BlogCommendFromBaidu_16"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/huahuazhu/article/details/73167610" target="_blank" title="决策树算法及python实现 - huahuazhu的博客">
+				<h4 class="text-truncate oneline">
+						<em>决策树</em>算法及<em>python</em>实现 - huahuazhu的博客				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/7/7/B/3_huahuazhu.jpg" alt="huahuazhu" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">huahuazhu</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">06-13</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							9366</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/huahuazhu/article/details/73167610" target="_blank" title="决策树算法及python实现 - huahuazhu的博客">
+							<span class="desc oneline">1 什么是决策树
+
+决策树（Decision Tree）是一种基本的分类与回归方法，本文主要讨论分类决策树。决策树模型呈树形结构，在分类问题中，表示基于特征对数据进行分类的过程。它可以认为是if-th...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/huahuazhu">来自：	<span class="blog_title"> huahuazhu的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/hu948162999/article/details/73124135,BlogCommendFromBaidu_17"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/hu948162999/article/details/73124135,BlogCommendFromBaidu_17"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/hu948162999/article/details/73124135" target="_blank" title="决策树算法原理及案例 - 千丈之松的专栏">
+				<h4 class="text-truncate oneline">
+						<em>决策树</em>算法<em>原理</em>及案例 - 千丈之松的专栏				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/8/A/2/3_hu948162999.jpg" alt="hu948162999" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">hu948162999</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">06-12</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							1.4万</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/hu948162999/article/details/73124135" target="_blank" title="决策树算法原理及案例 - 千丈之松的专栏">
+							<span class="desc oneline">机器学习在各个领域都有广泛的应用，特别在数据分析领域有着深远的影响。决策树是机器学习中最基础且应用最广泛的算法模型。本文介绍了机器学习的相关概念、常见的算法分类和决策树模型及应用。通过一个决策树案例，...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/hu948162999">来自：	<span class="blog_title"> 千丈之松的专栏</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    <div class="recommend-item-box recommend-ad-box"><div id="kp_box_623" data-pid="62" data-track-view='{"mod":"kp_popu_623","con":",,"}'><script type="text/javascript" src="//rabc1.iteye.com/production/dkjgal.js?cxpuwupg=g"></script></div><script>$(function(){csdn.track.viewCheck($("#kp_box_623"));});</script></div>
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/lixianjun913/article/details/52506828,BlogCommendFromBaidu_18"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/lixianjun913/article/details/52506828,BlogCommendFromBaidu_18"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/lixianjun913/article/details/52506828" target="_blank" title="《机器学习实战》学习（三）——决策树实例 - 不系之舟的专栏-QQ讨论群331590339">
+				<h4 class="text-truncate oneline">
+						《机器学习实战》学习（三）——<em>决策树</em><em>实例</em> - 不系之舟的专栏-QQ讨论群331590339				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/E/9/E/3_lixianjun913.jpg" alt="lixianjun913" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">lixianjun913</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">09-11</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							7454</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/lixianjun913/article/details/52506828" target="_blank" title="《机器学习实战》学习（三）——决策树实例 - 不系之舟的专栏-QQ讨论群331590339">
+							<span class="desc oneline">实例一 《机器学习》书中4.3习题1、问题描述试编程实现基于信息熵进行划分选择的决策树算法，并为表4.3中数据生成一棵决策树，表4.3数据如下：
+‘色泽’,’根蒂’,’敲声’,’纹理’,’脐部’,’触...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/lixianjun913">来自：	<span class="blog_title"> 不系之舟的专栏-QQ讨论群331590339</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/qsczse943062710/article/details/75642666,BlogCommendFromBaidu_19"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/qsczse943062710/article/details/75642666,BlogCommendFromBaidu_19"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/qsczse943062710/article/details/75642666" target="_blank" title="sklearn浅析（一）——sklearn的组织结构 - 起风之后，只剩沙丘">
+				<h4 class="text-truncate oneline">
+						sklearn浅析（一）——sklearn的组织结构 - 起风之后，只剩沙丘				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/C/0/E/3_qsczse943062710.jpg" alt="qsczse943062710" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">qsczse943062710</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">07-21</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							1.8万</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/qsczse943062710/article/details/75642666" target="_blank" title="sklearn浅析（一）——sklearn的组织结构 - 起风之后，只剩沙丘">
+							<span class="desc oneline">sklearn是基于numpy和scipy的一个机器学习算法库，设计的非常优雅，它让我们能够使用同样的接口来实现所有不同的算法调用。本文首先介绍下sklearn内的模块组织和算法类的顶层设计图。三大模...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/qsczse943062710">来自：	<span class="blog_title"> 起风之后，只剩沙丘</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/u014303046/article/details/78200010,BlogCommendFromBaidu_20"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/u014303046/article/details/78200010,BlogCommendFromBaidu_20"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/u014303046/article/details/78200010" target="_blank" title="一文搞定BP神经网络——从原理到应用（原理篇） - 佐井白白的微笑">
+				<h4 class="text-truncate oneline">
+						一文搞定BP神经网络——从<em>原理</em>到应用（<em>原理</em>篇） - 佐井白白的微笑				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/5/2/0/3_u014303046.jpg" alt="u014303046" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">u014303046</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">10-11</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							3万</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/u014303046/article/details/78200010" target="_blank" title="一文搞定BP神经网络——从原理到应用（原理篇） - 佐井白白的微笑">
+							<span class="desc oneline">神经网络结构以及前向传播过程
+损失函数和代价函数
+反向传播
+1 矩阵补充知识
+11 矩阵求梯度
+12 海塞矩阵
+13 总结
+2 矩阵乘积和对应元素相乘
+3 反向传播原理四个基础等式
+4 反向传播总结
+...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/u014303046">来自：	<span class="blog_title"> 佐井白白的微笑</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/u011305680/article/details/80334901,searchFromBaidu_21"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/u011305680/article/details/80334901,searchFromBaidu_21"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/u011305680/article/details/80334901" target="_blank" title="背包问题、决策树及python实现 - 青鱼入云的博客">
+				<h4 class="text-truncate oneline">
+						背包问题、<em>决策树</em>及<em>python</em>实现 - 青鱼入云的博客				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/C/5/9/3_u011305680.jpg" alt="u011305680" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">u011305680</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">05-16</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							170</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/u011305680/article/details/80334901" target="_blank" title="背包问题、决策树及python实现 - 青鱼入云的博客">
+							<span class="desc oneline">
+  背包问题是最优解问题中的一种，我们先来看一下最优解的定义：在特定要求下，按特定需求得出最优结果。 
+  按照这个定义我们做一下下面的分析，有以下一些特征：
+  
+  
+  特定要求，比如：某一个...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/u011305680">来自：	<span class="blog_title"> 青鱼入云的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/eye_water/article/details/80277439,searchFromBaidu_22"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/eye_water/article/details/80277439,searchFromBaidu_22"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/eye_water/article/details/80277439" target="_blank" title="决策树的生成--Python代码实现 - eye_water的博客">
+				<h4 class="text-truncate oneline">
+						<em>决策树</em>的生成--<em>Python</em><em>代码实现</em> - eye_water的博客				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/0/C/3/3_eye_water.jpg" alt="eye_water" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">eye_water</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">05-11</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							111</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/eye_water/article/details/80277439" target="_blank" title="决策树的生成--Python代码实现 - eye_water的博客">
+							<span class="desc oneline">前言
+
+本文思路来源于  
+How&amp;amp;nbsp;To&amp;amp;nbsp;Implement&amp;amp;nbsp;The&amp;amp;nbsp;Decision&amp;amp;nbsp;Tree&amp;amp;nb...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/eye_water">来自：	<span class="blog_title"> eye_water的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    <div class="recommend-item-box recommend-ad-box"><div id="kp_box_555" data-pid="63" data-track-view='{"mod":"kp_popu_555","con":",,"}'><div id="three_ad23" class="mediav_ad" ></div>
+<script type="text/javascript" src="//static.mediav.com/js/mvf_news_feed.js"></script>
+<script>
+                                               NEWS_FEED({
+                w: 900,
+                h : 84,
+                showid : 'GNKXx7',
+                placeholderId: "three_ad23",
+                inject : 'define',
+                define : {
+                    imagePosition : 'left',
+                    imageBorderRadius : 3,
+                    imageWidth: 90,
+                    imageHeight: 60,
+                    imageFill : 'clip',
+                    displayImage : true,
+                    displayTitle : true,
+                    titleFontSize: 16,
+                    titleFontColor: '#000',
+                    titleFontFamily : 'Microsoft Yahei',
+                    titleFontWeight: 'bold',
+                    titlePaddingTop : 0,
+                    titlePaddingRight : 0,
+                    titlePaddingBottom : 5,
+                    titlePaddingLeft : 16,
+                    displayDesc : true,
+                    descFontSize: 12,
+                    descFontColor: '#8e959a',
+                    descFontFamily : 'Microsoft Yahei',
+                    paddingTop : 10,
+                    paddingRight : 0,
+                    paddingBottom : 0,
+                    paddingLeft : 0,
+                    backgroundColor: '#fff',
+                    hoverColor: '#000'
+                      }
+                  })
+                                        </script></div><script>$(function(){csdn.track.viewCheck($("#kp_box_555"));});</script></div>
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/CY_TEC/article/details/80626650,searchFromBaidu_23"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/CY_TEC/article/details/80626650,searchFromBaidu_23"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/CY_TEC/article/details/80626650" target="_blank" title="使用 python 手写 决策树 - CY_TEC的博客">
+				<h4 class="text-truncate oneline">
+						使用 <em>python</em> 手写 <em>决策树</em> - CY_TEC的博客				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/7/4/9/3_cy_tec.jpg" alt="CY_TEC" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">CY_TEC</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">06-08</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							267</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/CY_TEC/article/details/80626650" target="_blank" title="使用 python 手写 决策树 - CY_TEC的博客">
+							<span class="desc oneline">使用 python 自己写一个 决策树
+
+很多复杂的学习方法，明白了其基础之后，一切就变得简单、易懂，并且符合直觉。 
+我今天打算手写一个决策树，或者说是“分类回归树”。
+
+
+
+参考
+
+https:/...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/CY_TEC">来自：	<span class="blog_title"> CY_TEC的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/www_buzhidao/article/details/71928684,BlogCommendFromGuangxin_24"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/www_buzhidao/article/details/71928684,BlogCommendFromGuangxin_24"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/www_buzhidao/article/details/71928684" target="_blank" title="python+决策树1 - www_buzhidao的专栏">
+				<h4 class="text-truncate oneline">
+						<em>python</em>+<em>决策树</em>1 - www_buzhidao的专栏				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/5/B/E/3_www_buzhidao.jpg" alt="www_buzhidao" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">www_buzhidao</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">05-14</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							474</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/www_buzhidao/article/details/71928684" target="_blank" title="python+决策树1 - www_buzhidao的专栏">
+							<span class="desc oneline">决策树初试</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/www_buzhidao">来自：	<span class="blog_title"> www_buzhidao的专栏</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/u012845311/article/details/77294973,BlogCommendFromGuangxin_25"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/u012845311/article/details/77294973,BlogCommendFromGuangxin_25"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/u012845311/article/details/77294973" target="_blank" title="简单Python决策树可视化实例 - 学苑新空">
+				<h4 class="text-truncate oneline">
+						简单<em>Python</em><em>决策树</em>可视化<em>实例</em> - 学苑新空				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/8/D/7/3_u012845311.jpg" alt="u012845311" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">u012845311</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">08-17</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							8006</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/u012845311/article/details/77294973" target="_blank" title="简单Python决策树可视化实例 - 学苑新空">
+							<span class="desc oneline">Python决策树可视化实现</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/u012845311">来自：	<span class="blog_title"> 学苑新空</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/tian544556/article/details/78761433,BlogCommendFromGuangxin_26"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/tian544556/article/details/78761433,BlogCommendFromGuangxin_26"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/tian544556/article/details/78761433" target="_blank" title="机器学习实战-python3决策树实例 - tian544556的博客">
+				<h4 class="text-truncate oneline">
+						机器学习实战-<em>python</em>3<em>决策树</em><em>实例</em> - tian544556的博客				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/F/A/3/3_tian544556.jpg" alt="tian544556" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">tian544556</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">12-09</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							501</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/tian544556/article/details/78761433" target="_blank" title="机器学习实战-python3决策树实例 - tian544556的博客">
+							<span class="desc oneline">工具：PythonCharm 书中的代码是python2的，而我用的python3，结合实践过程，这里会标注实践时遇到的问题和针对python3的修改。 
+实践代码和训练测试数据可以参考这里 
+htt...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/tian544556">来自：	<span class="blog_title"> tian544556的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/LULEI1217/article/details/49583357,BlogCommendFromGuangxin_27"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/LULEI1217/article/details/49583357,BlogCommendFromGuangxin_27"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/LULEI1217/article/details/49583357" target="_blank" title="python实现机器学习之决策树 - XXiaoLEI的专栏">
+				<h4 class="text-truncate oneline">
+						<em>python</em>实现机器学习之<em>决策树</em> - XXiaoLEI的专栏				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/D/5/7/3_lulei1217.jpg" alt="LULEI1217" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">LULEI1217</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">11-02</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							8731</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/LULEI1217/article/details/49583357" target="_blank" title="python实现机器学习之决策树 - XXiaoLEI的专栏">
+							<span class="desc oneline">这几天在看决策树算法，发现这算法在实际的应用中使用挺多的。所以想总结一下：
+这里给出一些我觉得比较好的博客链接：
+http://blog.jobbole.com/86443/　通俗易懂，同时也讲了...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/LULEI1217">来自：	<span class="blog_title"> XXiaoLEI的专栏</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    <div class="recommend-item-box recommend-ad-box"><div id="kp_box_626" data-pid="64" data-track-view='{"mod":"kp_popu_626","con":",,"}'><script type="text/javascript" src="//rabc1.iteye.com/production/wxzgt3.js?rme=jljjon"></script></div><script>$(function(){csdn.track.viewCheck($("#kp_box_626"));});</script></div>
+	
+    
+    			<div class="recommend-item-box recommend-box-ident recommend-download-box clearfix" data-track-view='{"mod":"popu_614","con":",https://download.csdn.net/download/flying_sfeng/9783419,BlogCommendFromQuerySearch_28"}' data-track-click='{"mod":"popu_614","con":",https://download.csdn.net/download/flying_sfeng/9783419,BlogCommendFromQuerySearch_28"}'>
+			<a href="https://download.csdn.net/download/flying_sfeng/9783419" target="_blank">
+				<div class="content">
+					<div class="">
+						<span class="type">下载</span>
+						<h4 class="text-truncate oneline clearfix">
+							<em>决策树</em>的<em>Python</em><em>代码实现</em> - flying_sfeng						</h4>
+						<span class="data float-right">03-16</span>
+					</div>
+					<div class="desc oneline">
+							本代码为本人阅读《机器学习实战》后写的关于使用决策树进行分类的完整代码，包括详细的中文注释，编程环境为Python2.7，欢迎下载学习。					</div>
+				</div>
+			</a>
+		</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/xietingcandice/article/details/44082735,BlogCommendFromQuerySearch_29"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/xietingcandice/article/details/44082735,BlogCommendFromQuerySearch_29"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/xietingcandice/article/details/44082735" target="_blank" title="机器学习 python实例完成—决策树 - xietingcandice的专栏">
+				<h4 class="text-truncate oneline">
+						机器学习 <em>python</em><em>实例</em>完成—<em>决策树</em> - xietingcandice的专栏				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/3/A/7/3_xietingcandice.jpg" alt="xietingcandice" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">xietingcandice</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">03-05</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							3747</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/xietingcandice/article/details/44082735" target="_blank" title="机器学习 python实例完成—决策树 - xietingcandice的专栏">
+							<span class="desc oneline">决策树学习是应用最广泛的归纳推理算法之一，是一种逼近离散值目标函数的方法，在这种方法中学习到的函数被表示为一棵决策树。决策树可以使用不熟悉的数据集合，并从中提取出一系列规则，机器学习算法最终将使用这些...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/xietingcandice">来自：	<span class="blog_title"> xietingcandice的专栏</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    			<div class="recommend-item-box recommend-box-ident recommend-download-box clearfix" data-track-view='{"mod":"popu_614","con":",https://download.csdn.net/download/flying_sfeng/9879781,BlogCommendFromQuerySearch_30"}' data-track-click='{"mod":"popu_614","con":",https://download.csdn.net/download/flying_sfeng/9879781,BlogCommendFromQuerySearch_30"}'>
+			<a href="https://download.csdn.net/download/flying_sfeng/9879781" target="_blank">
+				<div class="content">
+					<div class="">
+						<span class="type">下载</span>
+						<h4 class="text-truncate oneline clearfix">
+							使用<em>Python</em>实现<em>决策树</em> - flying_sfeng						</h4>
+						<span class="data float-right">06-24</span>
+					</div>
+					<div class="desc oneline">
+							2017年3月16号关于决策树的资源上传错了，这一份才是决策树的Python代码实现，包含详细的中文注释，欢迎下载学习。Python版本为2.7.					</div>
+				</div>
+			</a>
+		</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/Recall_Tomorrow/article/details/79553514,BlogCommendFromQuerySearch_31"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/Recall_Tomorrow/article/details/79553514,BlogCommendFromQuerySearch_31"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/Recall_Tomorrow/article/details/79553514" target="_blank" title="决策树算法原理及实现 - MLee的博客">
+				<h4 class="text-truncate oneline">
+						<em>决策树</em>算法<em>原理</em>及实现 - MLee的博客				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/2/2/2/3_recall_tomorrow.jpg" alt="Recall_Tomorrow" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">Recall_Tomorrow</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">03-14</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							696</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/Recall_Tomorrow/article/details/79553514" target="_blank" title="决策树算法原理及实现 - MLee的博客">
+							<span class="desc oneline">欢迎大家查看实现的完整代码。。。
+
+
+
+决策树模型
+
+&amp;amp;nbsp;&amp;amp;nbsp;&amp;amp;nbsp;&amp;amp;nbsp;&amp;amp;nbsp;&amp;amp;nbsp;&amp;amp;nbsp;&amp;am...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/Recall_Tomorrow">来自：	<span class="blog_title"> MLee的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/csharp25/article/details/51811148,BlogCommendFromQuerySearch_32"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/csharp25/article/details/51811148,BlogCommendFromQuerySearch_32"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/csharp25/article/details/51811148" target="_blank" title="机器学习 -- 决策树C45算法使用实例 - Stay focus,Stay Crazy">
+				<h4 class="text-truncate oneline">
+						机器学习 -- <em>决策树</em>C45算法使用<em>实例</em> - Stay focus,Stay Crazy				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/E/C/C/3_csharp25.jpg" alt="csharp25" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">csharp25</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">07-02</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							2864</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/csharp25/article/details/51811148" target="_blank" title="机器学习 -- 决策树C45算法使用实例 - Stay focus,Stay Crazy">
+							<span class="desc oneline">机器学习 -- 决策树C45算法使用实例</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/csharp25">来自：	<span class="blog_title"> Stay focus,Stay Crazy</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    <div class="recommend-item-box recommend-ad-box"><div id="kp_box_625" data-pid="65" data-track-view='{"mod":"kp_popu_625","con":",,"}'><script type="text/javascript" src="//rabc1.iteye.com/common/openjs/m022.js?hcuzbzy=bi"></script></div><script>$(function(){csdn.track.viewCheck($("#kp_box_625"));});</script></div>
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/wzmsltw/article/details/51039928,BlogCommendFromBaidu_33"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/wzmsltw/article/details/51039928,BlogCommendFromBaidu_33"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/wzmsltw/article/details/51039928" target="_blank" title="机器学习算法的Python实现 (2)：ID3决策树 - Will Lin的博客">
+				<h4 class="text-truncate oneline">
+						机器学习算法的<em>Python</em>实现 (2)：ID3<em>决策树</em> - Will Lin的博客				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/0/B/6/3_wzmsltw.jpg" alt="wzmsltw" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">wzmsltw</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">04-01</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							1.3万</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/wzmsltw/article/details/51039928" target="_blank" title="机器学习算法的Python实现 (2)：ID3决策树 - Will Lin的博客">
+							<span class="desc oneline">本文数据参照 机器学习-周志华 一书中的决策树一章。可作为此章课后习题3的答案
+代码则参照《机器学习实战》一书的内容，并做了一些修改。
+
+
+本文使用的Python库包括
+
+
+numpypandasma...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/wzmsltw">来自：	<span class="blog_title"> Will Lin的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/qq_34807908/article/details/81539536,BlogCommendFromBaidu_34"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/qq_34807908/article/details/81539536,BlogCommendFromBaidu_34"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/qq_34807908/article/details/81539536" target="_blank" title="决策树算法及Python实现 - Britesun的博客">
+				<h4 class="text-truncate oneline">
+						<em>决策树</em>算法及<em>Python</em>实现 - Britesun的博客				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/7/F/0/3_qq_34807908.jpg" alt="qq_34807908" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">qq_34807908</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">08-09</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							73</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/qq_34807908/article/details/81539536" target="_blank" title="决策树算法及Python实现 - Britesun的博客">
+							<span class="desc oneline"> 
+         
+                     
+                1 什么是决策树
+
+决策树（Decision Tree）是一种基本的分类与回归方法，本文主要讨论分类...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/qq_34807908">来自：	<span class="blog_title"> Britesun的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/luanpeng825485697/article/details/78965390,BlogCommendFromBaidu_35"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/luanpeng825485697/article/details/78965390,BlogCommendFromBaidu_35"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/luanpeng825485697/article/details/78965390" target="_blank" title="python机器学习库sklearn——决策树 - 全栈工程师开发手册（原创）">
+				<h4 class="text-truncate oneline">
+						<em>python</em>机器学习库sklearn——<em>决策树</em> - 全栈工程师开发手册（原创）				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/2/A/7/3_luanpeng825485697.jpg" alt="luanpeng825485697" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">luanpeng825485697</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">01-03</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							2716</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/luanpeng825485697/article/details/78965390" target="_blank" title="python机器学习库sklearn——决策树 - 全栈工程师开发手册（原创）">
+							<span class="desc oneline">
+  全栈工程师开发手册 （作者：栾鹏）
+  
+   python数据挖掘系列教程
+
+
+决策树的相关的知识内容可以参考 
+http://blog.csdn.net/luanpeng825485697/...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/luanpeng825485697">来自：	<span class="blog_title"> 全栈工程师开发手册（原创）</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/qq_27150893/article/details/79767087,BlogCommendFromBaidu_36"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/qq_27150893/article/details/79767087,BlogCommendFromBaidu_36"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/qq_27150893/article/details/79767087" target="_blank" title="python实现决策树实例 - qq_27150893的博客">
+				<h4 class="text-truncate oneline">
+						<em>python</em>实现<em>决策树</em><em>实例</em> - qq_27150893的博客				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/7/6/7/3_qq_27150893.jpg" alt="qq_27150893" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">qq_27150893</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">03-31</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							631</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/qq_27150893/article/details/79767087" target="_blank" title="python实现决策树实例 - qq_27150893的博客">
+							<span class="desc oneline">      今天用python实现了一个决策树模型，python做机器学习有大量的库支持，简洁高效，没有深厚数学与算法基础的人也可以调用库来实现机器学习模型。当然大家想做好机器学习还是要好好积淀深厚的...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/qq_27150893">来自：	<span class="blog_title"> qq_27150893的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/jacksonary/article/details/78885349,BlogCommendFromBaidu_37"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/jacksonary/article/details/78885349,BlogCommendFromBaidu_37"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/jacksonary/article/details/78885349" target="_blank" title="BP神经网络学习笔记 - jacksonary的博客">
+				<h4 class="text-truncate oneline">
+						BP神经网络学习笔记 - jacksonary的博客				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/A/9/A/3_jacksonary.jpg" alt="jacksonary" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">jacksonary</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">12-24</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							2.1万</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/jacksonary/article/details/78885349" target="_blank" title="BP神经网络学习笔记 - jacksonary的博客">
+							<span class="desc oneline">在BP神经网络中，输入层和输出层的节点个数都是确定的，而隐含层节点个数是部确定的， 
+可以根据经验公式来确定： 
+ 
+h为隐含层节点的数目，m和n分别是输入层和输出层节点的数目，a为1~10之间的调节...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/jacksonary">来自：	<span class="blog_title"> jacksonary的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    <div class="recommend-item-box recommend-ad-box"><div id="kp_box_87" data-pid="66" data-track-view='{"mod":"kp_popu_87","con":",,"}'><div id="three_ad38" class="mediav_ad" ></div>
+<script>
+                                               NEWS_FEED({
+                w: 900,
+                h : 84,
+                showid : 'Afihld',
+                placeholderId: "three_ad38",
+                inject : 'define',
+                define : {
+                    imagePosition : 'left',
+                    imageBorderRadius : 3,
+                    imageWidth: 90,
+                    imageHeight: 60,
+                    imageFill : 'clip',
+                    displayImage : true,
+                    displayTitle : true,
+                    titleFontSize: 16,
+                    titleFontColor: '#000',
+                    titleFontFamily : 'Microsoft Yahei',
+                    titleFontWeight: 'bold',
+                    titlePaddingTop : 0,
+                    titlePaddingRight : 0,
+                    titlePaddingBottom : 5,
+                    titlePaddingLeft : 16,
+                    displayDesc : true,
+                    descFontSize: 12,
+                    descFontColor: '#8e959a',
+                    descFontFamily : 'Microsoft Yahei',
+                    paddingTop : 10,
+                    paddingRight : 0,
+                    paddingBottom : 0,
+                    paddingLeft : 0,
+                    backgroundColor: '#fff',
+                    hoverColor: '#000'
+                      }
+                  })
+                                        </script></div><script>$(function(){csdn.track.viewCheck($("#kp_box_87"));});</script></div>
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/u014248127/article/details/78885180,BlogCommendFromBaidu_38"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/u014248127/article/details/78885180,BlogCommendFromBaidu_38"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/u014248127/article/details/78885180" target="_blank" title="sklearn库的学习 - yeal">
+				<h4 class="text-truncate oneline">
+						sklearn库的学习 - yeal				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/F/0/5/3_u014248127.jpg" alt="u014248127" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">u014248127</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">12-24</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							2.4万</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/u014248127/article/details/78885180" target="_blank" title="sklearn库的学习 - yeal">
+							<span class="desc oneline">sklearn入门，sklearn库结构</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/u014248127">来自：	<span class="blog_title"> yeal</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/kebu12345678/article/details/54915395,BlogCommendFromBaidu_39"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/kebu12345678/article/details/54915395,BlogCommendFromBaidu_39"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/kebu12345678/article/details/54915395" target="_blank" title="BP神经网络（完整的理论和经验公式） - kebu12345678的博客">
+				<h4 class="text-truncate oneline">
+						BP神经网络（完整的理论和经验公式） - kebu12345678的博客				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/3/9/5/3_kebu12345678.jpg" alt="kebu12345678" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">kebu12345678</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">02-07</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							2.4万</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/kebu12345678/article/details/54915395" target="_blank" title="BP神经网络（完整的理论和经验公式） - kebu12345678的博客">
+							<span class="desc oneline">http://blog.csdn.net/runatworld/article/details/50774215
+
+
+
+
+
+
+
+
+
+BP神经网络
+
+
+2016-03-01 17:27 271人阅读 评...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/kebu12345678">来自：	<span class="blog_title"> kebu12345678的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/u014180259/article/details/53580560,BlogCommendFromBaidu_40"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/u014180259/article/details/53580560,BlogCommendFromBaidu_40"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/u014180259/article/details/53580560" target="_blank" title="sklearn简介 - minning的博客">
+				<h4 class="text-truncate oneline">
+						sklearn简介 - minning的博客				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/7/6/3/3_u014180259.jpg" alt="u014180259" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">u014180259</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">12-12</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							1.8万</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/u014180259/article/details/53580560" target="_blank" title="sklearn简介 - minning的博客">
+							<span class="desc oneline">sklearn是机器学习中一个常用的python第三方模块，网址：http://scikit-learn.org/stable/index.html ，里面对一些常用的机器学习方法进行了封装，在进行机...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/u014180259">来自：	<span class="blog_title"> minning的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/ACdreamers/article/details/44657439,BlogCommendFromBaidu_41"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/ACdreamers/article/details/44657439,BlogCommendFromBaidu_41"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/ACdreamers/article/details/44657439" target="_blank" title="BP神经网络 - ACdreamer">
+				<h4 class="text-truncate oneline">
+						BP神经网络 - ACdreamer				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/D/D/6/3_acdreamers.jpg" alt="ACdreamers" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">ACdreamers</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">03-26</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							14.2万</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/ACdreamers/article/details/44657439" target="_blank" title="BP神经网络 - ACdreamer">
+							<span class="desc oneline">今天来讲BP神经网络，神经网络在机器学习中应用比较广泛，比如函数逼近，模式识别，分类，数据压缩，数据
+挖掘等领域。接下来介绍BP神经网络的原理及实现。
+ 
+Contents
+ 
+  1. BP神经网络...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/ACdreamers">来自：	<span class="blog_title"> ACdreamer</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/liulingyuan6/article/details/53423967,BlogCommendFromQuerySearch_42"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/liulingyuan6/article/details/53423967,BlogCommendFromQuerySearch_42"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/liulingyuan6/article/details/53423967" target="_blank" title="决策树算法原理及Spark MLlib调用实例（Scala/Java/python） - liulingyuan6的博客">
+				<h4 class="text-truncate oneline">
+						<em>决策树</em>算法<em>原理</em>及Spark MLlib调用<em>实例</em>（Scala/Java/<em>python</em>） - liulingyuan6的博客				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/4/3/5/3_liulingyuan6.jpg" alt="liulingyuan6" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">liulingyuan6</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">12-01</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							4110</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/liulingyuan6/article/details/53423967" target="_blank" title="决策树算法原理及Spark MLlib调用实例（Scala/Java/python） - liulingyuan6的博客">
+							<span class="desc oneline">决策树
+算法介绍：
+        决策树以及其集成算法是机器学习分类和回归问题中非常流行的算法。因其易解释性、可处理类别特征、易扩展到多分类问题、不需特征缩放等性质被广泛使用。树集成算法如随机森林以...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/liulingyuan6">来自：	<span class="blog_title"> liulingyuan6的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    <div class="recommend-item-box recommend-ad-box"><div id="kp_box_653" data-pid="67" data-track-view='{"mod":"kp_popu_653","con":",,"}'><div id="three_ad43" class="mediav_ad" ></div>
+<script>
+                                               NEWS_FEED({
+                w: 900,
+                h : 84,
+                showid : 'GNKXx7',
+                placeholderId: "three_ad43",
+                inject : 'define',
+                define : {
+                    imagePosition : 'left',
+                    imageBorderRadius : 3,
+                    imageWidth: 90,
+                    imageHeight: 60,
+                    imageFill : 'clip',
+                    displayImage : true,
+                    displayTitle : true,
+                    titleFontSize: 16,
+                    titleFontColor: '#000',
+                    titleFontFamily : 'Microsoft Yahei',
+                    titleFontWeight: 'bold',
+                    titlePaddingTop : 0,
+                    titlePaddingRight : 0,
+                    titlePaddingBottom : 5,
+                    titlePaddingLeft : 16,
+                    displayDesc : true,
+                    descFontSize: 12,
+                    descFontColor: '#8e959a',
+                    descFontFamily : 'Microsoft Yahei',
+                    paddingTop : 10,
+                    paddingRight : 0,
+                    paddingBottom : 0,
+                    paddingLeft : 0,
+                    backgroundColor: '#fff',
+                    hoverColor: '#000'
+                      }
+                  })
+                                        </script></div><script>$(function(){csdn.track.viewCheck($("#kp_box_653"));});</script></div>
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/rongrongyaofeiqi/article/details/52872957,BlogCommendFromQuerySearch_43"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/rongrongyaofeiqi/article/details/52872957,BlogCommendFromQuerySearch_43"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/rongrongyaofeiqi/article/details/52872957" target="_blank" title="决策树之鸢尾花卉实例解析 - rongrongyaofeiqi的博客">
+				<h4 class="text-truncate oneline">
+						<em>决策树</em>之鸢尾花卉<em>实例</em>解析 - rongrongyaofeiqi的博客				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/B/A/C/3_rongrongyaofeiqi.jpg" alt="rongrongyaofeiqi" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">rongrongyaofeiqi</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">10-20</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							4808</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/rongrongyaofeiqi/article/details/52872957" target="_blank" title="决策树之鸢尾花卉实例解析 - rongrongyaofeiqi的博客">
+							<span class="desc oneline">以sklearn数据集中的鸢尾花卉Iris数据集为例，解析决策树。</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/rongrongyaofeiqi">来自：	<span class="blog_title"> rongrongyaofeiqi的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/t15600624671/article/details/78895267,BlogCommendFromQuerySearch_44"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/t15600624671/article/details/78895267,BlogCommendFromQuerySearch_44"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/t15600624671/article/details/78895267" target="_blank" title="决策树的先剪枝和后剪枝 - t15600624671的博客">
+				<h4 class="text-truncate oneline">
+						<em>决策树</em>的先剪枝和后剪枝 - t15600624671的博客				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/7/B/4/3_t15600624671.jpg" alt="t15600624671" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">t15600624671</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">12-25</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							2976</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/t15600624671/article/details/78895267" target="_blank" title="决策树的先剪枝和后剪枝 - t15600624671的博客">
+							<span class="desc oneline">转载自：http://blog.csdn.net/u014697805/article/details/78636135 
+https://www.jianshu.com/p/794d08199e5e...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/t15600624671">来自：	<span class="blog_title"> t15600624671的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/yunqishequ1/article/details/76618354,BlogCommendFromQuerySearch_45"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/yunqishequ1/article/details/76618354,BlogCommendFromQuerySearch_45"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/yunqishequ1/article/details/76618354" target="_blank" title="干货｜从决策树到随机森林：树型算法的实现原理与Python 示例 - yunqishequ1的博客">
+				<h4 class="text-truncate oneline">
+						干货｜从<em>决策树</em>到随机森林：树型算法的实现<em>原理</em>与<em>Python</em> 示例 - yunqishequ1的博客				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/8/8/C/3_yunqishequ1.jpg" alt="yunqishequ1" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">yunqishequ1</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">08-03</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							2227</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/yunqishequ1/article/details/76618354" target="_blank" title="干货｜从决策树到随机森林：树型算法的实现原理与Python 示例 - yunqishequ1的博客">
+							<span class="desc oneline">原文地址
+
+
+基于树（Tree based）的学习算法在数据科学竞赛中是相当常见的。这些算法给预测模型赋予了准确性、稳定性以及易解释性。和线性模型不同，它们对非线性关系也能进行很好的映射。常见的...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/yunqishequ1">来自：	<span class="blog_title"> yunqishequ1的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    			<div class="recommend-item-box recommend-box-ident recommend-download-box clearfix" data-track-view='{"mod":"popu_614","con":",https://download.csdn.net/download/icefire_tyh/9739055,BlogCommendFromQuerySearch_46"}' data-track-click='{"mod":"popu_614","con":",https://download.csdn.net/download/icefire_tyh/9739055,BlogCommendFromQuerySearch_46"}'>
+			<a href="https://download.csdn.net/download/icefire_tyh/9739055" target="_blank">
+				<div class="content">
+					<div class="">
+						<span class="type">下载</span>
+						<h4 class="text-truncate oneline clearfix">
+							<em>python</em><em>决策树</em>代码 - 四去六进一						</h4>
+						<span class="data float-right">01-16</span>
+					</div>
+					<div class="desc oneline">
+							python决策树代码					</div>
+				</div>
+			</a>
+		</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/u014801811/article/details/79076634,BlogCommendFromBaidu_47"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/u014801811/article/details/79076634,BlogCommendFromBaidu_47"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/u014801811/article/details/79076634" target="_blank" title="python实现决策树算法 - RSon的学习笔记">
+				<h4 class="text-truncate oneline">
+						<em>python</em>实现<em>决策树</em>算法 - RSon的学习笔记				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/4/8/1/3_u014801811.jpg" alt="u014801811" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">u014801811</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">01-17</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							912</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/u014801811/article/details/79076634" target="_blank" title="python实现决策树算法 - RSon的学习笔记">
+							<span class="desc oneline">python实现决策树算法
+
+摘要：本文首先对决策树算法进行简单介绍，然后利用python一步步构造决策树，并通过matplotlib工具包直观的绘制树形图，最后在数据集对算法进行测试。
+
+关键词：机...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/u014801811">来自：	<span class="blog_title"> RSon的学习笔记</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    <div class="recommend-item-box recommend-ad-box"><div id="kp_box_654" data-pid="68" data-track-view='{"mod":"kp_popu_654","con":",,"}'><div id="three_ad48" class="mediav_ad" ></div>
+<script>
+                                               NEWS_FEED({
+                w: 900,
+                h : 84,
+                showid : 'Afihld',
+                placeholderId: "three_ad48",
+                inject : 'define',
+                define : {
+                    imagePosition : 'left',
+                    imageBorderRadius : 3,
+                    imageWidth: 90,
+                    imageHeight: 60,
+                    imageFill : 'clip',
+                    displayImage : true,
+                    displayTitle : true,
+                    titleFontSize: 16,
+                    titleFontColor: '#000',
+                    titleFontFamily : 'Microsoft Yahei',
+                    titleFontWeight: 'bold',
+                    titlePaddingTop : 0,
+                    titlePaddingRight : 0,
+                    titlePaddingBottom : 5,
+                    titlePaddingLeft : 16,
+                    displayDesc : true,
+                    descFontSize: 12,
+                    descFontColor: '#8e959a',
+                    descFontFamily : 'Microsoft Yahei',
+                    paddingTop : 10,
+                    paddingRight : 0,
+                    paddingBottom : 0,
+                    paddingLeft : 0,
+                    backgroundColor: '#fff',
+                    hoverColor: '#000'
+                      }
+                  })
+                                        </script></div><script>$(function(){csdn.track.viewCheck($("#kp_box_654"));});</script></div>
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_614","con":",https://blog.csdn.net/u011197534/article/details/52749325,BlogCommendFromBaidu_48"}' data-track-click='{"mod":"popu_614","con":",https://blog.csdn.net/u011197534/article/details/52749325,BlogCommendFromBaidu_48"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/u011197534/article/details/52749325" target="_blank" title="决策树的Python实现 - Summit的专栏">
+				<h4 class="text-truncate oneline">
+						<em>决策树</em>的<em>Python</em>实现 - Summit的专栏				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/B/7/8/3_u011197534.jpg" alt="u011197534" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">u011197534</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">10-07</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							2647</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/u011197534/article/details/52749325" target="_blank" title="决策树的Python实现 - Summit的专栏">
+							<span class="desc oneline">决策树的Python实现决策树理解　　 
+　　最近研读《机器学习实战》这本书，一方面想深入学习一下机器学习的思想，因为之前使用过一些机器学习方法在图像或者字符识别分类方面，但是使用的大多是OpenCV...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/u011197534">来自：	<span class="blog_title"> Summit的专栏</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    			<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_713","con":",http://union.dangdang.com/transfer.php?from=P-338253&ad_type=10&sys_id=1&backurl=http://product.dangdang.com/25216230.html,-"}' data-track-click='{"mod":"popu_713","con":",http://union.dangdang.com/transfer.php?from=P-338253&ad_type=10&sys_id=1&backurl=http://product.dangdang.com/25216230.html,-"}'>
+				<div class="content">
+					<a href="http://union.dangdang.com/transfer.php?from=P-338253&ad_type=10&sys_id=1&backurl=http://product.dangdang.com/25216230.html" target="_blank" title="Head First Python(第二版)">
+					<h4 class="text-truncate oneline">
+							Head First <em>Python</em>(第二版)					</h4>
+					<div class="info-box d-flex align-content-center">
+						<p class="date-and-readNum">
+							<span class="date hover-show">09-10</span>
+							</p>
+						</div>
+					</a>
+						<p class="content">
+							<a href="http://union.dangdang.com/transfer.php?from=P-338253&ad_type=10&sys_id=1&backurl=http://product.dangdang.com/25216230.html" target="_blank" title="Head First Python(第二版)">
+								<span class="desc oneline">你是不是想学习Python语言但又不想那么费劲地翻阅手册？利用这本《Head First Python（第二版）》，你能很快掌握Python的基础知识，并处理内置数据结构和函数。接下来你将构建你自己的Web应用，研究数据库管理、异常处理，...</span>
+							</a>
+						</p>
+				</div>
+										<div class="img-box float-left">
+							<img src="https://img-dm.csdnimg.cn/dangdang/25216230.jpg" alt="">
+					</div>
+						</div>
+	
+    
+	
+    
+    
+
+            <div class="recommend-loading-box">
+                <img src='https://csdnimg.cn/release/phoenix/images/feedLoading.gif'>
+            </div>
+            <div class="recommend-end-box">
+                <p class="text-center">没有更多推荐了，<a href="https://blog.csdn.net/" class="c-blue c-blue-hover c-blue-focus">返回首页</a></p>
+            </div>
+        </div>
+    </main>
+
+    <aside>
+		    <div id="asideProfile" class="aside-box">
+    <!-- <h3 class="aside-title">个人资料</h3> -->
+    <div class="profile-intro d-flex">
+        <div class="avatar-box d-flex justify-content-center flex-column">
+            <a href="https://blog.csdn.net/csqazwsxedc">
+                <img src="https://avatar.csdn.net/C/D/5/3_csqazwsxedc.jpg" class="avatar_pic">
+            </a>
+        </div>
+        <div class="user-info d-flex justify-content-center flex-column">
+            <p class="name csdn-tracking-statistics tracking-click" data-mod="popu_379">
+                <a href="https://blog.csdn.net/csqazwsxedc" target="_blank" class="" id="uid">a_achengsong</a>
+            </p>
+                    </div>
+                <div class="opt-box d-flex justify-content-center flex-column">
+            <span  class="csdn-tracking-statistics tracking-click" data-mod="popu_379">
+                <a class="btn btn-sm btn-red-hollow attention" id="btnAttent">关注</a>
+            </span>
+                    </div>
+            </div>
+    <div class="data-info d-flex item-tiling">
+                <dl class="text-center" title="23">
+                        <dt><a href="https://blog.csdn.net/csqazwsxedc?t=1">原创</a></dt>
+            <dd><a href="https://blog.csdn.net/csqazwsxedc?t=1"><span class="count">23</span></a></dd>
+                    </dl>
+        <dl class="text-center" id="fanBox" title="242">
+            <dt>粉丝</dt>
+            <dd><span class="count" id="fan">242</span></dd>
+        </dl>
+        <dl class="text-center" title="78">
+            <dt>喜欢</dt>
+            <dd><span class="count">78</span></dd>
+        </dl>
+        <dl class="text-center" title="157">
+            <dt>评论</dt>
+            <dd><span class="count">157</span></dd>
+        </dl>
+    </div>
+    <div class="grade-box clearfix">
+        <dl>
+            <dt>等级：</dt>
+            <dd>
+                <a href="https://blog.csdn.net/home/help.html#level" title="5级,点击查看等级说明" target="_blank">
+                    <svg class="icon icon-level" aria-hidden="true">
+                        <use xlink:href="#csdnc-bloglevel-5"></use>
+                    </svg>
+                </a>
+            </dd>
+        </dl>
+        <dl>
+            <dt>访问：</dt>
+            <dd title="313792">
+                31万+            </dd>
+        </dl>
+        <dl>
+            <dt>积分：</dt>
+            <dd title="2258">
+                2258            </dd>
+        </dl>
+        <dl title="24019">
+            <dt>排名：</dt>
+            <dd>2万+</dd>
+        </dl>
+    </div>
+    </div>
+		    <div class="csdn-tracking-statistics mb8 box-shadow" data-pid="blog" data-mod="popu_4" style="height:250px;">
+    <div class="aside-content text-center" id="cpro_u2734133">
+      <div id="kp_box_76" data-pid="56" data-track-view='{"mod":"kp_popu_76","con":",,"}'><script type="text/javascript" src="//rabc1.iteye.com/source/openjs/api/mbxf4.js?b=wocoltly"></script></div><script>$(function(){csdn.track.viewCheck($("#kp_box_76"));});</script>    </div>
+</div>
+		    <div id="asideNewArticle" class="aside-box">
+    <h3 class="aside-title">最新文章</h3>
+    <div class="aside-content">
+        <ul class="inf_list clearfix csdn-tracking-statistics tracking-click" data-mod="popu_382">
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/csqazwsxedc/article/details/79321833" target="_blank">爬虫--爬取csdn消息并邮箱通知（python3）</a>
+            </li>
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/csqazwsxedc/article/details/79209887" target="_blank">本人联系方式</a>
+            </li>
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/csqazwsxedc/article/details/72354206" target="_blank">bagging和boosting(python代码实现)</a>
+            </li>
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/csqazwsxedc/article/details/71513197" target="_blank">支持向量机SVM通俗理解（python代码实现）</a>
+            </li>
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/csqazwsxedc/article/details/69690655" target="_blank">逻辑回归原理（python代码实现）</a>
+            </li>
+                    </ul>
+    </div>
+</div>
+		    		    <div id="asideCategory" class="aside-box">
+    <h3 class="aside-title">个人分类</h3>
+    <div class="aside-content">
+        <ul>
+                        <li>
+                <a class="clearfix" href="https://blog.csdn.net/csqazwsxedc/article/category/6330774">
+                    <span class="title oneline">数据挖掘实战应用</span>
+                    <span class="count float-right">4篇</span>
+                </a>
+            </li>
+                        <li>
+                <a class="clearfix" href="https://blog.csdn.net/csqazwsxedc/article/category/6330779">
+                    <span class="title oneline">kaggle数据挖掘</span>
+                    <span class="count float-right">5篇</span>
+                </a>
+            </li>
+                        <li>
+                <a class="clearfix" href="https://blog.csdn.net/csqazwsxedc/article/category/6376675">
+                    <span class="title oneline">数据挖掘</span>
+                    <span class="count float-right">12篇</span>
+                </a>
+            </li>
+                        <li>
+                <a class="clearfix" href="https://blog.csdn.net/csqazwsxedc/article/category/6757743">
+                    <span class="title oneline">python</span>
+                    <span class="count float-right">10篇</span>
+                </a>
+            </li>
+                    </ul>
+    </div>
+    </div>
+		    <div id="asideArchive" class="aside-box flexible-box">
+    <h3 class="aside-title">归档</h3>
+    <div class="aside-content">
+        <ul class="archive-list">
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/csqazwsxedc/article/month/2018/02">
+                    2018年2月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/csqazwsxedc/article/month/2018/01">
+                    2018年1月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/csqazwsxedc/article/month/2017/05">
+                    2017年5月                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/csqazwsxedc/article/month/2017/04">
+                    2017年4月                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/csqazwsxedc/article/month/2017/03">
+                    2017年3月                    <span class="count float-right">5篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/csqazwsxedc/article/month/2016/08">
+                    2016年8月                    <span class="count float-right">4篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/csqazwsxedc/article/month/2016/07">
+                    2016年7月                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/csqazwsxedc/article/month/2016/06">
+                    2016年6月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/csqazwsxedc/article/month/2016/05">
+                    2016年5月                    <span class="count float-right">7篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/csqazwsxedc/article/month/2016/04">
+                    2016年4月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                    </ul>
+    </div>
+        <p class="text-center">
+        <a class="btn btn-link-blue flexible-btn" data-fbox="aside-archive">展开</a>
+    </p>
+    </div>
+		    <div id="asideHotArticle" class="aside-box">
+	<h3 class="aside-title">热门文章</h3>
+	<div class="aside-content">
+		<ul class="hotArticle-list csdn-tracking-statistics tracking-click" data-mod="popu_521">
+							<li>
+					<a href="https://blog.csdn.net/csqazwsxedc/article/details/51225156">信用卡评分模型（R语言）</a>
+					<p class="read">阅读量：<span>65652</span></p>
+				</li>
+							<li>
+					<a href="https://blog.csdn.net/csqazwsxedc/article/details/68498842">5分钟，6行代码教你写爬虫！（python）</a>
+					<p class="read">阅读量：<span>44798</span></p>
+				</li>
+							<li>
+					<a href="https://blog.csdn.net/csqazwsxedc/article/details/52230092">支持向量机SVM算法原理及应用（R）</a>
+					<p class="read">阅读量：<span>24229</span></p>
+				</li>
+							<li>
+					<a href="https://blog.csdn.net/csqazwsxedc/article/details/65697652">决策树原理实例（python代码实现）</a>
+					<p class="read">阅读量：<span>22722</span></p>
+				</li>
+							<li>
+					<a href="https://blog.csdn.net/csqazwsxedc/article/details/52225759">K-means算法原理以及应用（R）</a>
+					<p class="read">阅读量：<span>18029</span></p>
+				</li>
+					</ul>
+	</div>
+</div>
+		    <div id="asideNewComments" class="aside-box">
+    <h3 class="aside-title">最新评论</h3>
+    <div class="aside-content">
+        <ul class="newcomment-list">
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/csqazwsxedc/article/details/69690655#comments">逻辑回归原理（python代码实现）</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/studyaenjoy" class="user-name" target="_blank">studyaenjoy</a>：[reply]csqazwsxedc[/reply]
+不好意思啊，最近一直用手机登录，也没找到查看...                </p>
+            </li>
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/csqazwsxedc/article/details/79321833#comments">爬虫--爬取csdn消息并邮箱通知...</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/qq_43281792" class="user-name" target="_blank">qq_43281792</a>：可以写成爬取你的博客更新发到我邮箱吗                </p>
+            </li>
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/csqazwsxedc/article/details/71513197#comments">支持向量机SVM通俗理解（pyth...</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/binbigdata" class="user-name" target="_blank">binbigdata</a>：你好，怎么出现了编码解码的问题？UnicodeDecodeError: 'utf-8' codec...                </p>
+            </li>
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/csqazwsxedc/article/details/71513197#comments">支持向量机SVM通俗理解（pyth...</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/qq_27099569" class="user-name" target="_blank">qq_27099569</a>：[reply]weixin_40637594[/reply]
+数据文件的第一行去掉，那是属性说明                </p>
+            </li>
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/csqazwsxedc/article/details/71513197#comments">支持向量机SVM通俗理解（pyth...</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/qq_27099569" class="user-name" target="_blank">qq_27099569</a>：[reply]yalier_68[/reply]
+记得把csv第一行删掉                </p>
+            </li>
+                    </ul>
+    </div>
+</div>
+		<div id="asideFooter">
+			
+		<div class="aside-box">
+			<div id="kp_box_77" data-pid="57" data-track-view='{"mod":"kp_popu_77","con":",,"}'><script type="text/javascript" src="//rabc1.iteye.com/common/web/site/9i6gu.js?av=neunkwb"></script></div><script>$(function(){csdn.track.viewCheck($("#kp_box_77"));});</script>		</div>
+				<div class="aside-box">
+			<div class="persion_article">
+			</div>
+		</div>
+	</div>
+</aside>
+<script src="https://csdnimg.cn/pubfooter/js/publib_footer-1.0.3.js" data-isfootertrack="false" type="text/javascript"></script>
+<script>
+	$("a.flexible-btn").click(function(){
+		$(this).parents('div.aside-box').removeClass('flexible-box');
+		$(this).remove();
+	})
+</script>
+</div>
+<div class="mask-dark"></div>
+<div class="pulllog-box" style="display: block;">
+	<div class="pulllog clearfix">
+		<span class="text float-left">
+            <div id="dmp_ad_69"><div id="kp_box_75" data-pid="69" data-track-view='{"mod":"kp_popu_75","con":",,"}'><div style="float:left;margin-right:5px;border:1px solid #f13d3d;padding:2px 5px 0px 5px;">
+<a href="https://www.csdn.net/2018dev/?utm_source=blogtextlink" target="_blank" style="color:#f13d3d;font-weight:bold;text-decoration:none;font-size:15px;">开发者调查</a>
+</div>
+
+<div style="float:left;margin-right:5px;border:1px solid #000;padding:2px 5px 0px 5px;background:#000;">
+<a href="https://edu.csdn.net/topic/python115?utm_source=ditong1" target="_blank" style="color:#fff;font-weight:bold;text-decoration:none;font-size:15px;">Python学习路线！</a>
+</div>
+
+<div style="float:left;margin-right:5px;border:1px solid #f13d3d;padding:2px 5px 0px 5px;">
+<a href="https://microsoft-smb.cn/office365knj/home.html?code=58D0290D" target="_blank" style="color:#f13d3d;font-weight:bold;text-decoration:none;font-size:15px;">Office 365商业协作版  5折钜惠！ </a>
+</div>
+
+<div style="float:left;">
+<script type="text/javascript" src="//rabc1.iteye.com/common/js/ndr3h.js?b=wosyvccl"></script>
+</div></div><script>$(function(){csdn.track.viewCheck($("#kp_box_75"));});</script></div>            		</span>
+		<div class="pulllog-btn float-right clearfix">
+            <div class="float-left csdn-tracking-statistics tracking-click" data-mod="popu_557">
+                <a class="pulllog-login">登录</a>
+            </div>
+            <div class="pulllog-sigin float-left csdn-tracking-statistics tracking-click" data-mod="popu_558">
+                <a href="https://passport.csdn.net/account/mobileregister" target="_blank">注册</a>
+            </div>
+            <button class="btn-close">
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#csdnc-times"></use>
+                </svg>
+            </button>
+		</div>
+	</div>
+</div>
+<div id="loginWrap" style="display:none"></div>
+<div class="tool-box">
+	<ul class="meau-list">
+		<li class="btn-like-box long-width">
+			<button class=" long-height hover-box btn-like " title="点赞">
+				<svg class="icon active hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-thumbsup-ok"></use>
+				</svg>
+				<svg class="icon no-active hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-thumbsup"></use>
+				</svg>
+				<span class="hover-show text-box text">
+					<span class="no-active">点赞</span>
+					<span class="active">取消点赞</span>
+				</span>
+				<p>15</p>
+			</button>
+		</li>
+		<li class="">
+						<a class="btn-comments long-height hover-box" title="写评论" href="#commentBox">
+				<svg class="icon hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-comments"></use>
+				</svg>
+				<span class="hover-show text">评论</span>
+				<p class="">
+						3				</p>
+			</a>
+		</li>
+		<li class="toc-container-box" id="liTocBox">
+			<button class="btn-toc low-height hover-box" title="目录">
+				<svg class="icon hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-contents"></use>
+				</svg>
+				<span class="hover-show text">目录</span>
+			</button>
+			<div class="toc-container">
+				<div class="pos-box">
+					<div class="icon-arrow"></div>
+					<div class="scroll-box">
+						<div class="toc-box"></div>
+					</div>
+				</div>
+				<div class="opt-box">
+					<button class="btn-opt prev nomore" title="向上">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#csdnc-chevronup"></use>
+						</svg>
+					</button>
+					<button class="btn-opt next">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#csdnc-chevrondown"></use>
+						</svg>
+					</button>
+				</div>
+			</div>
+		</li>
+		<li>
+			<button class="btn-bookmark low-height hover-box" title="收藏">
+				<svg class="icon active hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-bookmark-ok"></use>
+				</svg>
+				<svg class="icon no-active hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-bookmark"></use>
+				</svg>
+					<span class="hover-show text">收藏</span>
+				<!-- <span class="hover-show text-box text">
+					<span class="no-active">收藏</span>
+					<span class="active">取消收藏</span>
+				</span> -->
+			</button>
+		</li>
+				<li class="bdsharebuttonbox">
+			<button class="btn-comments low-height hover-box" >
+				<a href="#" class="bds_weixin clear-share-style" data-cmd="weixin" title="手机看"></a>
+				<svg class="icon hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-usephone"></use>
+				</svg>
+				<span class="hover-show text text3">
+					手机看
+				</span>
+			</button>
+		</li>
+							<li class="widescreen-hide">
+				<a class="btn-comments low-height hover-box" href="https://blog.csdn.net/csqazwsxedc/article/details/62069933" title="KNN算法原理（python代码实现）">
+					<svg class="icon hover-hide" aria-hidden="true">
+						<use xlink:href="#csdnc-chevronleft"></use>
+					</svg>
+					<span class="hover-show text text3">上一篇</span>
+				</a>
+			</li>
+								<li class="widescreen-hide">
+			<a class="btn-comments hover-box low-height" href="https://blog.csdn.net/csqazwsxedc/article/details/68498842" title="5分钟，6行代码教你写爬虫！（python）">
+				<svg class="icon hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-chevronright"></use>
+				</svg>
+				<span class="hover-show text text3">下一篇</span>
+			</a>
+		</li>
+				<li class="bdsharebuttonbox _360_interactive"style="margin-top: 8px;"><div id="kp_box_97" data-pid="73" data-track-view='{"mod":"kp_popu_97","con":",,"}'><script type="text/javascript" src="//cjhd.mediav.com/js/interactive_plugin.js"></script> 
+			<style>
+				#_360_interactive > *{
+					 margin-left: -8px;
+				}
+			</style>
+			<div id="_360_interactive" > 
+				<script> INTERACTIVE_PLUGIN.render({ showid : 'N0ufqn', w: 60, h: 60, type: 'click', placeholderId: '_360_interactive' }); </script> 
+			</div>
+			<img src="//img-ads.csdn.net/2016/201608021757063065.png" style="margin: 0 auto;display: block;" alt=""></div><script>$(function(){csdn.track.viewCheck($("#kp_box_97"));});</script></li>		<!-- 宽屏更多按钮 -->
+		<li class="widescreen-more">
+			<a class="btn-comments chat-ask-button low-height hover-box" title="快问" href="#chatqa">
+				<svg class="icon hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-more"></use>
+				</svg>
+				<span class="hover-show text">更多</span>
+				
+			</a>
+			<ul class="widescreen-more-box">
+													<li class="widescreen-more">
+						<a class="btn-comments low-height hover-box" href="https://blog.csdn.net/csqazwsxedc/article/details/62069933" title="KNN算法原理（python代码实现）">
+							<svg class="icon hover-hide" aria-hidden="true">
+								<use xlink:href="#csdnc-chevronleft"></use>
+							</svg>
+							<span class="hover-show text text3">上一篇</span>
+						</a>
+					</li>
+																<li class="widescreen-more">
+					<a class="btn-comments hover-box low-height" href="https://blog.csdn.net/csqazwsxedc/article/details/68498842" title="5分钟，6行代码教你写爬虫！（python）">
+						<svg class="icon hover-hide" aria-hidden="true">
+							<use xlink:href="#csdnc-chevronright"></use>
+						</svg>
+						<span class="hover-show text text3">下一篇</span>
+					</a>
+				</li>
+							</ul>
+		</li>
+	</ul>
+</div>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'https://csdnimg.cn/static/api/js/share.js?v=89860594'];</script>
+<script>
+    var recommendCount = 50;
+    recommendCount = recommendCount > 1 ? (recommendCount + (recommendCount>6 ? 2 : 1)) : recommendCount;
+    var articleTit = articleTitles;
+    var ChannelId = 7;
+    var articleId = "65697652";
+    var commentscount = 3;
+    var islock = false;
+    var curentUrl = "https://blog.csdn.net/csqazwsxedc/article/details/65697652";
+    var myUrl = "https://my.csdn.net/";
+    //1禁止评论，2正常
+    var commentAuth = 2;
+    //百度搜索
+    var baiduKey = "%E5%86%B3%E7%AD%96%E6%A0%91python";
+    var needInsertBaidu = false;
+    // 代码段样式
+    var codeStyle = '';
+		var highlight = ["\u51b3\u7b56\u6811","\u539f\u7406","\u5b9e\u4f8b","python","\u4ee3\u7801\u5b9e\u73b0"];//高亮数组
+		// 相关推荐博主数据
+    var RecommendBlogExpertList = [{"user_name":"csharp25","nick_name":"_iorilan","avatar":"https:\/\/avatar.csdn.net\/E\/C\/C\/3_csharp25.jpg","is_expert":true,"article_count":1094},{"user_name":"lipengcn","nick_name":"TangowL","avatar":"https:\/\/avatar.csdn.net\/1\/5\/A\/3_lipengcn.jpg","is_expert":true,"article_count":110},{"user_name":"xietingcandice","nick_name":"candice\u5ef7","avatar":"https:\/\/avatar.csdn.net\/3\/A\/7\/3_xietingcandice.jpg","is_expert":false,"article_count":258},{"user_name":"Recall_Tomorrow","nick_name":"\u8fdb\u6b65\u4e00\u9ede\u9ede","avatar":"https:\/\/avatar.csdn.net\/2\/2\/2\/3_recall_tomorrow.jpg","is_expert":false,"article_count":57},{"user_name":"liulingyuan6","nick_name":"liulingyuan6","avatar":"https:\/\/avatar.csdn.net\/4\/3\/5\/3_liulingyuan6.jpg","is_expert":false,"article_count":35},{"user_name":"rongrongyaofeiqi","nick_name":"rongrongyaofeiqi","avatar":"https:\/\/avatar.csdn.net\/B\/A\/C\/3_rongrongyaofeiqi.jpg","is_expert":false,"article_count":33},{"user_name":"t15600624671","nick_name":"t156xxxx4671","avatar":"https:\/\/avatar.csdn.net\/7\/B\/4\/3_t15600624671.jpg","is_expert":false,"article_count":34},{"user_name":"yunqishequ1","nick_name":"\u4e91\u6816\u7cbe\u9009","avatar":"https:\/\/avatar.csdn.net\/8\/8\/C\/3_yunqishequ1.jpg","is_expert":false,"article_count":1490},{"user_name":"WiseDoge","nick_name":"WiseDoge","avatar":"https:\/\/avatar.csdn.net\/4\/D\/9\/3_wisedoge.jpg","is_expert":false,"article_count":80},{"user_name":"wenyusuran","nick_name":"\u6587\u5b87\u8083\u7136","avatar":"https:\/\/avatar.csdn.net\/B\/F\/3\/3_wenyusuran.jpg","is_expert":false,"article_count":644}];
+
+		var articleType = 1;
+		var CopyrightContent = '本文为博主原创文章，转载请注明来源。';
+</script>
+<script src="https://csdnimg.cn/public/sandalstrap/1.4/js/sandalstrap.min.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/vendor/pagination/paging.js"></script>
+<script src='https://csdnimg.cn/public/common/gotop/js/goTop-v1.0.min.js?v201803151422'></script>
+<script>
+    GoTop({
+        right: 8,
+        hasReport: true,
+        reportFun: function() {
+            showReport(false,articleTit);
+        }
+    })
+</script>
+<script src="https://g.csdnimg.cn/login-box/1.0.1/login-box.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/template/js/common-946dc75567.min.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/template/js/detail-38cf86a5ac.min.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/themes/skin-yellow/skin-yellow-9376486353.min.js"></script>
+<script src="//g.csdnimg.cn/fixed-sidebar/1.0.6/fixed-sidebar.js" type="text/javascript"></script>
+<script src="https://csdnimg.cn/search/baidu_search-1.1.2.js?v=201802071056&autorun=true&install=true&keyword=%E5%86%B3%E7%AD%96%E6%A0%91python"  type="text/javascript"></script>
+</body>
+
+<!-- 右侧第四栏 -->
+<div class="fourth_column">
+	<div class="title-box">
+		<b class="title">猿学习</b>
+		<span class="fourth_column_close">    
+			<svg class="icon" aria-hidden="true">
+				<use xlink:href="#csdnc-times"></use>
+			</svg>
+		</span>
+		
+	</div>
+	<ul class="">
+		<li><div id="kp_box_638" data-pid="456" data-track-view='{"mod":"kp_popu_638","con":",,"}'><a href="https://edu.csdn.net/topic/ai30?utm_source=blogright" target="_blank">  <div class="blogkp1"><img src="https://img-ads.csdn.net/2018/201811070940425306.png"width="100" height="100"><h6>人工智能工程师免费试听</h6></div></a></div><script>$(function(){csdn.track.viewCheck($("#kp_box_638"));});</script></li>		<li><div id="kp_box_639" data-pid="457" data-track-view='{"mod":"kp_popu_639","con":",,"}'><a href="https://edu.csdn.net/topic/python115?utm_source=blogright" target="_blank"><div class="blogkp2"><img src="https://img-ads.csdn.net/2018/201811070945058586.png"width="100" height="100"><h6>Python全栈工程师免费试听</h6>
+    </div></a></div><script>$(function(){csdn.track.viewCheck($("#kp_box_639"));});</script></li>		<li><div id="kp_box_640" data-pid="458" data-track-view='{"mod":"kp_popu_640","con":",,"}'><a href="https://gitchat.csdn.net/column/5a7d1a13a7f22b3dffca7e49?utm_source=csdn100" target="_blank"><div class="blogkp3"><img src="http://img-ads.csdn.net/2018/201811091452349556.png"width="100" height="100"><h6>Python 爬虫和数据分析实战</h6><span style="position:absolute;right:0;bottom:0;background:url(https://img-ads.csdn.net/2016/201608021757063065.png) no-repeat;width:33px;height:18px;display:block;z-index: 9999;"></span></div></a></div><script>$(function(){csdn.track.viewCheck($("#kp_box_640"));});</script></li>		<li><div id="kp_box_655" data-pid="459" data-track-view='{"mod":"kp_popu_655","con":",,"}'><a href="https://edu.csdn.net/topic/ai30?utm_source=blogright" target="_blank"><div class="blogkp3"><img src="https://img-ads.csdn.net/2018/201811091258589141.png"width="100" height="100"><h6>人工智能工程师 </h6><span style="position:absolute;right:0;bottom:0;background:url(https://img-ads.csdn.net/2016/201608021757063065.png) no-repeat;width:33px;height:18px;display:block;z-index: 9999;"></span></div></a></div><script>$(function(){csdn.track.viewCheck($("#kp_box_655"));});</script></li>	</ul>
+</div>
+<script type="text/javascript">
+	$('.fourth_column_close').click(function(){
+		$('.fourth_column').remove();
+	})
+</script>
+<!-- 右侧第四栏end -->
+<!-- 高亮未与 markdown兼容  -->
+	<script type="text/javascript" src="https://csdnimg.cn/release/phoenix/production/markdownCopy-3e5d9ef4b0.js" /></script>
+
+<script type="text/javascript" src="//g.csdnimg.cn/check-adblock/1.0.9/check-adblock.js"></script>
+
+<script type="text/javascript" src="https://static-blog.csdn.net/mdeditor/public/res/bower-libs/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+            "HTML-CSS": {
+                    linebreaks: { automatic: true, width: "94%container" },
+                    imageFont: null
+            },
+            tex2jax: {
+                preview: "none"
+            },
+            mml2jax: {
+                preview: 'none'
+            }
+    });
+</script>
+</html>

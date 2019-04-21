@@ -1,0 +1,22 @@
+
+在处理货币值计算时，应当坚持使用 decimal 模块
+
+{{{!# python
+>>> from decimal import Decimal
+>>> tax_rate = Decimal('7.25') / Decimal(100) # 前面的7.25是字符串，后面的100是整数
+>>> purchase_amount = Decimal('2.95')
+>>> tax_rate * purchase_amount
+
+Decimal('0.213875')
+
+# 演示如何进行货币舍入
+>>> penny = Decimal('0.01')
+>>> total_amount = purchase_amount + tax_rate * purchase_amount
+>>> total_amount.quantize(penny)
+
+Decimal('3.16')
+
+
+}}} 
+
+注意如果通过浮点数创建 Decimal 对象会得到异常的浮点近似值

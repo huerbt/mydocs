@@ -1,0 +1,17 @@
+
+安装：
+去这里下载
+
+www.vim.org/scripts/script.php?script_id=52
+
+然后把下载解压缩后的三个文件autoload、doc、plugin拷贝到 ~/.vim下
+
+
+然后vim ~/.vimrc
+
+加入下面这句：
+"Calendar
+map <F8> :Calendar<cr>
+
+
+

@@ -1,0 +1,21 @@
+Sphinx-Setup.wiki           Sphinx简介与安装             Oct 9, 2018
+Author: BuJiBuJi HuYi
+Summary:
+        Sphinx是一个 Python 事实上的标准文档生成工具，可以生成各种格式文档如 HTML，PDF 等
+        
+        此文介绍 Sphinx 的安装
+        
+===================================================================
+
+== Content ==
+
+1. 确认系统中安装了 pip3
+    - pip3 --version 
+2. 升级 pip3
+    - pip3 install --upgrade pip
+3. 通过 pip3 安装Sphinx
+    - pip3 install Sphinx
+4. 如果需要文档里的代码高亮可以安装 pygments
+    - pip3 install pygments
+
+安装完成

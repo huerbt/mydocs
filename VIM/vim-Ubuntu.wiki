@@ -1,0 +1,57 @@
+Vim-Ubuntu.wiki                                                                 Oct 7,2018
+Author : BuJiBuJi HuYi
+Summary:
+
+    在 Ubuntu 下安装 Vim，这里需要特别指明 Ubuntu 是在 Docker 容器中创建的，该 Ubuntu 与标准的 Ubuntu 更加精简，所以初始没有 vim 或 vi。关于完整的安装 Docker 以及部署镜像、容器、工具等内容可查看另一篇文章 TODO[ 给出另一篇文章的链接]
+ 
+     Ubuntu 的版本是Ubuntu 18.04.1 LTS \n \l
+
+lastUpDate: Oct 7, 2018
+
+=========================================================================================
+
+== Content ==
+
+I. 安装
+1. 在 Ubuntu 的 bash 命令行中执行如下命令
+    apt-get update  # 使用默认源安装
+    apt-get install -y vim
+    
+    
+II. 路径
+- vim 的所在路径:  /etc/
+- vimrc 文件的所在路径: /etc/vim/  ( 注意在 Ubuntu 里 vimrc 文件不是隐藏文件）
+- .vim 文件夹所在的目录: /etc/vim/
+- .vimrc_vundle 文件所在的目录: /etc/vim/
+
+III. 设置
+1. 获得vimrc文件
+   - 使用 git 克隆我的配置文件
+   git@github.com:huerbt/threeEverthing.git TODO: 待完善，有可能碰到没有 Shh 公钥的问题，我曾解决过这个问题。
+   - 拷贝文件
+        cp /threeEverthing/myConfig/.vimrc /etc/vim/vimrc  （注意目标的 vimrc 不是隐藏文件了）
+        
+2. 修改 vimrc 中的路径
+
+{{{!#vimrc
+
+filetype off
+    set rtp+=/etc/vim/.vim/bundle/Vundle.vim/
+call vundle#rc()
+
+let $CONFIG_DIR = "/etc/vim/"
+
+let $VUNDLE_CONFIG = $CONFIG_DIR.".vimrc_vundle"
+
+if filereadable(expand($VUNDLE_CONFIG))
+    source $VUNDLE_CONFIG
+endif
+
+}}}
+
+3.  修改 vimrc_vundle 中的路径
+{{{!#vimrc_vundle
+
+set rtp+=/etc/vim/.vim/bundle/Vundle.vim
+
+}}}

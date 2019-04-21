@@ -1,0 +1,29 @@
+== 代码折叠==
+vim 自身支持多种折叠：手动建立折叠（manual）、基于缩进进行折叠（indent）、基于语法进行折叠（syntax）、未更改文本构成折叠（diff）等等，其中，indent、syntax 比较适合编程，按需选用。增加如下配置信息：
+
+" 基于缩进或语法进行代码折叠
+"set foldmethod=indent
+set foldmethod=syntax
+" 启动 vim 时关闭折叠代码
+set nofoldenable
+
+操作：za，打开或关闭当前折叠；zM，关闭所有折叠；zR，打开所有折叠
+
+
+== 基于语义的声明/定义跳转==
+
+
+== 内容查找==
+1、在当前文件内查找 用 vim 的 / 命令和 ？
+2、在工程内查找，需要安装 ack 和 ctrls 插件
+你可以想让光标定位在该关键字上面，然后命令模式下键入
+:CtrlSF
+将自动提取光标所在关键字进行查找
+为方便操作，我设定了快捷键：
+
+" 使用 ctrlsf.vim 插件在工程内全局查找光标所在关键字，设置快捷键。快捷键速记法：search in project
+nnoremap <Leader>sp :CtrlSF<CR>
+
+== 内容替换==
+
+

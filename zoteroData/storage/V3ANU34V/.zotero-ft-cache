@@ -1,0 +1,492 @@
+
+
+原
+周志华《机器学习》课后习题解答系列（四）：Ch3.3 - 编程实现对率回归
+2017年03月19日 13:53:42 Snoopy_Yuan 阅读数：6978 标签： 机器学习 对率回归 梯度下降法 python sklearn
+个人分类： 机器学习
+版权声明：本文为博主原创文章，转载时请注明来源。 https://blog.csdn.net/Snoopy_Yuan/article/details/63684219
+
+这里采用 Python-sklearn 的方式，环境搭建可参考 数据挖掘入门：Python开发环境搭建（eclipse-pydev模式） .
+
+相关答案和源代码托管在我的Github上： PY131/Machine-Learning_ZhouZhihua .
+思路概要
+
+编程实现对率回归：
+* 采用 sklearn 逻辑斯蒂回归库函数实现，通过查看混淆矩阵，绘制决策区域来查看模型分类效果；
+* 自己编程实现，从极大化似然函数出发，采用 梯度下降法 得到最优参数，然后尝试了 随机梯度下降法 来优化过程。
+3.3 编程实现对率回归
+
+    这里写图片描述
+
+所使用的数据集如下：
+
+    这里写图片描述
+
+本题是本书的第一个编程练习，采用了自己编程实现和调用sklearn库函数两种不同的方式，详细解答和编码过程：（ 查看完整代码 ）：
+1.获取数据、查看数据、预处理：
+
+观察数据可知，X包含（密度、含糖量）两个变量，y为西瓜是否好瓜分类（二分），由此生成.csv数据文件，在Python中用Numpy读取数据并采用matplotlib库可视化数据：
+
+样例代码：
+
+ ''' data importion ''' import numpy as np import matplotlib.pyplot as plt # load the CSV file as a numpy matrix dataset = np.loadtxt( '../data/watermelon_3a.csv' , delimiter= "," ) # separate the data from the target attributes X = dataset[:, 1 : 3 ] y = dataset[:, 3 ] # draw scatter diagram to show the raw data f1 = plt.figure( 1 ) plt.title( 'watermelon_3a' ) plt.xlabel( 'density' ) plt.ylabel( 'ratio_sugar' ) plt.scatter(X[y == 0 , 0 ], X[y == 0 , 1 ], marker = 'o' , color = 'k' , s= 100 , label = 'bad' ) plt.scatter(X[y == 1 , 0 ], X[y == 1 , 1 ], marker = 'o' , color = 'g' , s= 100 , label = 'good' ) plt.legend(loc = 'upper right' ) plt.show() 
+
+数据散点图：
+
+    这里写图片描述
+
+2.采用sklearn逻辑回归库函数直接拟合：
+
+虽然样本量很少，这里还是先划分训练集和测试集，采用sklearn.model_selection.train_test_split()实现，然后采用sklearn.linear_model.LogisticRegression，基于训练集直接拟合出逻辑回归模型，然后在测试集上评估模型（查看混淆矩阵和F1值）。
+
+样例代码：
+
+ ''' using sklearn lib for logistic regression ''' from sklearn import model_selection from sklearn.linear_model import LogisticRegression from sklearn import metrics # generalization of test and train set X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y, test_size= 0.5 , random_state= 0 ) # model training log_model = LogisticRegression() log_model.fit(X_train, y_train) # model testing y_pred = log_model.predict(X_test) # summarize the accuracy of fitting print(metrics.confusion_matrix(y_test, y_pred)) print(metrics.classification_report(y_test, y_pred)) 
+
+得出混淆矩阵和相关度量（查准率（准确率）、查全率（召回率），F1值）结果如下：
+
+ [[4 1] [1 3]] precision recall f1-score support 0.0 0.80 0.80 0.80 5 1.0 0.75 0.75 0.75 4 avg / total 0.78 0.78 0.78 9  
+
+由混淆矩阵可以看到，由于样本本身数量较少，模型拟合效果一般，总体预测精度约为0.78。为提升精度，可以采用 自助法 进行重抽样扩充数据集，或是采用 交叉验证 选择最优模型。
+
+下图是采用matplotlib.contourf绘制的决策区域和边界，可以看出对率回归分类器还是成功的分出了绝大多数类：
+
+    这里写图片描述
+
+3.自己编程实现逻辑斯蒂回归
+
+编程实现逻辑回归的主要工作是求取参数w和b（见书p59），最常用的参数估计方法是 极大似然法 ，由于题3.1已经证得对数似然函数（见书3.27）是凸函数，存在最优解，这里考虑采用 梯度下降法 来迭代寻优。
+
+回顾一下Sigmoid函数，即逻辑斯蒂回归分类器的基础模型：
+
+    这里写图片描述
+
+目的是基于数据集求出最优参数w和b，最常采用的是极大似然法，参数的似然函数为：
+
+    这里写图片描述
+
+根据书p59，最大化上式等价于最小化下式：
+
+    这里写图片描述
+
+题3.2已证上式为凸函数，一定存在最小值，但按照导数为零的解析求解方式较为困难，于是考虑采用梯度下降法来求解上式最小值时对应的参数。
+
+注：梯度下降法基本知识可参考书中附录p409页，也可直接采用书中p60式3.30偏导数公式。书中关于参数迭代改变式子如下：
+
+    这里写图片描述
+
+对于迭代，可每次先根据(B.16)计算出梯度▽f(β)，然后由(B.17)更新得出下一步的Δβ。
+
+接下来编程实现基本的梯度下降法：
+
+(1)首先编程实现对象式3.27：
+
+ def likelihood_sub (x, y, beta) : ''' @param x: one sample variables @param y: one sample label @param beta: the parameter vector in 3.27 @return: the sub_log-likelihood of 3.27 ''' return -y * np.dot(beta, x.T) + np.math.log( 1 + np.math.exp(np.dot(beta, x.T))) def likelihood (X, y, beta) : ''' @param X: the sample variables matrix @param y: the sample label matrix @param beta: the parameter vector in 3.27 @return: the log-likelihood of 3.27 ''' sum = 0 m,n = np.shape(X) for i in range(m): sum += likelihood_sub(X[i], y[i], beta) return sum  
+
+(2)然后基于训练集（注意x->[x,1]），给出基于3.27似然函数的 定步长梯度下降 法，注意这里的 偏梯度 实现技巧：
+
+ ''' @param X: X is the variable matrix @param y: y is the label array @return: the best parameter estimate of 3.27 ''' def gradDscent_1 (X, y) : #implementation of basic gradDscent algorithms h = 0.1 # step length of iteration max_times= 500 # give the iterative times limit m, n = np.shape(X) beta = np.zeros(n) # parameter and initial to 0 delta_beta = np.ones(n)*h # delta parameter and initial to h llh = 0 llh_temp = 0 for i in range(max_times): beta_temp = beta.copy() # for partial derivative for j in range(n): beta[j] += delta_beta[j] llh_tmp = likelihood(X, y, beta) delta_beta[j] = -h * (llh_tmp - llh) / delta_beta[j] beta[j] = beta_temp[j] beta += delta_beta llh = likelihood(X, y, beta) return beta 
+
+通过追踪参数，查看其收敛曲线，然后来调节相关参数（步长h，迭代次数max_times）。下图是在当前参数取值下的beta曲线，可以看到其收敛良好：
+
+    这里写图片描述
+
+(3)最后建立Sigmoid预测函数，对测试集数据进预测，得到混淆矩阵如下：
+
+ [[ 4. 1.] [ 1. 3.]]  
+
+可以看出其总体预测精度（7/9 ≈ 0.78）与调用sklearn库得出的结果相当。
+
+(4)采用 随机梯度下降 法来优化：上面采用的是全局定步长梯度下降法（称之为 批量梯度下降 ），这种方法在可能会面临收敛过慢和收敛曲线波动情况的同时，每次迭代需要全局计算，计算量随数据量增大而急剧增大。所以尝试采用随机梯度下降来改善参数迭代寻优过程。
+
+随机梯度下降法的核心思想是 增量 学习：一次只用一个新样本来更新回归系数，从而形成在线流式处理。
+
+同时为了加快收敛，采用 变步长 的策略，h随着迭代次数逐渐减小。
+
+给出变步长随机梯度下降法的代码如下：
+
+ def gradDscent_2 (X, y) : #implementation of stochastic gradDscent algorithms ''' @param X: X is the variable matrix @param y: y is the label array @return: the best parameter estimate of 3.27 ''' import matplotlib.pyplot as plt m, n = np.shape(X) h = 0.5 # step length of iterator and initial beta = np.zeros(n) # parameter and initial delta_beta = np.ones(n) * h llh = 0 llh_temp = 0 for i in range(m): beta_temp = beta.copy() # for partial derivative for j in range(n): h = 0.5 * 1 / ( 1 + i + j) # change step length of iterator beta[j] += delta_beta[j] llh_tmp = likelihood_sub(X[i], y[i], beta) delta_beta[j] = -h * (llh_tmp - llh) / delta_beta[j] beta[j] = beta_temp[j] beta += delta_beta llh = likelihood_sub(X[i], y[i], beta) return beta  
+
+得出混淆矩阵：
+
+ [[ 3. 2.] [ 0. 4.]]  
+
+从结果看到的是：由于这里的西瓜数据集并不大，所以随机梯度下降法采用一次遍历所得的结果不太好，参数也没有完成收敛。这里只是给出随机梯度下降法的实现样例，这种方法在大数据集下相比批量梯度法应会有明显的优势。
+
+参考链接：
+由于这是本书第一个编程，索引资料较多，择其重要的一些列出如下：
+
+    Introduction to Machine Learning with Python and Scikit-Learn
+    scikit-learn官方主页
+    matplotlib官方主页
+    随机梯度下降（Stochastic gradient descent）和批量梯度下降（Batch gradient descent）的公式对比、实现对比
+    机器学习算法与Python实践之（七）逻辑回归（Logistic Regression）
+    plot decision boundary matplotlib
+    Ask（matplotlib决策区域和边界绘制
+    Python数据可视化——散点图
+
+阅读更多
+想对作者说点什么？ 我来说一句
+机器学习 ( 周志华 ) 参考答案 第三章 线性模型 3.3
+
+05-17 1.1万
+
+机器学习(周志华) 参考答案 第三章 线性模型 3.3机器学习(周志华西瓜书) 参考答案 总目录 http://blog.csdn.net/icefire_tyh/article/details... 来自： 我的博客
+西瓜书 习题 3.3 编程实现 对数几率 回归 ，梯度下降法
+
+01-08 1301
+
+最近入坑上道了，跟着周志华老师的《机器学习》，先搞个课后题练练手。 我电脑是Win10的，硬件配置不输Mac Pro，但是之前跑Kaggle上的泰坦尼克，装python的各种package装的我心累... 来自： 世靖的码场
+周志华 机器学习 ，3.3 编程实现 对率 回归 ，并给出西瓜数据集3.0α上的结果
+
+03-21 4278
+
+3.3编程实现对率回归，并给出西瓜数据集3.0α上的结果数据集： 1 0.697 0.460 1 2 0.774 0.376 1 3 0.634 0.264 1 4 0.608 0.318 1 ... 来自： zjy_lilas的博客
+Linux Socket编程实战第1季第1部分
+
+学院
+
+01-01
+
+适合人群：1、有C语言基础 ；2、对网络通讯感兴趣的人员；3、从事网络通讯的技术人员； 4、在校学生；,章节：如何对套接口读写之编程实现
+用对数几率 回归 实现 周志华 《 机器学习 》 习题 3.3西瓜分类，python编程
+
+03-30 2716
+
+数据集如下，要求根据西瓜的两个属性x1(密度)，x2(含糖率)实现对西瓜好瓜（1）还是坏瓜（0）的分类代码如下：# -*- coding: utf-8 -*- #对率回归分类 import numpy... 来自： 大树挖掘工的博客
+《 机器学习 》 周志华 课后 习题 3.3： 编程实现 对率 回归 ,并给出西瓜数据集 3.0α 上的结果.
+
+01-30 1309
+
+数据如下： python 代码如下： #!/usr/bin/env python3 # -*- coding: utf-8 -*- """ Created on Tue Jan 30 10:0... 来自： llwleon的博客
+《 机器学习 （ 周志华 ）》 习题 3.3答案
+
+04-05 2891
+
+编程实现对率回归，并给出西瓜数据集3.0@上的结果。 对率回归即逻辑回归，可以看做没有隐藏层的，用sigmoid做激活函数，crossentropy做cost（不加regularization）的神... 来自： 勿忘初衷
+机器学习 （ 周志华 ） 习题 3.3
+
+10-14 336
+
+本人菜鸟一枚，由于需要完成作业，所以尝试使用机器学习工具库去解决该题（周志华《机器学习》3.3题），主要参考别人的代码进行了改写，如有不足请多多指教！            以下附上本题代码     ... 来自： CHNguoshiwushuang的博客
+机器学习 ( 周志华 ) 参考答案 第三章 线性模型
+
+05-18 2万
+
+机器学习(周志华) 参考答案 第三章 线性模型 机器学习(周志华西瓜书) 参考答案 总目录 http://blog.csdn.net/icefire_tyh/article/details/5... 来自： 我的博客
+相关热词
+周志华 周志华课题组 周志华 勘误 周志华 线性模型 周志华研究生
+3.3 编程实现 对率 回归
+
+03-31 338
+
+&quot;&quot;&quot; Author: Victoria Created on: 2017.9.14 11:00 &quot;&quot;&quot; import matplotlib... 来自： 周博的博客
+换一批
+对率 回归 的实验
+
+08-27 141
+
+对数几率回归在python中的实现 在做分类任务时，需要找一个单调可微函数将分类任务的真实标记y与线性回归模型所预测的值联系起来。对数几率函数是用来“替代”单位跃阶函数的，满足单调可微的条件。以下是... 来自： qq_28915885的博客
+机器学习 ( 周志华 )-python编程练习- 习题 3-3
+
+09-18 19
+
+  习题3.3  编程实现对率回归，并给出西瓜数据集 3.0α 上的结果. 数据集3.0α sn density suger_ratio good_melon 1 0... 来自： bebusy的专栏
+机器学习 - 周志华 - 课后 习题 答案-线性模型
+
+01-17 1325
+
+3.1试分析在什么情况下，在以下式子中不比考虑偏置项b。答：在线性回归中，所有参数的确定都是为了让残差项的均值为0且残差项的平方和最小。在所有其他参数项确定后，偏置项b（或者说是常数项）的变化体现出来... 来自： 天台的猫爷爷的博客
+matlab自定义函数的几种方法
+
+10-14 2.6万
+
+1、函数文件+调用命令文件：需单独定义一个自定义函数的M文件; 2、函数文件+子函数：定义一个具有多个自定义函数的M文件； 3、Inline:无需M文件，直接定义； 4、匿名函数； ... 来自： yuxiaoxi21的博客
+Matlab中如何定义函数
+
+12-15 1.3万
+
+1.在m文件中，function y=f(x) %函数的声明 y=x^2就是建立了一个y=x2y=x^2的函数，f是函数的名称，m文件的名称必须是f.m. 如果返回值不止一个，则可以： fun... 来自： Katherine_S的专栏
+调用自己编写的matlab函数
+
+08-14 4.2万
+
+在matlab中调用自定义的函数 来自： without_scruple的博客
+对数几率 回归 （Logistic Regression）总结
+
+04-09 4966
+
+逻辑回归logistic regression，虽然名字是回归，但是实际上它是处理分类问题的算法。简单的说回归问题和分类问题如下：回归问题：预测一个连续的输出。 分类问题：离散输出，比如二分类问题输... 来自： code_caq的博客
+周志华 《 机器学习 》 习题 3.3
+
+12-18 748
+
+编程实现对数回归，并给出西瓜数据集3.0α\alpha上的结果。 既然是编程实现，就不要调用现成的库了好吧？比如sklearn就有对数回归的实现。看一下我们的数据，前两列是特征（attribute）... 来自： WUTab的博客
+机器学习 实战(用Scikit-learn和TensorFlow进行 机器学习 )(五)
+
+01-08 1822
+
+上几节讲述了真实数据集在回归问题以及分类问题上的总流程，但是对于模型的选择及参数的选择仍然一知半解，因此本节开始讲述关于模型的一些知识，本节会略过一些比较基础的知识，将一些较为深入的知识。如果在哪个方... 来自： fjl_CSDN的博客
+逻辑 回归 （Logistic regression）详解-并用scikit-learn训练逻辑 回归 拟合Iris数据集
+
+05-01 4.9万
+
+引言这篇文章主要介绍逻辑回归背后的一些概率概念，给你一些直观感觉关于它的代价函数的由来。并且我也介绍了关于最大似然估计（maximum likelihood）的概念，用这个强大的工具来导出逻辑回归的c... 来自： Xurtle
+Logistic Regression（逻辑 回归 ）
+
+10-12 806
+
+Logistic回归思想，Python实现，应用。Logistic 回归是与线性回归相对应的一种分类方法，是一种广义线性回归模型(generalized linear model)。该算法的基本概念由... 来自： 静敬澹一
+机器学习 之线性 回归 及代码示例
+
+11-26 7252
+
+一、线性回归线性回归一般用来做连续值的预测，预测的结果为一个连续值。因训练时学习样本不仅要提供学习的特征向量X，而且还要提供样本的实际结果（标记label），所以它是一种有监督学习。X= { x0 x... 来自： cxmscb的博客
+周志华 《 机器学习 》 课后 习题 解答 系列 （五）：Ch4 - 决策树
+
+04-06 4605
+
+本章讲述决策树的相关内容，包括决策树的生成，剪枝，连续值、缺失值的处理，多变量决策树等内容。... 来自： Snoopy_Yuan技术部落格
+机器学习 （ 周志华 ）第四章 习题 解答
+
+08-24 1650
+
+转自：http://blog.csdn.NET/wzmsltw/article/details/51059394 本文是对周志华的《机器学习》的习题解答，文章整理的很好，为方便之后查看，记录如下～ ... 来自： carson0408的博客
+《 机器学习 》 周志华 习题 4.3答案
+
+07-06 3615
+
+《机器学习》周志华著，第四章课后习题4.3答案 来自： Just Do IT
+机器学习 ( 周志华 ) 参考答案 第五章 神经网络
+
+05-18 1.1万
+
+机器学习(周志华) 参考答案 第五章 神经网络机器学习(周志华西瓜书) 参考答案 总目录 http://blog.csdn.net/icefire_tyh/article/details/520649... 来自： 我的博客
+机器学习 ( 周志华 ) 参考答案 第六章 支持向量机 6.9
+
+08-06 2750
+
+机器学习(周志华) 参考答案 第六章 支持向量机 6.9机器学习(周志华西瓜书) 参考答案 总目录 http://blog.csdn.net/icefire_tyh/article/details/5... 来自： 我的博客
+下载
+编程实现 对率 回归 ，并给出西瓜数据集3.0a上的结果。
+10-14
+机器学习的第一次作业。周志华老师教材的p3.3。python实现対率回归，已给数据集
+机器学习 作业1 - 对率 回归 （逻辑 回归 ）
+
+09-28 1919
+
+使用10折交叉验证法和留一法评测对率回归分类器标题有点长哈……这是第一次作业，来自周志华《机器学习》作业3.4，题目如下： 选择两个UCI数据集，比较10折交叉验证法和留一法所估计出的对率回归（逻... 来自： Dapan同学
+逻辑 回归 /对数几率 回归 --西瓜书、统计学习总结
+
+05-04 251
+
+广义模型可以解决分类任务。只需找到一个单调可微函数将分类任务的真实标记y与线性回归模型的预测值联系起来。一般采用单位阶跃函数，但是这个函数不连续，所以找一个可以近似替代的函数，这个函数就是对数几率函数... 来自： zhangdamengcsdn的博客
+对数几率 回归 Logistic Regression（Matlab）
+
+01-13 6769
+
+这里的数据均来源于吴恩达老师机器学习的课程。        上一篇内容是线性回归，利用线性模型进行回归学习，最终结果是找到一组合适的theta值，使代价函数的值最小，可是对于分类任务该如何解决呢？其... 来自： XLM11的专栏
+机器学习 —西瓜书-chapter3—对率 回归
+
+01-10 215
+
+编程实现对率回归，并给出西瓜数据集3.0α上的结果 对率函数是任意阶可导的凸函数，这是非常重要的性质。 西瓜数据集3.0 暂时不知道什么原因导致，结果差别这么大，记录下来。 %matlab... 来自： 糖糖糖豆的博客
+《 机器学习 》( 周志华 ) 课后 习题 参考答案
+
+01-04 3325
+
+目录： 周志华《机器学习》课后习题解答系列（二）：Ch1 - 绪论周志华《机器学习》课后习题解答系列（三）：Ch2 - 模型评估与选择周志华《机器学习》课后习题解答系列（四）：Ch3 - 线性模... 来自： kchai31的博客
+matlab如何在文中定义函数
+
+01-04 9514
+
+matlab如何在文中定义函数 通常我们多是将函数单独在编写在单个的m文件中，再于主程序中调用。但是，有时候觉得程序太小，直接在程序末尾编写函数，又会收到“此上下文中不允许函数定义”的错误提示。那... 来自： lusongno1的博客
+第三章 线性模型-- 机器学习 （ 周志华 ）参考答案
+
+11-06 834
+
+原文的链接 机器学习(周志华) 参考答案 第三章 线性模型 机器学习(周志华西瓜书) 参考答案 总目录 http://blog.csdn.net/icefire_tyh/article/det... 来自： qq_35218763的博客
+周志华 《 机器学习 》之 第三章（线性模型）概念总结
+
+08-12 2699
+
+阅读之后，根据周志华老师对本章节的安排，首先从线性模型的基本形式入手，逐渐引入线性回归、对数几率回归、线性判别分析（LDA）、多分类学习等多种线性模型，最后针对类别不平衡问题总结了一些相关的解决思路 ... 来自： 不系之舟的专栏-QQ讨论群331590339
+使用sklearn做各种 回归
+
+07-13 9274
+
+使用sklearn做各种回归 基本回归：线性、决策树、SVM、KNN 集成方法：随机森林、Adaboost、GradientBoosting、Bagging1. 数据准备为了实验用，我自己写了一个... 来自： Yeoman92的博客
+西瓜书《 机器学习 》 课后 答案——Chapter3_3.4
+
+09-15 1617
+
+选择两个UCI数据集，比较10折交叉验证法和留一法所估计出的对率回归的错误率。 解答： 从UCI网站上选择了Iris数据集。总共分为3类，每类50个样本。每个实例有四个属性。将数据保存成bezde... 来自： CodeTutor
+周志华 《 机器学习 》 课后 习题 解答 系列 （五）：Ch4.3 - 编程实现 ID3算法
+
+04-03 2808
+
+这里采用了自己编程的方式实现ID3算法，并基于西瓜数据集生成了决策树，评估了其好坏。... 来自： Snoopy_Yuan技术部落格
+西瓜书《 机器学习 》 课后 答案——Chapter3_3.5
+
+09-15 1440
+
+编程实现线性判别分析，并给出西瓜数据集3.0alpha上的结果。""" Author: Victoria Created on: 2017.9.15 11:45 """ import xlrd imp... 来自： CodeTutor
+机器学习 ( 周志华 ) 参考答案 第九章 聚类 9.10
+
+08-16 2013
+
+机器学习(周志华) 参考答案 第九章 聚类 9.10机器学习(周志华西瓜书) 参考答案 总目录 http://blog.csdn.net/icefire_tyh/article/details/520... 来自： 我的博客
+《 机器学习 》 -- 周志华 版（西瓜书）-- 课后 参考答案
+
+01-18 2883
+
+开始学习周志华版的《机器学习》，将别人写的课后习题的参考答案保存下来供参考。- 目录第一章 绪论http://blog.csdn.net/icefire_tyh/article/details/520... 来自： 这里记录着我一点一滴的进步
+logistic 回归 概率详解
+
+09-15 91
+
+logistic回归概率详解 上一篇我们介绍了线性代数的基本知识，并以PCA作为案例进行了讲解。在本篇中，我们依然按照相同的思路进行开展：首先复习一下概率的相关知识，最后以对率回归（对数几率回归）... 来自： qq_40213457的博客
+你应该知道的7种 回归 方法
+
+12-31 1.7万
+
+本文是我从国外网站翻译而来的文章，如有错误之处，敬请指出！ 原文标题：7 Types of Regression Techniques you should know! 链接：https://ww... 来自： Steve lock的blog记录之地
+机器学习 ( 周志华 西瓜书) 参考答案 总目录
+
+05-17 8.2万
+
+机器学习(周志华西瓜书)参考答案总目录 从刚开始学习机器学习到现在也有几个月了，期间看过PDF，上过MOOC，总感觉知道一点了又不是特别明白，最后趁某东买书大减价弄了几本相关的书来看看，其中一本就是... 来自： 我的博客
+周志华 《 机器学习 》读书笔记（一）
+
+10-05 2167
+
+本书前几章讲的都是基本术语，最硬核的数学部分很少，所以比较简单。 机器学习的主要内容，是从数据产生模型，再由模型做出相应的判断和预测。 比如已经知道某房屋所在街区的其他房屋的价格，通过给这些面积，... 来自： garrulousabyss的博客
+周志华 机器学习 笔记（一）
+
+02-06 676
+
+新人一枚，既是机器学习的初学者，也是首次发博客。谨以此记录我的学习体会，做一些总结。望与大家共同学习、共同进步。文中若有内容错误或有措词不严谨之处，望大家不吝指出。谢谢！ 机器学习中的基本概念 ... 来自： baidu_38401528的博客
+机器学习 ( 周志华 ) 习题 解答 1.1-1.3: 理解假设和版本空间
+
+08-25 1.2万
+
+本文介绍版本空间，假设空间的概念并举例求解。另外介绍和简单证明“没有免费的午餐定理”，是说针对某一域的所有问题，所有算法的期望性能是相同的。即该域的有些问题上算法 A 比 B 好，则其余问题则有 B ... 来自： 走过的都是未来
+机器学习 ( 周志华 ) 参考答案 第一章 绪论
+
+05-18 4万
+
+机器学习(周志华) 参考答案 第一章 假设空间指的是问题所有假设组成的空间，我们可以把学习过程看作是在假设空间中搜索的过程，搜索目标是寻找与训练集“匹配”的假设。... 来自： 我的博客
+逻辑 回归 模型推导及梯度下降
+
+01-29 488
+
+这里的逻辑回归模型，除了重要要放在回归上，还要看到逻辑，所谓的逻辑其实就是正确和错误，因而建立的是分类模型。主要的思想是：根据现有数据对分类边界线建立回归公式，以此来进行分类。而这里的“回归”也是拟合... 来自： 哆啦咪~fo
+
+没有更多推荐了， 返回首页
+
+Snoopy_Yuan
+关注
+
+原创
+    40 
+
+粉丝
+    415 
+
+喜欢
+    70 
+
+评论
+    130 
+
+等级：
+
+访问：
+    12万+ 
+
+积分：
+    1334 
+
+排名：
+    4万+
+
+勋章：
+
+持之以恒
+授予每个自然月内发布4篇或4篇以上原创或翻译IT博文的用户。不积跬步无以至千里，不积小流无以成江海，程序人生的精彩需要坚持不懈地积累！
+更多信息
+
+Email: pn_yuan@163.com
+
+GitHub: https://github.com/PnYuan
+最新文章
+
+    Kaggle滑水 - CTR预估（FM_FFM）
+    Kaggle滑水 - CTR预估（GBDT-LR）
+    Kaggle滑水 - CTR预估（LR）
+    Kaggle滑水 - 泰坦尼克之灾（决策树）
+    深度学习基础 - 对象检测（CNN+滑窗+YOLO）
+
+归档
+
+    2018年6月 3篇
+    2018年4月 2篇
+    2018年3月 3篇
+    2017年10月 2篇
+    2017年7月 6篇
+    2017年6月 1篇
+    2017年5月 6篇
+    2017年4月 8篇
+    2017年3月 9篇
+
+展开
+个人分类
+
+    机器学习 33篇
+    深度学习 8篇
+    概率图 1篇
+    数据挖掘 9篇
+    Hadoop 1篇
+    天池赛 4篇
+    Kaggle 4篇
+
+展开
+最新评论
+
+    周志华《机器学习》课后习题解答系列...
+
+    qq_40530372 ：利用随机梯度下降法求出的混淆矩阵跟您给出的不一样，用你的GitHub上的源码
+    周志华《机器学习》课后习题解答系列...
+
+    u012016803 ：CART_watermelon.py源码报错 <class> Traceback (m...
+    周志华《机器学习》课后习题解答系列...
+
+    huazeci ：真是有心人
+    周志华《机器学习》课后习题解答系列...
+
+    catherined ：[reply]liucheng_34[/reply] 感谢提示！
+    周志华《机器学习》课后习题解答系列...
+
+    mmm_jsw ：作者出现了一处笔误，应该是：n1 = (2+1)(3+1)(3+1)+1 = 49种
+
+开发者调查
+AI开发者大会日程曝光
+Office 365商业协作版 5折钜惠！
+登录
+注册
+
+    点赞 取消点赞
+
+    4
+    评论
+
+    9
+    目录
+    收藏
+    手机看
+    上一篇
+    下一篇
+    更多
+        上一篇
+        下一篇
+

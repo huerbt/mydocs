@@ -1,0 +1,31 @@
+test-dir.wiki               创建测试目录及测试文件               Oct 15,2018
+Author: BujiBuji HuYi
+Summary:
+        经常在创建测试时容易忘记测试目录在那个位置创建，测试的 py
+        文件应该如何命名
+        
+============================================================================
+
+== Content ==
+
+1. 测试文件夹 tests 应该在 module 里，与 module 里的 docs 同级，如下
+
+
+my_project
+        |------packages+
+        |              |-----My_project+
+        |              |               |----README.set(The big picture
+        |              |               |                ,Quick Start)
+        |              |-----module1+
+        |              |            |-----README.rst(代码来历：主要说明代码
+        |              |            |     如何工作以及何时应该使用
+        |              |            |----module1+
+        |              |            |           |----__init__.py
+        |              |            |           |----docs+
+        |              |            |           |        |---README.rst
+        |              |            |           |----*tests*+
+        |              |            |           |         |--__init__.py
+        |              |            |           |         |--test_docs__.py
+        |              |-----module2
+
+2. 测试文件名的命名： test_模块名.py

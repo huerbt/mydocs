@@ -1,0 +1,74 @@
+UltiSnips.wiki              代码片段插件的配置与使用         Oct 13, 2018
+Author: BuJiBuJi HuYi
+Summary:
+        代码片段的 vim 插件 UltiSnips。https://github.com/SirVer/ultisnips
+        最佳解释文章：https://vimzijun.net/2016/10/30/ultisnip/
+        
+lastUpdate: Oct 13, 2018
+
+
+=========================================================================
+== Content ==
+
+1. 安装 UltiSnips 和 vim-snippets
+    - 在 .vimrc_vundle 中加入两个插件
+        Plugin 'SirVer/ultisnips'
+        Plugin 'huerbt/vim-snippets' 这个是我在GitHub上的
+
+    - 进入 vim 键入命令
+        :PluginInstall
+        
+2. 创建目录
+    - 找到插件目录，是位于~/.vim/bundle/下的ultisnips和vim-snippets。
+    - 不要在vim-snippets中预备好的各语言snippets上直接修改，因为每次更新都会被覆盖。
+    - 必须在ultisnips文件夹下创建一个UltiSnips文件夹，所有自定义代码都存在这里。
+    - 自定义的代码片段必须给每个语言创建单独文件，保存的文件名必须遵循语言名.snippets格式.如果是运用到所有文件上的，就叫all.snippets。
+    - mkdir ~/.vim/bundle/ultisnips/UltiSnips/
+    - 
+    
+3. 修改 vimrc 避免快捷键冲突
+    "UltiSnips
+    "插入模式下直接通过<C-z>键来触发UltiSnips的代码块补全
+    let g:UltiSnipsExpandTrigger="<C-z>"
+    "弹出UltiSnips的可用列表,由于不常用, 所以这里设置成了特殊的<C-i>映射
+    let g:UltiSnipsListSnippets="<C-i>"
+    "<C-f>跳转的到下一个代码块可编辑区
+    let g:UltiSnipsJumpForwardTrigger="<C-f>"
+    "<C-b>跳转到上一个代码块可编辑区
+    let g:UltiSnipsJumpBackwardTrigger="<C-b>" 
+    " If you want :UltiSnipsEdit to split your window.
+    let g:UltiSnipsEditSplit="vertical"
+    
+4. 创建一个自己的额 snippets 文件
+    - 一般来说， snippets 的文件名称就是 文档类型 + .snippets，如果是 LaTex的文件，那就是 tex.snippets
+    - cd ~/.vim/bundle/ultisnips/UltiSnips
+    - vim python.snippets
+        定义的一段 snip 的格式是这样的：
+            snippet 触发关键词 “说明” 设定参数
+            代码片段内容
+            endsnippet
+        
+        
+5. 使用代码片段
+    - 输入 snippet 的关键词，然后按 CTRL-z 就会变成代码片段了
+
+6. 编辑 snippet 文件的方法。可以在命令模式下输入:UltiSnipsEdit
+
+** 设置替换内容 **
+{{{
+snippet class "class" b
+class ${1:Class}{
+public:
+    // constructors, asssignment, destructor
+    $1();
+    $1(const $1&);
+    $1& operator=(const $1&);
+    ~$1();
+private:
+
+};
+endsnippet{
+
+}}}
+
+里面的 ${1:Class} 就是代表可以替换的内容，而且其他几个 $1 则会显示一模一样的内容

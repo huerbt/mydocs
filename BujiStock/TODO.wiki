@@ -1,0 +1,25 @@
+
+== MarketBuji_ToDo Tasks ==
+- [O] README.rst
+    - [O] SymbolPdBuji
+    - [X] DataBaseBuji
+    - [X] SymbolStockBuji
+    - [X] MarketBuji                                
+    - [X] DataSourceBuji
+    - [X] DataParseBuji
+    - [X] DataFeedBuji
+    - [X] DataCatcheBuji
+    - [o] NetWorkBuji
+    - [X] SymbolBuji
+
+
+- [X] 加入新的数据源
+
+
+== FactorBuyBuji_ToDo Tasks ==
+
+- [.] FactorBuyBaseBuji
+    - [O] TradeBuji.OrderBuji.Order
+    - [ ] TradeBuji.MlFeature.MlFeature
+    - [ ] UmpBuji.UmpManagerBuji.UmpManager
+    - [.] BetaBuji.AtrPositionBuji.AtrPosition

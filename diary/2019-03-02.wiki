@@ -1,0 +1,7 @@
+开发日志
+
+1、明确了，在docs中撰写针对针对系统使用者的文档。在docsTest里撰写开发者使用的文档。在tests里撰写完备性测试
+
+2、在SymbolBuji.py 的完备性测试时发现code_to_symbol()还没写完。
+
+3、把原来属于模块里的docs文件名修改为docsTest

@@ -1,0 +1,31 @@
+
+ZSH
+
+（1）、安装了iTerm2，我们先把bash切换成zsh，使用命令行如下：
+chsh -s /bin/zsh
+
+执行命令后，会让你输入电脑的密码，输入即可。完成后，需要完全退出iTerm2,再次进入时，就已经从bash切换到zsh了。当然，如果你哪一天又想用bash了，也可以使用下列命令：
+
+chsh -s /bin/bash
+
+（2）、安装 oh my zsh
+不得不说，这个oh my zsh真的是牛逼哄哄，去看看上面的star就知道了。个人推荐使用curl自动安装，执行命令行如下：
+
+curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | sh
+
+（3）、zsh配置
+将下面的文本加到.zshrc文件中，让zsh支持vim:
+
+export EDITOR="vim"
+bindkey -v 
+ 
+# vi style incremental search
+bindkey '^R' history-incremental-search-backward
+bindkey '^S' history-incremental-search-forward
+bindkey '^P' history-search-backward
+bindkey '^N' history-search-forward
+
+支持更多的智能命令。比如，如果你想在bash中移动到一个目录里，你可能会输入cd foo。而在zsh中如果你将下面一行加入到.zshrc中，你只需要输入foo即可。
+setopt AUTO_CD
+
+

@@ -1,0 +1,356 @@
+clsss-method.wiki           类的实例方法、类方法、静态方法的区别    Oct 30，2018
+Author: BuJi HuYi
+summary:
+        搞清楚类中三种方法的使用场景
+
+LastUpDate：Oct 30，2018
+
+----
+
+== Content ==
+
+Python中有3种方式定义类方法：：
+    - 静态方法（staticmethod）      用@staticmethod 修饰
+    - 类方法（classmethod）         用@classmethod 修饰
+    - 实例方法（instance method）   常规方式
+
+{{{!#python
+
+class Foo(object):
+    def foo(self):#定义了实例方法（必须实例化类之后才能被调用）
+        print("object")
+    @classmethod
+    def class_foo(clss):#定义了类方法（不需要实例化类就可以被类本身调用）
+        print("class")
+    @staticmethod
+    def static_foo():#定义了静态方法
+        print("static")
+
+}}}
+
+=== 调用对照表 ===
+
+| \       | 实例方法 | 类方法         | 静态方法        |
+| a = A() | a.foo(x) | a.class_foo(x) | a.static_foo(x) |
+| A       | 不可用   | A.class_foo(x) | A.static_foo(x) |
+
+
+- 实例方法
+    
+    是对象的绑定方法，对象在调用绑定方法时会自动将自己作为参数(self)传递给方法的第一个参数。
+    
+    
+- 类方法
+    
+    类方法，是给类用的，类方法在使用时会将类本身当做参数传给类方法的第一个参数（clss是类本身），调用方法时传的值也必须是类的公有属性，
+    
+
+- 静态方法
+    
+    它和classmethod非常的相似，但它不强制要求传递参数，不要求实例化它。它本质上就是一个函数，调用方式和调用函数一样，它不关注对象和对象内部属性。
+    
+
+=== 参考推荐 ===
+
+
+类中的方法，其实就是类中的函数，可以分为：实例方法，类方法，静态方法。方法和字段一样，也是属于类的属性，所以也具有运行中修改的特效， 但一般不推荐这样做。
+
+　　我在类的基本语法中，介绍了构造器方法：__nit__ 、__new__；解构器方法：__del__;
+
+　　注意，这里虽然是以两个下划线（__）开头，但同时以两个下划线（__）结尾，这里表明其是一个‘魔法方法’，关于类中的魔法方法，将起一篇进行说明。
+
+　　但是，如果单纯只以两个下划线开始，则依然是私有化的意思，看代码示例：
+
+{{{!#python
+class Test(object):
+
+    def __scolia__(self):   # 一个类似魔术方法，并不是私有化
+        return 'scolia'
+
+    def __good(self):   # 私有方法
+        return 'good'
+
+a = Test()
+print a.__scolia__()   # 魔法方法可以在直接访问
+print a.__good()    # 私有方法不能直接访问
+}}}
+ 
+
+
+
+　　同样的，和字段私有化一样，我们也可能同特殊手段进行强制访问：
+
+print a._Test__good()  # 强制访问
+ 
+
+
+
+　　当然，私有方法也可以在类的内部访问，和私有字段一样。
+
+　　所以说，属性的私有化都是对访问入口进行混淆，同样的，也不建议强制访问私有属性。
+
+　　也许这里的‘魔法方法’看起来并不‘魔法’，详情将以后解释。
+
+实例方法：
+　　在 __init__ 构造器中，提起过其是一个实例方法，实例方法的特点就是：
+
+　　1.方法的第一个参数必须是 self，当然这是约定俗成的写法，你可以将 self 换成 abc 之类的，但是为了别的程序员能看得懂，还是统一用 self 吧。这里的 self 代表实例本身，也就是说如果我实例化时使用的是： a = Test() ,那么 self 就代表 a 这个实例，我们可以在很多构造器中看到类似 self.scolia = 'good' 的写法，其实这个写法和在类外面 a.scolia = 'good' 效果一样，是为了添加属性，只不过 __init__ 方法是实例化时自动调用的函数，所以适合进行初始属性的创建。
+
+　　2.实例方法在调用的时候，self 是自动传递的，所以不需要我们再处理。
+
+　　3.实例方法一般要有实例才能调用，当然也有特殊的调用方法。
+
+代码示例：
+
+{{{!#python
+class Test(object):
+
+    def __init__(self, a, b):   # 构造器在实例创建时进行属性的初始化
+        self.a = int(a)
+        self.b = int(b)
+
+    def abc(self, c):  # 实例方法
+        print self.a + self.b + int(c)  # 因为self是自动传递的，所以我们可以在实例方法中调用实例的属性
+
+a = Test(123, 321)  # 我们只要为 a 和 b 传参就行了
+a.abc(666)  # 同样的，只要为 c 传参
+}}}
+ 
+
+
+
+　　这里，将引入一个绑定 (binding) 的概念，其主要和方法的调用有关。
+
+　　首先，我们知道方法是类的属性，而不是实例的属性，在上篇博文类的属性和实例的属性中我们也讨论过这个问题。
+
+　　其次，方法只有在其所属的类拥有实例时，才能被调用。当一个类存在实例后，方法才被认为是绑定到这个实例。没有实例的时候，方法是未绑定的。
+
+　　最后，任何一个方法定义的第一个参数都是变量 self ，它表示调用此方法的实例对象。
+
+　　很明显这里的绑定针对的是实例方法。因为如果没有实例的话，self 就无法传递，这将导致参数的不足，当然就无法调用了。
+
+　　但是，我们可以自己传递 self 来调用未绑定的方法。调用未绑定的方法通常是在我们继承了一个父类后， 我们覆盖了父类中的某个方法，但是为了实现代码重用，我们又想在子类中调用父类的方法。单纯的复制父类中的代码明显不是一个好选择， 除了浪费系统资源之外，还有可能在复制的时候出错，而且以后修改父类的代码之后，还要修改相应子类中的代码，实在太低效，这个时候就是调用未绑定方法的场景。
+
+代码示例：
+
+{{{!#python
+class abc(object):
+    def __init__(self, a):
+        self.a = -int(a)
+
+class Test(abc):
+    def __init__(self, a, b):
+        abc.__init__(self, a)   # 调用父类的构造器，并手动传递 self
+        self.b = b
+
+    def fangfa(self):
+        print self.a + self.b   # 属性 a 由父类的构造器创建，b 由子类构造器创建
+
+a = Test(123, 321)  # 我们只创建了子类的实例，而没有创建父类的实例
+a.fangfa()
+}}}
+ 
+
+
+
+　　本来我们没有创建父类的示例，是无法调用父类的实例方法的，但是我们手动传递了实例方法需要的 self 参数，就可以实现调用了。
+
+　　这里的顺序是，我们创建了 Test 的实例，其 self 是自动传递的，故 Test 的构造方法 __init__(self, a, b) 中 self 就代表实例 a，而我们又调用了父类的 abc.__init__(self, a) 这里的 self 就是子类的实例 a ，参数 a 就是我们传的 123，而父类中 self.a = -int(a) ;最后我们可在子类的方法中调用 self.a 这个属性。
+
+ 
+
+ 
+
+类方法：
+　　类方法其实和实例方法类似，不过其第一个参数一般是 cls （约定俗成）而不是 self。但是，如果我们直接将 self 换成 cls 来创建类方法是不对的，因为实例方法的首个参数也是任意的，只是统一使用 self 。python的解释器并没有说看见第一个参数是 cls 就知道这个是类方法，它还是将其当作是实例方法来对待，所以我们需要通过内建函数： classmethod() 来创建类方法。
+
+代码示例：
+
+{{{!#python
+class Test(object):
+
+    def abc(cls):
+        print cls.__name__  # 打印类名
+
+    abc = classmethod(abc)  # 通过普通的函数传参的方式创建类方法
+
+a = Test()  
+Test.abc()  # 类能调用
+a.abc()     # 实例也能调用
+}}}
+ 
+
+　　当然，有同学在看到这段代码的时候想到了装饰器，实际上我们也可以使用装饰器的方法来创建类方法：
+{{{!#python
+class Test(object):
+    @classmethod
+    def abc(cls):
+        print cls.__name__  # 打印类名
+}}} 
+
+　　结果也是一样的，具体选择看个人喜好。
+
+　　注意，因为使用了  classmethod()函数，其第一个参数 cls 是固定传递的，而且是代表当前的类。并没有实例方法中非绑定方法的调用形式。
+
+ 
+
+ 
+
+静态方法：
+　　静态方法其实就是类中的一个普通函数，它并没有默认传递的参数，在创建静态方法的时候，需要用到内置函数： staticmethod() 。
+
+代码示例：
+
+{{{!#python
+class Test(object):
+
+    def abc():
+        print 'abc'
+        
+    abc = staticmethod(abc)
+
+    @staticmethod
+    def xyz(a, b):
+        print a + b
+
+Test.abc()  # 类调用
+Test.xyz(1, 2)  # 类调用
+a = Test()
+a.abc()     # 实例调用
+a.xyz(3, 4)  # 实例调用
+}}}
+ 
+
+
+
+　　注意，虽然静态方法没有默认参数， 但并不代表不能有参数。
+
+ 
+
+总结：
+
+　　1.实例方法需要至少一个默认参数 self。
+
+　　2.类方法需要至少一个默认参数 cls。
+
+　　3.静态方法不需要默认参数。
+
+　　另外：方法也是属性，所以在类的内部，我们可通过 self.abc()、cls.abc() 的方式来调用类中的其他方法，当然要注意传参的问题。
+
+ 
+
+用方法冒充字段:
+　　有时候，我们的一个方法在经过一系列处理以后，返回的是一个数据，例如：
+
+{{{!#python
+class Test:
+
+    def __init__(self, a, b):
+        self.a = a
+        self.b = b
+
+    def fangfa(self):
+        c = self.a + self.b
+        return c    # 返回处理的结果数据
+
+
+a = Test(1, 2)
+b = a.fangfa()    # 调用方法,得到返回值
+print b
+}}}
+ 
+
+
+
+　　但是，懒惰的程序员们想：我想要的只是和字段类似的数据，却要调用一个方法，有时候容易搞错，能不能用字段的形式获取数据呢？这样更加符合直觉。
+
+　　可以，只有使用 property() 函数就可以了。同样的，这里也有两种创建方式，这里只演示装饰器的方式：
+
+{{{!#python
+class Test:
+
+    def __init__(self, a, b):
+        self.a = a
+        self.b = b
+
+    @property
+    def fangfa(self):
+        c = self.a + self.b
+        return c
+
+
+a = Test(1, 2)
+b = a.fangfa    # 不用带括号了
+print b
+}}}
+ 
+
+　　这样是实现了方法伪装成字段了。其实就是懒惰的程序员们不愿意多写一个括号，当然还有一些其他好处。
+
+　　另外，函数要用返回值，不然就默认为 None 了。
+
+　　如果在经典类中，我们就只能做到这样了。
+
+　　但是，使用新式类的话，就能有更多的功能：
+
+{{{!#python
+class Test(object):
+
+    def __init__(self, a, b):
+        self.a = a
+        self.b = b
+
+    @property
+    def fangfa(self):
+        c = self.a + self.b
+        return c
+
+    @fangfa.setter
+    def fangfa(self, value):
+        self.a = value
+
+    @fangfa.deleter
+    def fangfa(self):
+        print '属性已删除'
+
+a = Test(1, 2)
+b = a.fangfa   # 获得方法的返回值
+print b
+a.fangfa = 100    # 执行 fangfa.setter 修饰的方法，并让value = 100
+print a.a
+del a.fangfa    # 执行 fangfa.deleter 修饰的方法
+}}}
+
+
+　　注意后面两个装饰器的名字。
+
+　　另外，方法必须要先经过 property()函数的装饰后，才有后面两个装饰器的用法。
+
+　　如果使用非装饰器的形式的话：
+
+{{{!#python
+class Test(object):
+
+    def __init__(self, a, b):
+        self.a = a
+        self.b = b
+
+    def fangfa_get(self):
+        c = self.a + self.b
+        return c
+
+    def fangfa_set(self, value):
+        self.a = value
+
+    def fangfa_del(self):
+        print '属性已删除'
+
+    fangfa = property(fangfa_get, fangfa_set, fangfa_del)
+}}}
+ 
+
+　　  property(fget=None, fset=None, fdel=None, doc=None)  
+
+　　最后的 doc 是说明文档，看个人需要添加，可通过 Test.fangfa.__doc__ 进行访问。
+
+　　关于方法就先说这么多，以后有需要再进行修改补充。

@@ -1,0 +1,123 @@
+DDD                         文档驱动开发                     Oct 15, 2018
+Author: BujiBuji HuYi
+Summary
+       与其他语言相比，Python 中的 doctests 是一个真正的优势，在文档中包含代码示例，并将其作为测试运行，这改变了 TDD 的开发方式，通过 doctests 而不是常规的单元测试来构建软件称为文档驱动开发 DDD。在 DDD 中通过构建一个代码的来历编写 doctests，来历主要说明代码如何工作以及何时应该使用代码
+
+lastUpdate:Oct 15,2018
+
+=========================================================================
+
+== Content ==
+
+1. DDD 的位置：如下图中 docs 以及 README.rst的位置，每个模块都有一个自己的 DDD
+
+my_DevelopRoot
+        |------My_project+i
+        |              |-----docs+
+        |              |         |---source (projrct big picture,quick start，给系统使用者)
+        |              |         |---build  (to Html)
+        |              |-----packages+
+        |              |             |-----module1+
+        |              |             |            |----__init__.py
+        |              |             |            |----*docsTest*+
+        |              |             |            |          |---*README.rst*(给开发者说明方法，及方法的标准输出）
+        |              |             |            |----tests+
+        |              |             |            |         |--__init__.py
+        |              |             |            |         |--test_docs.py
+        |              |             |            |----XXXX.py
+        |              |             |            |----XXX.py
+        |              |             |-----module2
+
+2. DDD 的样子
+
+=================
+ tomisator.parser
+=================
+
+The parser knows how to return a feed content, with
+the `parse` function, available as a top-level function::
+
+    >>> from atomisator.parser import Parser
+
+This function takes the feed url and returns an iterator
+over its content. A second parameter can specify a maximum
+number of entries to return. If not given, it is fixed to 10::
+
+    >>> import os
+    >>> res = Parser()(os.path.join(test_dir, 'sample.xml'))
+    >>> res
+    <itertools.imap ...>
+
+Each item is a dictionary that contain the entry::
+
+    >>> entry = res.next()
+    >>> entry['title']
+    u'CSSEdit 2.0 Released'
+
+The keys available are:
+
+    >>> keys = sorted(entry.keys())
+    >>> list(keys)
+    ['id', 'link', 'links', 'summary', 'summary_detail', 'tags', 
+     'title', 'title_detail']
+
+Dates are changed into datetime::
+
+    >>> type(entry['date'])
+    >>>
+
+
+3. 运行 DDD
+3.1. 在当前模块的 tests目录下新建 test_docs.py 文件
+{{{!#python
+import unittest
+import doctest
+import os
+import sys
+
+test_dir = os.path.dirname(__file__)
+package_dir = os.path.split(test_dir)[0]
+
+def doc_suite(test_dir):
+    """Returns a test suite, based on doctests found in /doctest."""
+    suite = []
+    globs = globals()
+    
+    flags = (doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE |
+                 doctest.REPORT_ONLY_FIRST_FAILURE)
+
+    doctest_dir = os.path.join(package_dir, 'docsTest')
+    # filtering files on extension
+    docs = [os.path.join(doctest_dir, doc) for doc in
+            os.listdir(doctest_dir) if doc.endswith('.rst')]
+    for test in docs:
+        suite.append(doctest.DocFileSuite(test, optionflags=flags, 
+                                          globs=globs,module_relative=False))
+    return unittest.TestSuite(suite)
+
+if not 'nosetests' in sys.argv[0]:
+    def test_suite():
+        """Returns the test suite."""
+        return doc_suite(test_dir)
+                     
+    if __name__ == '__main__':
+        unittest.main(defaultTest='test_suite')
+else:
+    def tests():
+        suite = doc_suite(test_dir)
+        res = unittest.TestResult()
+        suite.run(res)
+        for f in res.errors + res.failures:
+            raise AssertionError(f[1])
+        assert res.wasSuccessful()                                  
+
+
+}}}
+
+3.2  在模块目录下用 nosetests --doctest-tests 运行测试
+
+    --with-doctest
+    Enable plugin Doctest: Activate doctest plugin to find and run doctests in
+    non-test modules. [NOSE_WITH_DOCTEST]
+    启用插件:激活Doctest插件来查找和运行非测试模块中的doctests。
+

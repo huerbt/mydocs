@@ -1,0 +1,3082 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="canonical" href="https://blog.csdn.net/Snoopy_Yuan/article/details/63684219"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="renderer" content="webkit"/>
+    <meta name="force-rendering" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="referrer" content="always">
+    <meta http-equiv="Cache-Control" content="no-siteapp" /><link rel="alternate" media="handheld" href="#" />
+    <meta name="shenma-site-verification" content="5a59773ab8077d4a62bf469ab966a63b_1497598848">
+    <script src="https://csdnimg.cn/release/phoenix/vendor/tingyun/tingyun-rum-blog.js"></script>
+
+    <link href="https://csdnimg.cn/public/favicon.ico" rel="SHORTCUT ICON">
+    <title>周志华《机器学习》课后习题解答系列（四）：Ch3.3 - 编程实现对率回归 - Snoopy_Yuan技术部落格 - CSDN博客</title>
+
+            <link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/detail-afa8a65ceb.min.css">
+        <link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/themes/skin3-template/skin3-template-9b39979775.min.css">
+
+    <script type="text/javascript">
+        var username = "Snoopy_Yuan";
+        var blog_address = "https://blog.csdn.net/snoopy_yuan";
+        var static_host = "https://csdnimg.cn/release/phoenix/";
+        var currentUserName = "";
+        var isShowAds = true;
+        var isOwner = false;
+        var loginUrl = "http://passport.csdn.net/account/login?from=https://blog.csdn.net/Snoopy_Yuan/article/details/63684219"
+        var blogUrl = "https://blog.csdn.net/";
+        //页面皮肤样式
+        var curSkin = "skin3-template";
+        // 第四范式所需数据
+        var articleTitles = "周志华《机器学习》课后习题解答系列（四）：Ch3.3 - 编程实现对率回归 - Snoopy_Yuan技术部落格";
+        var articleID = "63684219";
+
+        var nickName = "Snoopy_Yuan";
+    </script>
+    <script type="text/javascript">
+        // Traffic Stats of the entire Web site By baidu
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?6bcd52f51e9b3dce32bec4a3997715ac";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+        // Traffic Stats of the entire Web site By baidu end
+    </script>
+    <script src="https://csdnimg.cn/public/common/libs/jquery/jquery-1.9.1.min.js" type="text/javascript"></script>
+    <script src="https://csdnimg.cn/rabbit/exposure-click/main-1.0.6.js"></script>
+    <!-- 新版上报 -->
+    <script src="//g.csdnimg.cn/track/1.1.1/track.js" type="text/javascript"></script>
+    <!-- 新版上报end -->
+            <link rel="stylesheet" href="https://csdnimg.cn/public/sandalstrap/1.4/css/sandalstrap.min.css">
+    <style>
+        .MathJax, .MathJax_Message, .MathJax_Preview{
+            display: none
+        }
+    </style>
+</head>
+<!-- nodata 第三栏接口无数据时样式不变 -->
+<body class="nodata"> 
+    <link rel="stylesheet" href="https://csdnimg.cn/public/common/toolbar/content_toolbar_css/content_toolbar.css">
+    <script id="toolbar-tpl-scriptId" src="https://csdnimg.cn/public/common/toolbar/js/content_toolbar.js" type="text/javascript" domain="https://blog.csdn.net/"></script>
+<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/blog_code-c3a0c33d5c.css">
+<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/vendor/pagination/paging.css">
+<script type="text/javascript">
+	// 容错处理
+	var NEWS_FEED = function(){}
+</script>
+<script type="text/javascript" src="//static.mediav.com/js/mvf_news_feed.js"></script>
+<script type="text/javascript" src="//g.csdnimg.cn/copyright/1.0.3/copyright.js"></script>
+<div style="display:none;">
+	<img src="" onerror='setTimeout(function(){if(!/(csdn.net|iteye.com|baiducontent.com|googleusercontent.com|360webcache.com|sogoucdn.com|bingj.com|baidu.com)$/.test(window.location.hostname)){window.location.href="\x68\x74\x74\x70\x73\x3a\x2f\x2f\x77\x77\x77\x2e\x63\x73\x64\x6e\x2e\x6e\x65\x74"}},3000);'>
+</div>
+<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/chart-3456820cac.css" />
+
+
+
+<script src="https://dup.baidustatic.com/js/ds.js"></script>
+<div class="container clearfix" id="mainBox">
+		<div class="recommend-right">
+  <ul class="recommend-fixed-box">
+    
+  </ul>
+</div>
+    <main>
+        <div class="blog-content-box">
+	<div class="article-header-box">
+		<div class="article-header">
+			<div class="article-title-box">
+				<span class="article-type type-1 float-left">原</span>				<h1 class="title-article">周志华《机器学习》课后习题解答系列（四）：Ch3.3 - 编程实现对率回归</h1>
+			</div>
+			<div class="article-info-box">
+				<div class="article-bar-top">
+																				<span class="time">2017年03月19日 13:53:42</span>
+					<a class="follow-nickName" href="https://me.csdn.net/Snoopy_Yuan" target="_blank">Snoopy_Yuan</a>
+						<span class="read-count">阅读数：6978</span>
+						
+														<span class="tags-box artic-tag-box">
+								<span class="label">标签：</span>
+																<a data-track-click='{"mod":"popu_626","con":"机器学习"}' data-track-view='{"mod":"popu_626","con":"机器学习"}' class="tag-link" href="http://so.csdn.net/so/search/s.do?q=机器学习&t=blog" target="_blank">机器学习																<a data-track-click='{"mod":"popu_626","con":"对率回归"}' data-track-view='{"mod":"popu_626","con":"对率回归"}' class="tag-link" href="http://so.csdn.net/so/search/s.do?q=对率回归&t=blog" target="_blank">对率回归																<a data-track-click='{"mod":"popu_626","con":"梯度下降法"}' data-track-view='{"mod":"popu_626","con":"梯度下降法"}' class="tag-link" href="http://so.csdn.net/so/search/s.do?q=梯度下降法&t=blog" target="_blank">梯度下降法																<a data-track-click='{"mod":"popu_626","con":"python"}' data-track-view='{"mod":"popu_626","con":"python"}' class="tag-link" href="http://so.csdn.net/so/search/s.do?q=python&t=blog" target="_blank">python																<a data-track-click='{"mod":"popu_626","con":"sklearn"}' data-track-view='{"mod":"popu_626","con":"sklearn"}' class="tag-link" href="http://so.csdn.net/so/search/s.do?q=sklearn&t=blog" target="_blank">sklearn																</a>
+							</span>
+																					<div class="tags-box space">
+								<span class="label">个人分类：</span>
+																<a class="tag-link" href="https://blog.csdn.net/Snoopy_Yuan/article/category/6788615"  target="_blank">机器学习																</a>
+							</div>
+																								</div>
+				<div class="operating">
+														</div>
+			</div>
+		</div>
+	</div>
+	<article>
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+					版权声明：本文为博主原创文章，转载时请注明来源。					https://blog.csdn.net/Snoopy_Yuan/article/details/63684219				</div>
+								            <div class="markdown_views prism-atom-one-dark">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>这里采用<strong>Python-sklearn</strong>的方式，环境搭建可参考<a href="http://blog.csdn.net/snoopy_yuan/article/details/61211639" rel="nofollow"> 数据挖掘入门：Python开发环境搭建（eclipse-pydev模式）</a>.</p>
+
+<p>相关答案和源代码托管在我的Github上：<a href="https://github.com/PY131/Machine-Learning_ZhouZhihua" rel="nofollow">PY131/Machine-Learning_ZhouZhihua</a>.</p>
+
+
+
+<h4 id="思路概要">思路概要</h4>
+
+<p>编程实现对率回归： <br>
+ * 采用<strong>sklearn</strong>逻辑斯蒂回归库函数实现，通过查看混淆矩阵，绘制决策区域来查看模型分类效果； <br>
+ * 自己编程实现，从极大化似然函数出发，采用<strong>梯度下降法</strong>得到最优参数，然后尝试了<strong>随机梯度下降法</strong>来优化过程。</p>
+
+
+
+<h3 id="33-编程实现对率回归">3.3 编程实现对率回归</h3>
+
+<blockquote>
+  <p><img src="https://img-blog.csdn.net/20170319133439115?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvU25vb3B5X1l1YW4=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述" title=""></p>
+</blockquote>
+
+<p>所使用的数据集如下：</p>
+
+<blockquote>
+  <p><img src="https://img-blog.csdn.net/20170319133609082?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvU25vb3B5X1l1YW4=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述" title=""></p>
+</blockquote>
+
+<p>本题是本书的第一个编程练习，采用了自己编程实现和调用sklearn库函数两种不同的方式，详细解答和编码过程：（<a href="https://github.com/PY131/Machine-Learning_ZhouZhihua/tree/master/ch3_linear_model/3.3_logistic_regression_watermelon/src" rel="nofollow">查看完整代码</a>）：</p>
+
+
+
+<h4 id="1获取数据查看数据预处理">1.获取数据、查看数据、预处理：</h4>
+
+<p>观察数据可知，X包含（密度、含糖量）两个变量，y为西瓜是否好瓜分类（二分），由此生成.csv数据文件，在Python中用Numpy读取数据并采用matplotlib库可视化数据：</p>
+
+<p>样例代码：</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs python"><span class="hljs-string">'''
+data importion
+'''</span>
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt  
+
+<span class="hljs-comment"># load the CSV file as a numpy matrix</span>
+dataset = np.loadtxt(<span class="hljs-string">'../data/watermelon_3a.csv'</span>, delimiter=<span class="hljs-string">","</span>)
+
+<span class="hljs-comment"># separate the data from the target attributes</span>
+X = dataset[:,<span class="hljs-number">1</span>:<span class="hljs-number">3</span>]
+y = dataset[:,<span class="hljs-number">3</span>]
+
+<span class="hljs-comment"># draw scatter diagram to show the raw data</span>
+f1 = plt.figure(<span class="hljs-number">1</span>)   
+plt.title(<span class="hljs-string">'watermelon_3a'</span>)  
+plt.xlabel(<span class="hljs-string">'density'</span>)  
+plt.ylabel(<span class="hljs-string">'ratio_sugar'</span>)  
+plt.scatter(X[y == <span class="hljs-number">0</span>,<span class="hljs-number">0</span>], X[y == <span class="hljs-number">0</span>,<span class="hljs-number">1</span>], marker = <span class="hljs-string">'o'</span>, color = <span class="hljs-string">'k'</span>, s=<span class="hljs-number">100</span>, label = <span class="hljs-string">'bad'</span>)
+plt.scatter(X[y == <span class="hljs-number">1</span>,<span class="hljs-number">0</span>], X[y == <span class="hljs-number">1</span>,<span class="hljs-number">1</span>], marker = <span class="hljs-string">'o'</span>, color = <span class="hljs-string">'g'</span>, s=<span class="hljs-number">100</span>, label = <span class="hljs-string">'good'</span>)
+plt.legend(loc = <span class="hljs-string">'upper right'</span>)  
+plt.show()</code></pre>
+
+<p>数据散点图：</p>
+
+<blockquote>
+  <p><img src="https://img-blog.csdn.net/20170319135240517?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvU25vb3B5X1l1YW4=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述" title=""></p>
+</blockquote>
+
+
+
+<h4 id="2采用sklearn逻辑回归库函数直接拟合">2.采用sklearn逻辑回归库函数直接拟合：</h4>
+
+<p>虽然样本量很少，这里还是先划分训练集和测试集，采用sklearn.model_selection.train_test_split()实现，然后采用sklearn.linear_model.LogisticRegression，基于训练集直接拟合出逻辑回归模型，然后在测试集上评估模型（查看混淆矩阵和F1值）。</p>
+
+<p>样例代码：</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs python"><span class="hljs-string">''' 
+using sklearn lib for logistic regression
+'''</span>
+<span class="hljs-keyword">from</span> sklearn <span class="hljs-keyword">import</span> model_selection
+<span class="hljs-keyword">from</span> sklearn.linear_model <span class="hljs-keyword">import</span> LogisticRegression
+<span class="hljs-keyword">from</span> sklearn <span class="hljs-keyword">import</span> metrics
+
+
+<span class="hljs-comment"># generalization of test and train set</span>
+X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y, test_size=<span class="hljs-number">0.5</span>, random_state=<span class="hljs-number">0</span>)
+
+<span class="hljs-comment"># model training</span>
+log_model = LogisticRegression() 
+log_model.fit(X_train, y_train) 
+
+<span class="hljs-comment"># model testing</span>
+y_pred = log_model.predict(X_test)
+
+<span class="hljs-comment"># summarize the accuracy of fitting</span>
+print(metrics.confusion_matrix(y_test, y_pred))
+print(metrics.classification_report(y_test, y_pred))</code></pre>
+
+<p>得出混淆矩阵和相关度量（查准率（准确率）、查全率（召回率），F1值）结果如下：</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs lua"><span class="hljs-string">[[4 1]
+ [1 3]]</span>
+             precision    recall  f1-score   support
+
+        <span class="hljs-number">0.0</span>       <span class="hljs-number">0.80</span>      <span class="hljs-number">0.80</span>      <span class="hljs-number">0.80</span>         <span class="hljs-number">5</span>
+        <span class="hljs-number">1.0</span>       <span class="hljs-number">0.75</span>      <span class="hljs-number">0.75</span>      <span class="hljs-number">0.75</span>         <span class="hljs-number">4</span>
+
+avg / total       <span class="hljs-number">0.78</span>      <span class="hljs-number">0.78</span>      <span class="hljs-number">0.78</span>         <span class="hljs-number">9</span></code></pre>
+
+<p>由混淆矩阵可以看到，由于样本本身数量较少，模型拟合效果一般，总体预测精度约为0.78。为提升精度，可以采用<strong>自助法</strong>进行重抽样扩充数据集，或是采用<strong>交叉验证</strong>选择最优模型。</p>
+
+<p>下图是采用matplotlib.contourf绘制的决策区域和边界，可以看出对率回归分类器还是成功的分出了绝大多数类：</p>
+
+<blockquote>
+  <p><img src="https://img-blog.csdn.net/20170319135912983?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvU25vb3B5X1l1YW4=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述" title=""></p>
+</blockquote>
+
+
+
+<h4 id="3自己编程实现逻辑斯蒂回归">3.自己编程实现逻辑斯蒂回归</h4>
+
+<p>编程实现逻辑回归的主要工作是求取参数w和b（见书p59），最常用的参数估计方法是<strong>极大似然法</strong>，由于题3.1已经证得对数似然函数（见书3.27）是凸函数，存在最优解，这里考虑采用<strong>梯度下降法</strong>来迭代寻优。</p>
+
+<p>回顾一下Sigmoid函数，即逻辑斯蒂回归分类器的基础模型：</p>
+
+<blockquote>
+  <p><img src="https://img-blog.csdn.net/20170319140004343?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvU25vb3B5X1l1YW4=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述" title=""></p>
+</blockquote>
+
+<p>目的是基于数据集求出最优参数w和b，最常采用的是极大似然法，参数的似然函数为：</p>
+
+<blockquote>
+  <p><img src="https://img-blog.csdn.net/20170319140118219?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvU25vb3B5X1l1YW4=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述" title=""></p>
+</blockquote>
+
+<p>根据书p59，最大化上式等价于最小化下式：</p>
+
+<blockquote>
+  <p><img src="https://img-blog.csdn.net/20170319140218220?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvU25vb3B5X1l1YW4=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述" title=""></p>
+</blockquote>
+
+<p>题3.2已证上式为凸函数，一定存在最小值，但按照导数为零的解析求解方式较为困难，于是考虑采用梯度下降法来求解上式最小值时对应的参数。</p>
+
+<p>注：梯度下降法基本知识可参考书中附录p409页，也可直接采用书中p60式3.30偏导数公式。书中关于参数迭代改变式子如下：</p>
+
+<blockquote>
+  <p><img src="https://img-blog.csdn.net/20170319140333845?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvU25vb3B5X1l1YW4=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述" title=""></p>
+</blockquote>
+
+<p>对于迭代，可每次先根据(B.16)计算出梯度▽f(β)，然后由(B.17)更新得出下一步的Δβ。</p>
+
+<p>接下来编程实现基本的梯度下降法：</p>
+
+<p>(1)首先编程实现对象式3.27：</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">likelihood_sub</span><span class="hljs-params">(x, y, beta)</span>:</span>
+    <span class="hljs-string">'''
+    @param x: one sample variables
+    @param y: one sample label
+    @param beta: the parameter vector in 3.27
+    @return: the sub_log-likelihood of 3.27  
+    '''</span> 
+    <span class="hljs-keyword">return</span> -y * np.dot(beta, x.T) + np.math.log(<span class="hljs-number">1</span> + np.math.exp(np.dot(beta, x.T)))   
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">likelihood</span><span class="hljs-params">(X, y, beta)</span>:</span>
+    <span class="hljs-string">'''
+    @param X: the sample variables matrix
+    @param y: the sample label matrix
+    @param beta: the parameter vector in 3.27
+    @return: the log-likelihood of 3.27  
+    '''</span>
+    sum = <span class="hljs-number">0</span>
+    m,n = np.shape(X)  
+
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(m):
+        sum += likelihood_sub(X[i], y[i], beta)
+
+    <span class="hljs-keyword">return</span> sum  </code></pre>
+
+<p>(2)然后基于训练集（注意x-&gt;[x,1]），给出基于3.27似然函数的<strong>定步长梯度下降</strong>法，注意这里的<strong>偏梯度</strong>实现技巧：</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs python"><span class="hljs-string">'''
+@param X: X is the variable matrix 
+@param y: y is the label array
+@return: the best parameter estimate of 3.27
+'''</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">gradDscent_1</span><span class="hljs-params">(X, y)</span>:</span>  <span class="hljs-comment">#implementation of basic gradDscent algorithms</span>
+
+    h = <span class="hljs-number">0.1</span>  <span class="hljs-comment"># step length of iteration</span>
+    max_times= <span class="hljs-number">500</span>  <span class="hljs-comment"># give the iterative times limit</span>
+    m, n = np.shape(X)
+
+    beta = np.zeros(n)  <span class="hljs-comment"># parameter and initial to 0</span>
+    delta_beta = np.ones(n)*h  <span class="hljs-comment"># delta parameter and initial to h</span>
+    llh = <span class="hljs-number">0</span>
+    llh_temp = <span class="hljs-number">0</span>
+
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(max_times):
+        beta_temp = beta.copy()
+
+        <span class="hljs-comment"># for partial derivative </span>
+        <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> range(n): 
+            beta[j] += delta_beta[j]
+            llh_tmp = likelihood(X, y, beta)
+            delta_beta[j] = -h * (llh_tmp - llh) / delta_beta[j]                
+            beta[j] = beta_temp[j]
+
+        beta += delta_beta            
+        llh = likelihood(X, y, beta)
+
+    <span class="hljs-keyword">return</span> beta</code></pre>
+
+<p>通过追踪参数，查看其收敛曲线，然后来调节相关参数（步长h，迭代次数max_times）。下图是在当前参数取值下的beta曲线，可以看到其收敛良好：</p>
+
+<blockquote>
+  <p><img src="https://img-blog.csdn.net/20170319140552787?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvU25vb3B5X1l1YW4=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述" title=""></p>
+</blockquote>
+
+<p>(3)最后建立Sigmoid预测函数，对测试集数据进预测，得到混淆矩阵如下：</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs lua"><span class="hljs-string">[[ 4.  1.]
+ [ 1.  3.]]</span></code></pre>
+
+<p>可以看出其总体预测精度（7/9 ≈ 0.78）与调用sklearn库得出的结果相当。</p>
+
+<p>(4)采用<strong>随机梯度下降</strong>法来优化：上面采用的是全局定步长梯度下降法（称之为<strong>批量梯度下降</strong>），这种方法在可能会面临收敛过慢和收敛曲线波动情况的同时，每次迭代需要全局计算，计算量随数据量增大而急剧增大。所以尝试采用随机梯度下降来改善参数迭代寻优过程。</p>
+
+<p>随机梯度下降法的核心思想是<strong>增量</strong>学习：一次只用一个新样本来更新回归系数，从而形成在线流式处理。</p>
+
+<p>同时为了加快收敛，采用<strong>变步长</strong>的策略，h随着迭代次数逐渐减小。</p>
+
+<p>给出变步长随机梯度下降法的代码如下：</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">gradDscent_2</span><span class="hljs-params">(X, y)</span>:</span>  <span class="hljs-comment">#implementation of stochastic gradDscent algorithms</span>
+  <span class="hljs-string">'''
+   @param X: X is the variable matrix 
+   @param y: y is the label array
+   @return: the best parameter estimate of 3.27
+   '''</span>
+   <span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt  
+
+   m, n = np.shape(X)
+   h = <span class="hljs-number">0.5</span>  <span class="hljs-comment">#  step length of iterator and initial</span>
+   beta = np.zeros(n)  <span class="hljs-comment"># parameter and initial</span>
+   delta_beta = np.ones(n) * h
+   llh = <span class="hljs-number">0</span>
+   llh_temp = <span class="hljs-number">0</span>
+
+   <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(m):
+       beta_temp = beta.copy()  <span class="hljs-comment"># for partial derivative </span>
+
+       <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> range(n): 
+           h = <span class="hljs-number">0.5</span> * <span class="hljs-number">1</span> / (<span class="hljs-number">1</span> + i + j)  <span class="hljs-comment"># change step length of iterator </span>
+           beta[j] += delta_beta[j]
+           llh_tmp = likelihood_sub(X[i], y[i], beta)
+           delta_beta[j] = -h * (llh_tmp - llh) / delta_beta[j]   
+           beta[j] = beta_temp[j]  
+
+       beta += delta_beta    
+       llh = likelihood_sub(X[i], y[i], beta)
+
+   <span class="hljs-keyword">return</span> beta
+</code></pre>
+
+<p>得出混淆矩阵：</p>
+
+<pre class="prettyprint"><code class=" hljs lua"><span class="hljs-string">[[ 3.  2.]
+ [ 0.  4.]]</span></code></pre>
+
+<p>从结果看到的是：由于这里的西瓜数据集并不大，所以随机梯度下降法采用一次遍历所得的结果不太好，参数也没有完成收敛。这里只是给出随机梯度下降法的实现样例，这种方法在大数据集下相比批量梯度法应会有明显的优势。</p>
+
+<hr>
+
+<p>参考链接： <br>
+由于这是本书第一个编程，索引资料较多，择其重要的一些列出如下：</p>
+
+<ul>
+<li><a href="https://kukuruku.co/post/introduction-to-machine-learning-with-python-andscikit-learn/" rel="nofollow">Introduction to Machine Learning with Python and Scikit-Learn</a></li>
+<li><a href="http://scikit-learn.org/stable/index.html" rel="nofollow">scikit-learn官方主页</a></li>
+<li><a href="http://matplotlib.org/index.html" rel="nofollow">matplotlib官方主页</a></li>
+<li><a href="http://blog.csdn.net/lilyth_lilyth/article/details/8973972" rel="nofollow">随机梯度下降（Stochastic gradient descent）和批量梯度下降（Batch gradient descent）的公式对比、实现对比</a></li>
+<li><a href="http://blog.csdn.net/zouxy09/article/details/20319673" rel="nofollow">机器学习算法与Python实践之（七）逻辑回归（Logistic Regression）</a></li>
+<li><a href="http://stackoverflow.com/questions/19054923/plot-decision-boundary-matplotlib" rel="nofollow">plot decision boundary matplotlib <br>
+Ask（matplotlib决策区域和边界绘制</a></li>
+<li><a href="http://blog.csdn.net/abcjennifer/article/details/19848269" rel="nofollow">Python数据可视化——散点图</a></li>
+</ul>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-7f770a53f2.css" rel="stylesheet">
+                </div>
+									<div class="hide-article-box text-center">
+						<a class="btn" id="btn-readmore" data-track-view='{"mod":"popu_376","con":",https://blog.csdn.net/Snoopy_Yuan/article/details/63684219,"}' data-track-click='{"mod":"popu_376","con":",https://blog.csdn.net/Snoopy_Yuan/article/details/63684219,"}'>阅读更多</a>
+					</div>
+					<script>
+						(function(){
+							function setArticleH(btnReadmore,posi){
+								var winH = $(window).height();
+								var articleBox = $("div.article_content");
+								var artH = articleBox.height();
+								if(artH > winH*posi){
+									articleBox.css({
+										'height':winH*posi+'px',
+										'overflow':'hidden'
+									})
+									btnReadmore.click(function(){
+										articleBox.removeAttr("style");
+										$(this).parent().remove();
+									})
+								}else{
+									btnReadmore.parent().remove();
+								}
+							}
+							var btnReadmore = $("#btn-readmore");
+							if(btnReadmore.length>0){
+								if(currentUserName){
+									setArticleH(btnReadmore,3);
+								}else{
+									setArticleH(btnReadmore,1.2);
+								}
+							}
+						})()
+					</script>
+					</article>
+	
+</div>
+<script>
+		$(".MathJax").remove();
+		if($('div.markdown_views pre.prettyprint code.hljs').length > 0 ){
+				$('div.markdown_views')[0].className = 'markdown_views';
+		}
+</script>
+        <div class="p4course_target" ></div><script>window.p4sdk_enable_courseBox=true</script>        <a id="commentBox"></a>
+<div class="comment-box">
+	  	<div class="unlogin-box text-center">
+		想对作者说点什么？
+		<!-- $curl 当前地址 -->
+		<button id="btnCommentUnlogin" class="btn btn-sm btn-red">我来说一句</button>
+	</div>
+			<div class="comment-list-container">
+		<a id="comments"></a>
+		<div class="comment-list-box">
+		</div>
+		<div id="commentPage" class="pagination-box d-none"></div>
+		<div class="opt-box text-center">
+			<button class="btn btn-sm btn-link-blue" id="btnMoreComment"></button>
+		</div>
+	</div>
+</div>
+        <div class="recommend-box">
+            		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/icefire_tyh/article/details/52068844,BlogCommendFromBaidu_5"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/icefire_tyh/article/details/52068844,BlogCommendFromBaidu_5"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/icefire_tyh/article/details/52068844" target="_blank" title="机器学习(周志华) 参考答案 第三章  线性模型 3.3">
+				<h4 class="text-truncate oneline">
+						<em>机器学习</em>(<em>周志华</em>) 参考答案 第三章  线性模型 3.3				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/3/7/E/3_icefire_tyh.jpg" alt="icefire_tyh" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">icefire_tyh</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">05-17</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							1.1万</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/icefire_tyh/article/details/52068844" target="_blank" title="机器学习(周志华) 参考答案 第三章  线性模型 3.3">
+							<span class="desc oneline">机器学习(周志华) 参考答案 第三章  线性模型 3.3机器学习(周志华西瓜书) 参考答案 总目录  
+http://blog.csdn.net/icefire_tyh/article/details...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/icefire_tyh">来自：	<span class="blog_title"> 我的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/qdbszsj/article/details/79001568,BlogCommendFromBaidu_7"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/qdbszsj/article/details/79001568,BlogCommendFromBaidu_7"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/qdbszsj/article/details/79001568" target="_blank" title="西瓜书 习题3.3 编程实现对数几率回归，梯度下降法">
+				<h4 class="text-truncate oneline">
+						西瓜书 <em>习题</em>3.3 <em>编程实现</em>对数几率<em>回归</em>，梯度下降法				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/F/D/5/3_qdbszsj.jpg" alt="qdbszsj" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">qdbszsj</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">01-08</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							1301</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/qdbszsj/article/details/79001568" target="_blank" title="西瓜书 习题3.3 编程实现对数几率回归，梯度下降法">
+							<span class="desc oneline">最近入坑上道了，跟着周志华老师的《机器学习》，先搞个课后题练练手。
+我电脑是Win10的，硬件配置不输Mac Pro，但是之前跑Kaggle上的泰坦尼克，装python的各种package装的我心累...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/qdbszsj">来自：	<span class="blog_title"> 世靖的码场</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/zjy_lilas/article/details/64439717,BlogCommendFromBaidu_0"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/zjy_lilas/article/details/64439717,BlogCommendFromBaidu_0"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/zjy_lilas/article/details/64439717" target="_blank" title="周志华机器学习，3.3编程实现对率回归，并给出西瓜数据集3.0α上的结果">
+				<h4 class="text-truncate oneline">
+						<em>周志华</em><em>机器学习</em>，3.3<em>编程实现</em>对率<em>回归</em>，并给出西瓜数据集3.0α上的结果				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/5/B/0/3_zjy_lilas.jpg" alt="zjy_lilas" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">zjy_lilas</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">03-21</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							4278</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/zjy_lilas/article/details/64439717" target="_blank" title="周志华机器学习，3.3编程实现对率回归，并给出西瓜数据集3.0α上的结果">
+							<span class="desc oneline">3.3编程实现对率回归，并给出西瓜数据集3.0α上的结果数据集：
+1 0.697 0.460 1 
+2 0.774 0.376 1 
+3 0.634 0.264 1 
+4 0.608 0.318 1 ...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/zjy_lilas">来自：	<span class="blog_title"> zjy_lilas的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    <div class="recommend-item-box recommend-ad-box"><div id="kp_box_78" data-pid="59" data-track-view='{"mod":"kp_popu_78","con":",,"}'><script type="text/javascript" src="//rabc1.iteye.com/production/res/rxjg.js?pkcgstj=jm"></script></div><script>$(function(){csdn.track.viewCheck($("#kp_box_78"));});</script></div>
+	
+    
+    		<div class="recommend-item-box recommend-box-ident" data-track-view='{"mod":"popu_387","con":",https://edu.csdn.net/course/detail/7012?from=recdm&lessonid=140349,BlogCommendFromEdu_1"}' data-track-click='{"mod":"popu_387","con":",https://edu.csdn.net/course/detail/7012?from=recdm&lessonid=140349,BlogCommendFromEdu_1"}'>
+		<a href="https://edu.csdn.net/course/detail/7012?from=recdm&lessonid=140349" target="_blank">
+			<h4 class="text-truncate oneline">
+					Linux Socket编程实战第1季第1部分			</h4>
+			<div class="info-box d-flex align-content-center">
+				<p>
+									<span class="read-num">学院</span>
+								</p>
+				<p>
+					<span class="date">01-01</span>
+				</p>
+			</div>
+			<p class="content oneline">
+					适合人群：1、有C语言基础 ；2、对网络通讯感兴趣的人员；3、从事网络通讯的技术人员； 4、在校学生；,章节：如何对套接口读写之编程实现			</p>
+		</a>
+
+	</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/OnTheWayGoGoing/article/details/68485682,BlogCommendFromBaidu_2"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/OnTheWayGoGoing/article/details/68485682,BlogCommendFromBaidu_2"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/OnTheWayGoGoing/article/details/68485682" target="_blank" title="用对数几率回归实现周志华《机器学习》习题3.3西瓜分类，python编程">
+				<h4 class="text-truncate oneline">
+						用对数几率<em>回归</em>实现<em>周志华</em>《<em>机器学习</em>》<em>习题</em>3.3西瓜分类，python编程				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/0/B/A/3_onthewaygogoing.jpg" alt="OnTheWayGoGoing" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">OnTheWayGoGoing</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">03-30</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							2716</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/OnTheWayGoGoing/article/details/68485682" target="_blank" title="用对数几率回归实现周志华《机器学习》习题3.3西瓜分类，python编程">
+							<span class="desc oneline">数据集如下，要求根据西瓜的两个属性x1(密度)，x2(含糖率)实现对西瓜好瓜（1）还是坏瓜（0）的分类代码如下：# -*- coding: utf-8 -*-
+#对率回归分类
+import numpy...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/OnTheWayGoGoing">来自：	<span class="blog_title">  大树挖掘工的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/llwleon/article/details/79204790,BlogCommendFromBaidu_3"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/llwleon/article/details/79204790,BlogCommendFromBaidu_3"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/llwleon/article/details/79204790" target="_blank" title="《机器学习》周志华 课后习题3.3：编程实现对率回归,并给出西瓜数据集 3.0α 上的结果.">
+				<h4 class="text-truncate oneline">
+						《<em>机器学习</em>》<em>周志华</em> <em>课后</em><em>习题</em>3.3：<em>编程实现</em>对率<em>回归</em>,并给出西瓜数据集 3.0α 上的结果.				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/F/1/1/3_llwleon.jpg" alt="llwleon" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">llwleon</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">01-30</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							1309</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/llwleon/article/details/79204790" target="_blank" title="《机器学习》周志华 课后习题3.3：编程实现对率回归,并给出西瓜数据集 3.0α 上的结果.">
+							<span class="desc oneline">数据如下：
+
+python 代码如下：
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+&quot;&quot;&quot;
+Created on Tue Jan 30 10:0...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/llwleon">来自：	<span class="blog_title"> llwleon的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/Wiking__acm/article/details/51063982,BlogCommendFromBaidu_4"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/Wiking__acm/article/details/51063982,BlogCommendFromBaidu_4"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/Wiking__acm/article/details/51063982" target="_blank" title="《机器学习（周志华）》习题3.3答案">
+				<h4 class="text-truncate oneline">
+						《<em>机器学习</em>（<em>周志华</em>）》<em>习题</em>3.3答案				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/A/3/C/3_wiking__acm.jpg" alt="Wiking__acm" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">Wiking__acm</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">04-05</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							2891</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/Wiking__acm/article/details/51063982" target="_blank" title="《机器学习（周志华）》习题3.3答案">
+							<span class="desc oneline">编程实现对率回归，并给出西瓜数据集3.0@上的结果。
+对率回归即逻辑回归，可以看做没有隐藏层的，用sigmoid做激活函数，crossentropy做cost（不加regularization）的神...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/Wiking__acm">来自：	<span class="blog_title"> 勿忘初衷</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/CHNguoshiwushuang/article/details/78233770,BlogCommendFromBaidu_6"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/CHNguoshiwushuang/article/details/78233770,BlogCommendFromBaidu_6"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/CHNguoshiwushuang/article/details/78233770" target="_blank" title="机器学习（周志华）习题3.3">
+				<h4 class="text-truncate oneline">
+						<em>机器学习</em>（<em>周志华</em>）<em>习题</em>3.3				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/2/7/A/3_chnguoshiwushuang.jpg" alt="CHNguoshiwushuang" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">CHNguoshiwushuang</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">10-14</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							336</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/CHNguoshiwushuang/article/details/78233770" target="_blank" title="机器学习（周志华）习题3.3">
+							<span class="desc oneline">本人菜鸟一枚，由于需要完成作业，所以尝试使用机器学习工具库去解决该题（周志华《机器学习》3.3题），主要参考别人的代码进行了改写，如有不足请多多指教！
+           以下附上本题代码
+    ...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/CHNguoshiwushuang">来自：	<span class="blog_title"> CHNguoshiwushuang的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    <div class="recommend-item-box recommend-ad-box"><div id="kp_box_43" data-pid="60" data-track-view='{"mod":"kp_popu_43","con":",,"}'><div id="three_ad8" class="mediav_ad" ></div>
+<script type="text/javascript" src="//static.mediav.com/js/mvf_news_feed.js"></script>
+<script>
+                                               NEWS_FEED({
+                w: 900,
+                h : 84,
+                showid : 'Afihld',
+                placeholderId: "three_ad8",
+                inject : 'define',
+                define : {
+                    imagePosition : 'left',
+                    imageBorderRadius : 3,
+                    imageWidth: 90,
+                    imageHeight: 60,
+                    imageFill : 'clip',
+                    displayImage : true,
+                    displayTitle : true,
+                    titleFontSize: 16,
+                    titleFontColor: '#000',
+                    titleFontFamily : 'Microsoft Yahei',
+                    titleFontWeight: 'bold',
+                    titlePaddingTop : 0,
+                    titlePaddingRight : 0,
+                    titlePaddingBottom : 5,
+                    titlePaddingLeft : 16,
+                    displayDesc : true,
+                    descFontSize: 12,
+                    descFontColor: '#8e959a',
+                    descFontFamily : 'Microsoft Yahei',
+                    paddingTop : 10,
+                    paddingRight : 0,
+                    paddingBottom : 0,
+                    paddingLeft : 0,
+                    backgroundColor: '#fff',
+                    hoverColor: '#000'
+                      }
+                  })
+                                        </script></div><script>$(function(){csdn.track.viewCheck($("#kp_box_43"));});</script></div>
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/icefire_tyh/article/details/52069025,BlogCommendFromBaidu_8"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/icefire_tyh/article/details/52069025,BlogCommendFromBaidu_8"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/icefire_tyh/article/details/52069025" target="_blank" title="机器学习(周志华) 参考答案 第三章  线性模型">
+				<h4 class="text-truncate oneline">
+						<em>机器学习</em>(<em>周志华</em>) 参考答案 第三章  线性模型				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/3/7/E/3_icefire_tyh.jpg" alt="icefire_tyh" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">icefire_tyh</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">05-18</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							2万</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/icefire_tyh/article/details/52069025" target="_blank" title="机器学习(周志华) 参考答案 第三章  线性模型">
+							<span class="desc oneline">机器学习(周志华) 参考答案 第三章  线性模型
+
+机器学习(周志华西瓜书) 参考答案 总目录  
+http://blog.csdn.net/icefire_tyh/article/details/5...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/icefire_tyh">来自：	<span class="blog_title"> 我的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+			<div class="recommend-item-box type_hot_word">
+									<div class="content clearfix oneline">
+				<h5 class="float-left">相关热词</h5>
+				<div class="float-left">
+									<span>
+						<a href="https://blog.csdn.net/jzrita/article/details/72780287" target="_blank">
+						周志华</a>
+					</span>
+									<span>
+						<a href="https://blog.csdn.net/zhujianing1993/article/details/64919819" target="_blank">
+						周志华课题组</a>
+					</span>
+									<span>
+						<a href="https://blog.csdn.net/sunspeedzy/article/details/79698210" target="_blank">
+						周志华 勘误</a>
+					</span>
+									<span>
+						<a href="https://blog.csdn.net/zmdsjtu/article/details/52891654" target="_blank">
+						周志华 线性模型</a>
+					</span>
+									<span>
+						<a href="https://blog.csdn.net/zhujianing1993/article/details/64919819" target="_blank">
+						周志华研究生</a>
+					</span>
+								</div>
+			</div>
+					</div>
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/u010083327/article/details/79766731,BlogCommendFromBaidu_9"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/u010083327/article/details/79766731,BlogCommendFromBaidu_9"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/u010083327/article/details/79766731" target="_blank" title="3.3编程实现对率回归">
+				<h4 class="text-truncate oneline">
+						3.3<em>编程实现</em>对率<em>回归</em>				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/7/5/4/3_u010083327.jpg" alt="u010083327" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">u010083327</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">03-31</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							338</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/u010083327/article/details/79766731" target="_blank" title="3.3编程实现对率回归">
+							<span class="desc oneline">&amp;quot;&amp;quot;&amp;quot;
+Author: Victoria
+Created on: 2017.9.14 11:00
+&amp;quot;&amp;quot;&amp;quot;
+import matplotlib...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/u010083327">来自：	<span class="blog_title"> 周博的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+            <div class="recommend-item-box blog-expert-recommend-box">
+			<div class="d-flex">
+				<div class="blog-expert-recommend">
+					<div class="blog-expert">
+						<div class="blog-expert-flexbox"></div>
+					</div>
+				</div>
+				<div class="blog-expert-load-new" data-index="3">
+					<svg version="1.1" viewBox="0 0 200 200" style="enable-background:new 0 0 200 200;" xml:space="preserve">
+					<path d="M142.5,57.5c-1.3-1.2-2.1-3.3-2.1-5.4c0-4.2,3.3-7.5,7.5-7.5h19.6c4.2,0,7.5,3.3,7.5,7.5s-3.3,7.5-7.5,7.5h-4.2
+						C170.8,71.2,175,85,175,100c0,41.7-33.8,75-75,75c-4.2,0-7.5-3.3-7.5-7.5c0-4.2,3.3-7.5,7.5-7.5c33.3,0,60-27.1,60-60
+						C160,83.7,153.8,68.7,142.5,57.5L142.5,57.5z M57.5,142.5c1.2,1.2,2.1,3.3,2.1,5.4c0,4.2-3.3,7.5-7.5,7.5H32.5
+						c-4.2,0-7.5-3.3-7.5-7.5c0-4.2,3.3-7.5,7.5-7.5h4.2C29.2,128.8,25,115,25,100c0-41.7,33.7-75,75-75c4.2,0,7.5,3.3,7.5,7.5
+						S104.2,40,100,40c-33.3,0-60,27.1-60,60C40,116.2,46.2,131.2,57.5,142.5z"/>
+					</svg>
+					<span>换一批</span>
+				</div>
+			</div>
+        </div>
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/qq_28915885/article/details/82114942,BlogCommendFromBaidu_10"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/qq_28915885/article/details/82114942,BlogCommendFromBaidu_10"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/qq_28915885/article/details/82114942" target="_blank" title="对率回归的实验">
+				<h4 class="text-truncate oneline">
+						对率<em>回归</em>的实验				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/9/B/E/3_qq_28915885.jpg" alt="qq_28915885" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">qq_28915885</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">08-27</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							141</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/qq_28915885/article/details/82114942" target="_blank" title="对率回归的实验">
+							<span class="desc oneline">对数几率回归在python中的实现
+
+在做分类任务时，需要找一个单调可微函数将分类任务的真实标记y与线性回归模型所预测的值联系起来。对数几率函数是用来“替代”单位跃阶函数的，满足单调可微的条件。以下是...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/qq_28915885">来自：	<span class="blog_title"> qq_28915885的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/bebusy/article/details/82753619,BlogCommendESEnWordWeight_11"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/bebusy/article/details/82753619,BlogCommendESEnWordWeight_11"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/bebusy/article/details/82753619" target="_blank" title="机器学习(周志华)-python编程练习-习题3-3">
+				<h4 class="text-truncate oneline">
+						<em>机器学习</em>(<em>周志华</em>)-python编程练习-<em>习题</em>3-3				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/9/9/4/3_bebusy.jpg" alt="bebusy" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">bebusy</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">09-18</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							19</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/bebusy/article/details/82753619" target="_blank" title="机器学习(周志华)-python编程练习-习题3-3">
+							<span class="desc oneline"> 
+
+习题3.3  编程实现对率回归，并给出西瓜数据集 3.0α 上的结果.
+
+数据集3.0α
+
+sn
+			density
+			suger_ratio
+			good_melon
+		1
+			0...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/bebusy">来自：	<span class="blog_title"> bebusy的专栏</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/u013630675/article/details/79089171,BlogCommendESEnWordWeight_12"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/u013630675/article/details/79089171,BlogCommendESEnWordWeight_12"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/u013630675/article/details/79089171" target="_blank" title="机器学习-周志华-课后习题答案-线性模型">
+				<h4 class="text-truncate oneline">
+						<em>机器学习</em>-<em>周志华</em>-<em>课后</em><em>习题</em>答案-线性模型				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/1/7/A/3_u013630675.jpg" alt="u013630675" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">u013630675</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">01-17</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							1325</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/u013630675/article/details/79089171" target="_blank" title="机器学习-周志华-课后习题答案-线性模型">
+							<span class="desc oneline">3.1试分析在什么情况下，在以下式子中不比考虑偏置项b。答：在线性回归中，所有参数的确定都是为了让残差项的均值为0且残差项的平方和最小。在所有其他参数项确定后，偏置项b（或者说是常数项）的变化体现出来...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/u013630675">来自：	<span class="blog_title"> 天台的猫爷爷的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    <div class="recommend-item-box recommend-ad-box"><div id="kp_box_557" data-pid="61" data-track-view='{"mod":"kp_popu_557","con":",,"}'><div id="three_ad13" class="mediav_ad" ></div>
+<script type="text/javascript" src="//static.mediav.com/js/mvf_news_feed.js"></script>
+<script>
+                                               NEWS_FEED({
+                w: 900,
+                h : 84,
+                showid : 'GNKXx7',
+                placeholderId: "three_ad13",
+                inject : 'define',
+                define : {
+                    imagePosition : 'left',
+                    imageBorderRadius : 3,
+                    imageWidth: 90,
+                    imageHeight: 60,
+                    imageFill : 'clip',
+                    displayImage : true,
+                    displayTitle : true,
+                    titleFontSize: 16,
+                    titleFontColor: '#000',
+                    titleFontFamily : 'Microsoft Yahei',
+                    titleFontWeight: 'bold',
+                    titlePaddingTop : 0,
+                    titlePaddingRight : 0,
+                    titlePaddingBottom : 5,
+                    titlePaddingLeft : 16,
+                    displayDesc : true,
+                    descFontSize: 12,
+                    descFontColor: '#8e959a',
+                    descFontFamily : 'Microsoft Yahei',
+                    paddingTop : 10,
+                    paddingRight : 0,
+                    paddingBottom : 0,
+                    paddingLeft : 0,
+                    backgroundColor: '#fff',
+                    hoverColor: '#000'
+                      }
+                  })
+                                        </script></div><script>$(function(){csdn.track.viewCheck($("#kp_box_557"));});</script></div>
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/yuxiaoxi21/article/details/78232005,BlogCommendFromBaidu_13"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/yuxiaoxi21/article/details/78232005,BlogCommendFromBaidu_13"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/yuxiaoxi21/article/details/78232005" target="_blank" title="matlab自定义函数的几种方法">
+				<h4 class="text-truncate oneline">
+						matlab自定义函数的几种方法				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/A/5/9/3_yuxiaoxi21.jpg" alt="yuxiaoxi21" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">yuxiaoxi21</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">10-14</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							2.6万</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/yuxiaoxi21/article/details/78232005" target="_blank" title="matlab自定义函数的几种方法">
+							<span class="desc oneline">1、函数文件+调用命令文件：需单独定义一个自定义函数的M文件;
+
+2、函数文件+子函数：定义一个具有多个自定义函数的M文件；
+
+3、Inline:无需M文件，直接定义；
+
+4、匿名函数；...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/yuxiaoxi21">来自：	<span class="blog_title"> yuxiaoxi21的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/Katherine_S/article/details/53677460,BlogCommendFromBaidu_14"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/Katherine_S/article/details/53677460,BlogCommendFromBaidu_14"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/Katherine_S/article/details/53677460" target="_blank" title="Matlab中如何定义函数">
+				<h4 class="text-truncate oneline">
+						Matlab中如何定义函数				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/A/3/5/3_katherine_s.jpg" alt="Katherine_S" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">Katherine_S</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">12-15</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							1.3万</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/Katherine_S/article/details/53677460" target="_blank" title="Matlab中如何定义函数">
+							<span class="desc oneline">1.在m文件中，function y=f(x) %函数的声明
+    y=x^2就是建立了一个y=x2y=x^2的函数，f是函数的名称，m文件的名称必须是f.m.
+如果返回值不止一个，则可以：
+fun...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/Katherine_S">来自：	<span class="blog_title"> Katherine_S的专栏</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/without_scruple/article/details/77162752,BlogCommendFromBaidu_15"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/without_scruple/article/details/77162752,BlogCommendFromBaidu_15"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/without_scruple/article/details/77162752" target="_blank" title="调用自己编写的matlab函数">
+				<h4 class="text-truncate oneline">
+						调用自己编写的matlab函数				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/3/2/3/3_without_scruple.jpg" alt="without_scruple" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">without_scruple</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">08-14</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							4.2万</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/without_scruple/article/details/77162752" target="_blank" title="调用自己编写的matlab函数">
+							<span class="desc oneline">在matlab中调用自定义的函数</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/without_scruple">来自：	<span class="blog_title"> without_scruple的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/code_caq/article/details/69803476,BlogCommendFromBaidu_16"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/code_caq/article/details/69803476,BlogCommendFromBaidu_16"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/code_caq/article/details/69803476" target="_blank" title="对数几率回归（Logistic Regression）总结">
+				<h4 class="text-truncate oneline">
+						对数几率<em>回归</em>（Logistic Regression）总结				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/5/1/6/3_code_caq.jpg" alt="code_caq" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">code_caq</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">04-09</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							4966</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/code_caq/article/details/69803476" target="_blank" title="对数几率回归（Logistic Regression）总结">
+							<span class="desc oneline">逻辑回归logistic regression，虽然名字是回归，但是实际上它是处理分类问题的算法。简单的说回归问题和分类问题如下：回归问题：预测一个连续的输出。 
+分类问题：离散输出，比如二分类问题输...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/code_caq">来自：	<span class="blog_title"> code_caq的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/WUTab/article/details/53728377,BlogCommendFromBaidu_17"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/WUTab/article/details/53728377,BlogCommendFromBaidu_17"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/WUTab/article/details/53728377" target="_blank" title="周志华《机器学习》习题3.3">
+				<h4 class="text-truncate oneline">
+						<em>周志华</em>《<em>机器学习</em>》<em>习题</em>3.3				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/7/3/3/3_wutab.jpg" alt="WUTab" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">WUTab</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">12-18</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							748</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/WUTab/article/details/53728377" target="_blank" title="周志华《机器学习》习题3.3">
+							<span class="desc oneline">编程实现对数回归，并给出西瓜数据集3.0α\alpha上的结果。 
+既然是编程实现，就不要调用现成的库了好吧？比如sklearn就有对数回归的实现。看一下我们的数据，前两列是特征（attribute）...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/WUTab">来自：	<span class="blog_title"> WUTab的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    <div class="recommend-item-box recommend-ad-box"><div id="kp_box_623" data-pid="62" data-track-view='{"mod":"kp_popu_623","con":",,"}'><script type="text/javascript" src="//rabc1.iteye.com/production/dkjgal.js?cxpuwupg=g"></script></div><script>$(function(){csdn.track.viewCheck($("#kp_box_623"));});</script></div>
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/fjl_CSDN/article/details/79005629,BlogCommendFromGuangxin_18"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/fjl_CSDN/article/details/79005629,BlogCommendFromGuangxin_18"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/fjl_CSDN/article/details/79005629" target="_blank" title="机器学习实战(用Scikit-learn和TensorFlow进行机器学习)(五)">
+				<h4 class="text-truncate oneline">
+						<em>机器学习</em>实战(用Scikit-learn和TensorFlow进行<em>机器学习</em>)(五)				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/F/5/2/3_fjl_csdn.jpg" alt="fjl_CSDN" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">fjl_CSDN</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">01-08</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							1822</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/fjl_CSDN/article/details/79005629" target="_blank" title="机器学习实战(用Scikit-learn和TensorFlow进行机器学习)(五)">
+							<span class="desc oneline">上几节讲述了真实数据集在回归问题以及分类问题上的总流程，但是对于模型的选择及参数的选择仍然一知半解，因此本节开始讲述关于模型的一些知识，本节会略过一些比较基础的知识，将一些较为深入的知识。如果在哪个方...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/fjl_CSDN">来自：	<span class="blog_title"> fjl_CSDN的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/xlinsist/article/details/51289825,BlogCommendFromGuangxin_19"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/xlinsist/article/details/51289825,BlogCommendFromGuangxin_19"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/xlinsist/article/details/51289825" target="_blank" title="逻辑回归（Logistic regression）详解-并用scikit-learn训练逻辑回归拟合Iris数据集">
+				<h4 class="text-truncate oneline">
+						逻辑<em>回归</em>（Logistic regression）详解-并用scikit-learn训练逻辑<em>回归</em>拟合Iris数据集				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/3/5/D/3_xlinsist.jpg" alt="xlinsist" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">xlinsist</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">05-01</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							4.9万</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/xlinsist/article/details/51289825" target="_blank" title="逻辑回归（Logistic regression）详解-并用scikit-learn训练逻辑回归拟合Iris数据集">
+							<span class="desc oneline">引言这篇文章主要介绍逻辑回归背后的一些概率概念，给你一些直观感觉关于它的代价函数的由来。并且我也介绍了关于最大似然估计（maximum likelihood）的概念，用这个强大的工具来导出逻辑回归的c...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/xlinsist">来自：	<span class="blog_title"> Xurtle</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/qq_39388410/article/details/78218925,BlogCommendFromGuangxin_20"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/qq_39388410/article/details/78218925,BlogCommendFromGuangxin_20"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/qq_39388410/article/details/78218925" target="_blank" title="Logistic Regression（逻辑回归）">
+				<h4 class="text-truncate oneline">
+						Logistic Regression（逻辑<em>回归</em>）				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/4/4/7/3_qq_39388410.jpg" alt="qq_39388410" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">qq_39388410</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">10-12</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							806</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/qq_39388410/article/details/78218925" target="_blank" title="Logistic Regression（逻辑回归）">
+							<span class="desc oneline">Logistic回归思想，Python实现，应用。Logistic 回归是与线性回归相对应的一种分类方法，是一种广义线性回归模型(generalized linear model)。该算法的基本概念由...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/qq_39388410">来自：	<span class="blog_title"> 静敬澹一</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/cxmscb/article/details/53345795,BlogCommendFromGuangxin_21"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/cxmscb/article/details/53345795,BlogCommendFromGuangxin_21"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/cxmscb/article/details/53345795" target="_blank" title="机器学习之线性回归及代码示例">
+				<h4 class="text-truncate oneline">
+						<em>机器学习</em>之线性<em>回归</em>及代码示例				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/6/9/1/3_cxmscb.jpg" alt="cxmscb" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">cxmscb</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">11-26</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							7252</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/cxmscb/article/details/53345795" target="_blank" title="机器学习之线性回归及代码示例">
+							<span class="desc oneline">一、线性回归线性回归一般用来做连续值的预测，预测的结果为一个连续值。因训练时学习样本不仅要提供学习的特征向量X，而且还要提供样本的实际结果（标记label），所以它是一种有监督学习。X= { x0 x...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/cxmscb">来自：	<span class="blog_title"> cxmscb的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/Snoopy_Yuan/article/details/69384822,BlogCommendFromQuerySearch_22"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/Snoopy_Yuan/article/details/69384822,BlogCommendFromQuerySearch_22"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/Snoopy_Yuan/article/details/69384822" target="_blank" title="周志华《机器学习》课后习题解答系列（五）：Ch4 - 决策树">
+				<h4 class="text-truncate oneline">
+						<em>周志华</em>《<em>机器学习</em>》<em>课后</em><em>习题</em><em>解答</em><em>系列</em>（五）：Ch4 - 决策树				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/1/D/7/3_snoopy_yuan.jpg" alt="Snoopy_Yuan" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">Snoopy_Yuan</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">04-06</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							4605</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/Snoopy_Yuan/article/details/69384822" target="_blank" title="周志华《机器学习》课后习题解答系列（五）：Ch4 - 决策树">
+							<span class="desc oneline">本章讲述决策树的相关内容，包括决策树的生成，剪枝，连续值、缺失值的处理，多变量决策树等内容。...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/Snoopy_Yuan">来自：	<span class="blog_title"> Snoopy_Yuan技术部落格</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    <div class="recommend-item-box recommend-ad-box"><div id="kp_box_555" data-pid="63" data-track-view='{"mod":"kp_popu_555","con":",,"}'><div id="three_ad23" class="mediav_ad" ></div>
+<script type="text/javascript" src="//static.mediav.com/js/mvf_news_feed.js"></script>
+<script>
+                                               NEWS_FEED({
+                w: 900,
+                h : 84,
+                showid : 'GNKXx7',
+                placeholderId: "three_ad23",
+                inject : 'define',
+                define : {
+                    imagePosition : 'left',
+                    imageBorderRadius : 3,
+                    imageWidth: 90,
+                    imageHeight: 60,
+                    imageFill : 'clip',
+                    displayImage : true,
+                    displayTitle : true,
+                    titleFontSize: 16,
+                    titleFontColor: '#000',
+                    titleFontFamily : 'Microsoft Yahei',
+                    titleFontWeight: 'bold',
+                    titlePaddingTop : 0,
+                    titlePaddingRight : 0,
+                    titlePaddingBottom : 5,
+                    titlePaddingLeft : 16,
+                    displayDesc : true,
+                    descFontSize: 12,
+                    descFontColor: '#8e959a',
+                    descFontFamily : 'Microsoft Yahei',
+                    paddingTop : 10,
+                    paddingRight : 0,
+                    paddingBottom : 0,
+                    paddingLeft : 0,
+                    backgroundColor: '#fff',
+                    hoverColor: '#000'
+                      }
+                  })
+                                        </script></div><script>$(function(){csdn.track.viewCheck($("#kp_box_555"));});</script></div>
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/carson0408/article/details/77540001,BlogCommendFromQuerySearch_23"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/carson0408/article/details/77540001,BlogCommendFromQuerySearch_23"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/carson0408/article/details/77540001" target="_blank" title="机器学习（周志华）第四章习题解答">
+				<h4 class="text-truncate oneline">
+						<em>机器学习</em>（<em>周志华</em>）第四章<em>习题</em><em>解答</em>				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/C/1/8/3_carson0408.jpg" alt="carson0408" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">carson0408</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">08-24</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							1650</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/carson0408/article/details/77540001" target="_blank" title="机器学习（周志华）第四章习题解答">
+							<span class="desc oneline">转自：http://blog.csdn.NET/wzmsltw/article/details/51059394
+本文是对周志华的《机器学习》的习题解答，文章整理的很好，为方便之后查看，记录如下～...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/carson0408">来自：	<span class="blog_title"> carson0408的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/sysu_cis/article/details/51842736,BlogCommendFromQuerySearch_24"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/sysu_cis/article/details/51842736,BlogCommendFromQuerySearch_24"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/sysu_cis/article/details/51842736" target="_blank" title="《机器学习》周志华习题4.3答案">
+				<h4 class="text-truncate oneline">
+						《<em>机器学习</em>》<em>周志华</em><em>习题</em>4.3答案				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/8/5/E/3_sysu_cis.jpg" alt="sysu_cis" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">sysu_cis</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">07-06</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							3615</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/sysu_cis/article/details/51842736" target="_blank" title="《机器学习》周志华习题4.3答案">
+							<span class="desc oneline">《机器学习》周志华著，第四章课后习题4.3答案</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/sysu_cis">来自：	<span class="blog_title"> Just Do IT</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/icefire_tyh/article/details/52106899,BlogCommendFromQuerySearch_25"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/icefire_tyh/article/details/52106899,BlogCommendFromQuerySearch_25"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/icefire_tyh/article/details/52106899" target="_blank" title="机器学习(周志华) 参考答案 第五章 神经网络">
+				<h4 class="text-truncate oneline">
+						<em>机器学习</em>(<em>周志华</em>) 参考答案 第五章 神经网络				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/3/7/E/3_icefire_tyh.jpg" alt="icefire_tyh" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">icefire_tyh</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">05-18</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							1.1万</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/icefire_tyh/article/details/52106899" target="_blank" title="机器学习(周志华) 参考答案 第五章 神经网络">
+							<span class="desc oneline">机器学习(周志华) 参考答案 第五章 神经网络机器学习(周志华西瓜书) 参考答案 总目录
+http://blog.csdn.net/icefire_tyh/article/details/520649...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/icefire_tyh">来自：	<span class="blog_title"> 我的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/icefire_tyh/article/details/52135526,BlogCommendFromQuerySearch_26"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/icefire_tyh/article/details/52135526,BlogCommendFromQuerySearch_26"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/icefire_tyh/article/details/52135526" target="_blank" title="机器学习(周志华) 参考答案 第六章 支持向量机 6.9">
+				<h4 class="text-truncate oneline">
+						<em>机器学习</em>(<em>周志华</em>) 参考答案 第六章 支持向量机 6.9				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/3/7/E/3_icefire_tyh.jpg" alt="icefire_tyh" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">icefire_tyh</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">08-06</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							2750</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/icefire_tyh/article/details/52135526" target="_blank" title="机器学习(周志华) 参考答案 第六章 支持向量机 6.9">
+							<span class="desc oneline">机器学习(周志华) 参考答案 第六章 支持向量机 6.9机器学习(周志华西瓜书) 参考答案 总目录
+http://blog.csdn.net/icefire_tyh/article/details/5...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/icefire_tyh">来自：	<span class="blog_title"> 我的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    			<div class="recommend-item-box recommend-box-ident recommend-download-box clearfix" data-track-view='{"mod":"popu_387","con":",https://download.csdn.net/download/huaixiaohuai/10719788,BlogCommendFromBaidu_27"}' data-track-click='{"mod":"popu_387","con":",https://download.csdn.net/download/huaixiaohuai/10719788,BlogCommendFromBaidu_27"}'>
+			<a href="https://download.csdn.net/download/huaixiaohuai/10719788" target="_blank">
+				<div class="content">
+					<div class="">
+						<span class="type">下载</span>
+						<h4 class="text-truncate oneline clearfix">
+							<em>编程实现</em>对率<em>回归</em>，并给出西瓜数据集3.0a上的结果。						</h4>
+						<span class="data float-right">10-14</span>
+					</div>
+					<div class="desc oneline">
+							机器学习的第一次作业。周志华老师教材的p3.3。python实现対率回归，已给数据集					</div>
+				</div>
+			</a>
+		</div>
+	
+    <div class="recommend-item-box recommend-ad-box"><div id="kp_box_626" data-pid="64" data-track-view='{"mod":"kp_popu_626","con":",,"}'><script type="text/javascript" src="//rabc1.iteye.com/production/wxzgt3.js?rme=jljjon"></script></div><script>$(function(){csdn.track.viewCheck($("#kp_box_626"));});</script></div>
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/dapanbest/article/details/78128147,BlogCommendFromBaidu_28"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/dapanbest/article/details/78128147,BlogCommendFromBaidu_28"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/dapanbest/article/details/78128147" target="_blank" title="机器学习作业1 - 对率回归（逻辑回归）">
+				<h4 class="text-truncate oneline">
+						<em>机器学习</em>作业1 - 对率<em>回归</em>（逻辑<em>回归</em>）				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/C/3/1/3_dapanbest.jpg" alt="dapanbest" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">dapanbest</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">09-28</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							1919</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/dapanbest/article/details/78128147" target="_blank" title="机器学习作业1 - 对率回归（逻辑回归）">
+							<span class="desc oneline">使用10折交叉验证法和留一法评测对率回归分类器标题有点长哈……这是第一次作业，来自周志华《机器学习》作业3.4，题目如下：
+  选择两个UCI数据集，比较10折交叉验证法和留一法所估计出的对率回归（逻...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/dapanbest">来自：	<span class="blog_title"> Dapan同学</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/zhangdamengcsdn/article/details/80200690,BlogCommendFromBaidu_29"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/zhangdamengcsdn/article/details/80200690,BlogCommendFromBaidu_29"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/zhangdamengcsdn/article/details/80200690" target="_blank" title="逻辑回归/对数几率回归--西瓜书、统计学习总结">
+				<h4 class="text-truncate oneline">
+						逻辑<em>回归</em>/对数几率<em>回归</em>--西瓜书、统计学习总结				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/E/E/2/3_zhangdamengcsdn.jpg" alt="zhangdamengcsdn" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">zhangdamengcsdn</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">05-04</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							251</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/zhangdamengcsdn/article/details/80200690" target="_blank" title="逻辑回归/对数几率回归--西瓜书、统计学习总结">
+							<span class="desc oneline">广义模型可以解决分类任务。只需找到一个单调可微函数将分类任务的真实标记y与线性回归模型的预测值联系起来。一般采用单位阶跃函数，但是这个函数不连续，所以找一个可以近似替代的函数，这个函数就是对数几率函数...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/zhangdamengcsdn">来自：	<span class="blog_title"> zhangdamengcsdn的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/XLM11/article/details/54411660,BlogCommendFromBaidu_30"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/XLM11/article/details/54411660,BlogCommendFromBaidu_30"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/XLM11/article/details/54411660" target="_blank" title="对数几率回归Logistic Regression（Matlab）">
+				<h4 class="text-truncate oneline">
+						对数几率<em>回归</em>Logistic Regression（Matlab）				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/A/B/6/3_xlm11.jpg" alt="XLM11" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">XLM11</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">01-13</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							6769</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/XLM11/article/details/54411660" target="_blank" title="对数几率回归Logistic Regression（Matlab）">
+							<span class="desc oneline">这里的数据均来源于吴恩达老师机器学习的课程。
+       上一篇内容是线性回归，利用线性模型进行回归学习，最终结果是找到一组合适的theta值，使代价函数的值最小，可是对于分类任务该如何解决呢？其...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/XLM11">来自：	<span class="blog_title"> XLM11的专栏</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/liukai2918/article/details/79022382,BlogCommendFromBaidu_31"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/liukai2918/article/details/79022382,BlogCommendFromBaidu_31"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/liukai2918/article/details/79022382" target="_blank" title="机器学习—西瓜书-chapter3—对率回归">
+				<h4 class="text-truncate oneline">
+						<em>机器学习</em>—西瓜书-chapter3—对率<em>回归</em>				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/E/D/B/3_liukai2918.jpg" alt="liukai2918" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">liukai2918</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">01-10</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							215</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/liukai2918/article/details/79022382" target="_blank" title="机器学习—西瓜书-chapter3—对率回归">
+							<span class="desc oneline">编程实现对率回归，并给出西瓜数据集3.0α上的结果
+
+对率函数是任意阶可导的凸函数，这是非常重要的性质。
+
+西瓜数据集3.0
+
+
+
+暂时不知道什么原因导致，结果差别这么大，记录下来。
+
+%matlab...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/liukai2918">来自：	<span class="blog_title"> 糖糖糖豆的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/kchai31/article/details/78966941,BlogCommendFromBaidu_32"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/kchai31/article/details/78966941,BlogCommendFromBaidu_32"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/kchai31/article/details/78966941" target="_blank" title="《机器学习》(周志华)课后习题参考答案">
+				<h4 class="text-truncate oneline">
+						《<em>机器学习</em>》(<em>周志华</em>)<em>课后</em><em>习题</em>参考答案				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/7/9/B/3_kchai31.jpg" alt="kchai31" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">kchai31</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">01-04</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							3325</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/kchai31/article/details/78966941" target="_blank" title="《机器学习》(周志华)课后习题参考答案">
+							<span class="desc oneline">目录：
+
+周志华《机器学习》课后习题解答系列（二）：Ch1 - 绪论周志华《机器学习》课后习题解答系列（三）：Ch2 - 模型评估与选择周志华《机器学习》课后习题解答系列（四）：Ch3 - 线性模...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/kchai31">来自：	<span class="blog_title"> kchai31的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    <div class="recommend-item-box recommend-ad-box"><div id="kp_box_84" data-pid="65" data-track-view='{"mod":"kp_popu_84","con":",,"}'><div id="three_ad33" class="mediav_ad" ></div>
+<script type="text/javascript" src="//static.mediav.com/js/mvf_news_feed.js"></script>
+<script>
+                                               NEWS_FEED({
+                w: 900,
+                h : 84,
+                showid : 'GNKXx7',
+                placeholderId: "three_ad33",
+                inject : 'define',
+                define : {
+                    imagePosition : 'left',
+                    imageBorderRadius : 3,
+                    imageWidth: 90,
+                    imageHeight: 60,
+                    imageFill : 'clip',
+                    displayImage : true,
+                    displayTitle : true,
+                    titleFontSize: 16,
+                    titleFontColor: '#000',
+                    titleFontFamily : 'Microsoft Yahei',
+                    titleFontWeight: 'bold',
+                    titlePaddingTop : 0,
+                    titlePaddingRight : 0,
+                    titlePaddingBottom : 5,
+                    titlePaddingLeft : 16,
+                    displayDesc : true,
+                    descFontSize: 12,
+                    descFontColor: '#8e959a',
+                    descFontFamily : 'Microsoft Yahei',
+                    paddingTop : 10,
+                    paddingRight : 0,
+                    paddingBottom : 0,
+                    paddingLeft : 0,
+                    backgroundColor: '#fff',
+                    hoverColor: '#000'
+                      }
+                  })
+                                        </script></div><script>$(function(){csdn.track.viewCheck($("#kp_box_84"));});</script></div>
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/lusongno1/article/details/54018723,BlogCommendFromBaidu_33"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/lusongno1/article/details/54018723,BlogCommendFromBaidu_33"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/lusongno1/article/details/54018723" target="_blank" title="matlab如何在文中定义函数">
+				<h4 class="text-truncate oneline">
+						matlab如何在文中定义函数				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/6/C/4/3_lusongno1.jpg" alt="lusongno1" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">lusongno1</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">01-04</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							9514</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/lusongno1/article/details/54018723" target="_blank" title="matlab如何在文中定义函数">
+							<span class="desc oneline">matlab如何在文中定义函数
+  通常我们多是将函数单独在编写在单个的m文件中，再于主程序中调用。但是，有时候觉得程序太小，直接在程序末尾编写函数，又会收到“此上下文中不允许函数定义”的错误提示。那...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/lusongno1">来自：	<span class="blog_title"> lusongno1的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/qq_35218763/article/details/78455002,BlogCommendFromBaidu_34"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/qq_35218763/article/details/78455002,BlogCommendFromBaidu_34"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/qq_35218763/article/details/78455002" target="_blank" title="第三章 线性模型--机器学习（周志华）参考答案">
+				<h4 class="text-truncate oneline">
+						第三章 线性模型--<em>机器学习</em>（<em>周志华</em>）参考答案				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/D/5/A/3_qq_35218763.jpg" alt="qq_35218763" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">qq_35218763</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">11-06</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							834</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/qq_35218763/article/details/78455002" target="_blank" title="第三章 线性模型--机器学习（周志华）参考答案">
+							<span class="desc oneline">原文的链接
+
+
+机器学习(周志华) 参考答案 第三章 线性模型
+机器学习(周志华西瓜书) 参考答案 总目录 
+
+http://blog.csdn.net/icefire_tyh/article/det...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/qq_35218763">来自：	<span class="blog_title"> qq_35218763的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/lixianjun913/article/details/52191721,BlogCommendFromBaidu_35"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/lixianjun913/article/details/52191721,BlogCommendFromBaidu_35"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/lixianjun913/article/details/52191721" target="_blank" title="周志华 《机器学习》之 第三章（线性模型）概念总结">
+				<h4 class="text-truncate oneline">
+						<em>周志华</em> 《<em>机器学习</em>》之 第三章（线性模型）概念总结				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/E/9/E/3_lixianjun913.jpg" alt="lixianjun913" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">lixianjun913</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">08-12</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							2699</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/lixianjun913/article/details/52191721" target="_blank" title="周志华 《机器学习》之 第三章（线性模型）概念总结">
+							<span class="desc oneline">阅读之后，根据周志华老师对本章节的安排，首先从线性模型的基本形式入手，逐渐引入线性回归、对数几率回归、线性判别分析（LDA）、多分类学习等多种线性模型，最后针对类别不平衡问题总结了一些相关的解决思路 ...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/lixianjun913">来自：	<span class="blog_title"> 不系之舟的专栏-QQ讨论群331590339</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/Yeoman92/article/details/75051848,BlogCommendFromBaidu_36"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/Yeoman92/article/details/75051848,BlogCommendFromBaidu_36"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/Yeoman92/article/details/75051848" target="_blank" title="使用sklearn做各种回归">
+				<h4 class="text-truncate oneline">
+						使用sklearn做各种<em>回归</em>				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/8/5/A/3_yeoman92.jpg" alt="Yeoman92" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">Yeoman92</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">07-13</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							9274</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/Yeoman92/article/details/75051848" target="_blank" title="使用sklearn做各种回归">
+							<span class="desc oneline">使用sklearn做各种回归 
+基本回归：线性、决策树、SVM、KNN 
+集成方法：随机森林、Adaboost、GradientBoosting、Bagging1. 数据准备为了实验用，我自己写了一个...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/Yeoman92">来自：	<span class="blog_title"> Yeoman92的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/VictoriaW/article/details/77989486,BlogCommendFromQuerySearch_37"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/VictoriaW/article/details/77989486,BlogCommendFromQuerySearch_37"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/VictoriaW/article/details/77989486" target="_blank" title="西瓜书《机器学习》课后答案——Chapter3_3.4">
+				<h4 class="text-truncate oneline">
+						西瓜书《<em>机器学习</em>》<em>课后</em>答案——Chapter3_3.4				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/A/7/B/3_victoriaw.jpg" alt="VictoriaW" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">VictoriaW</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">09-15</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							1617</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/VictoriaW/article/details/77989486" target="_blank" title="西瓜书《机器学习》课后答案——Chapter3_3.4">
+							<span class="desc oneline">选择两个UCI数据集，比较10折交叉验证法和留一法所估计出的对率回归的错误率。 
+解答： 
+从UCI网站上选择了Iris数据集。总共分为3类，每类50个样本。每个实例有四个属性。将数据保存成bezde...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/VictoriaW">来自：	<span class="blog_title"> CodeTutor</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    <div class="recommend-item-box recommend-ad-box"><div id="kp_box_87" data-pid="66" data-track-view='{"mod":"kp_popu_87","con":",,"}'><div id="three_ad38" class="mediav_ad" ></div>
+<script type="text/javascript" src="//static.mediav.com/js/mvf_news_feed.js"></script>
+<script>
+                                               NEWS_FEED({
+                w: 900,
+                h : 84,
+                showid : 'Afihld',
+                placeholderId: "three_ad38",
+                inject : 'define',
+                define : {
+                    imagePosition : 'left',
+                    imageBorderRadius : 3,
+                    imageWidth: 90,
+                    imageHeight: 60,
+                    imageFill : 'clip',
+                    displayImage : true,
+                    displayTitle : true,
+                    titleFontSize: 16,
+                    titleFontColor: '#000',
+                    titleFontFamily : 'Microsoft Yahei',
+                    titleFontWeight: 'bold',
+                    titlePaddingTop : 0,
+                    titlePaddingRight : 0,
+                    titlePaddingBottom : 5,
+                    titlePaddingLeft : 16,
+                    displayDesc : true,
+                    descFontSize: 12,
+                    descFontColor: '#8e959a',
+                    descFontFamily : 'Microsoft Yahei',
+                    paddingTop : 10,
+                    paddingRight : 0,
+                    paddingBottom : 0,
+                    paddingLeft : 0,
+                    backgroundColor: '#fff',
+                    hoverColor: '#000'
+                      }
+                  })
+                                        </script></div><script>$(function(){csdn.track.viewCheck($("#kp_box_87"));});</script></div>
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/Snoopy_Yuan/article/details/68959025,BlogCommendFromQuerySearch_38"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/Snoopy_Yuan/article/details/68959025,BlogCommendFromQuerySearch_38"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/Snoopy_Yuan/article/details/68959025" target="_blank" title="周志华《机器学习》课后习题解答系列（五）：Ch4.3 - 编程实现ID3算法">
+				<h4 class="text-truncate oneline">
+						<em>周志华</em>《<em>机器学习</em>》<em>课后</em><em>习题</em><em>解答</em><em>系列</em>（五）：Ch4.3 - <em>编程实现</em>ID3算法				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/1/D/7/3_snoopy_yuan.jpg" alt="Snoopy_Yuan" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">Snoopy_Yuan</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">04-03</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							2808</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/Snoopy_Yuan/article/details/68959025" target="_blank" title="周志华《机器学习》课后习题解答系列（五）：Ch4.3 - 编程实现ID3算法">
+							<span class="desc oneline">这里采用了自己编程的方式实现ID3算法，并基于西瓜数据集生成了决策树，评估了其好坏。...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/Snoopy_Yuan">来自：	<span class="blog_title"> Snoopy_Yuan技术部落格</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/VictoriaW/article/details/77990217,BlogCommendFromQuerySearch_39"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/VictoriaW/article/details/77990217,BlogCommendFromQuerySearch_39"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/VictoriaW/article/details/77990217" target="_blank" title="西瓜书《机器学习》课后答案——Chapter3_3.5">
+				<h4 class="text-truncate oneline">
+						西瓜书《<em>机器学习</em>》<em>课后</em>答案——Chapter3_3.5				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/A/7/B/3_victoriaw.jpg" alt="VictoriaW" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">VictoriaW</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">09-15</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							1440</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/VictoriaW/article/details/77990217" target="_blank" title="西瓜书《机器学习》课后答案——Chapter3_3.5">
+							<span class="desc oneline">编程实现线性判别分析，并给出西瓜数据集3.0alpha上的结果。&quot;&quot;&quot;
+Author: Victoria
+Created on: 2017.9.15 11:45
+&quot;&quot;&quot;
+import xlrd
+imp...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/VictoriaW">来自：	<span class="blog_title"> CodeTutor</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/icefire_tyh/article/details/52224612,BlogCommendFromQuerySearch_40"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/icefire_tyh/article/details/52224612,BlogCommendFromQuerySearch_40"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/icefire_tyh/article/details/52224612" target="_blank" title="机器学习(周志华) 参考答案 第九章 聚类 9.10">
+				<h4 class="text-truncate oneline">
+						<em>机器学习</em>(<em>周志华</em>) 参考答案 第九章 聚类 9.10				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/3/7/E/3_icefire_tyh.jpg" alt="icefire_tyh" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">icefire_tyh</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">08-16</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							2013</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/icefire_tyh/article/details/52224612" target="_blank" title="机器学习(周志华) 参考答案 第九章 聚类 9.10">
+							<span class="desc oneline">机器学习(周志华) 参考答案 第九章 聚类 9.10机器学习(周志华西瓜书) 参考答案 总目录
+http://blog.csdn.net/icefire_tyh/article/details/520...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/icefire_tyh">来自：	<span class="blog_title"> 我的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/ccblogger/article/details/79097643,BlogCommendFromQuerySearch_41"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/ccblogger/article/details/79097643,BlogCommendFromQuerySearch_41"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/ccblogger/article/details/79097643" target="_blank" title="《机器学习》 --周志华版（西瓜书）--课后参考答案">
+				<h4 class="text-truncate oneline">
+						《<em>机器学习</em>》 --<em>周志华</em>版（西瓜书）--<em>课后</em>参考答案				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/4/6/F/3_ccblogger.jpg" alt="ccblogger" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">ccblogger</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">01-18</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							2883</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/ccblogger/article/details/79097643" target="_blank" title="《机器学习》 --周志华版（西瓜书）--课后参考答案">
+							<span class="desc oneline">开始学习周志华版的《机器学习》，将别人写的课后习题的参考答案保存下来供参考。- 目录第一章 绪论http://blog.csdn.net/icefire_tyh/article/details/520...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/ccblogger">来自：	<span class="blog_title"> 这里记录着我一点一滴的进步</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/qq_40213457/article/details/82715203,BlogCommendFromBaidu_42"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/qq_40213457/article/details/82715203,BlogCommendFromBaidu_42"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/qq_40213457/article/details/82715203" target="_blank" title="logistic回归概率详解">
+				<h4 class="text-truncate oneline">
+						logistic<em>回归</em>概率详解				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/3/B/E/3_qq_40213457.jpg" alt="qq_40213457" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">qq_40213457</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">09-15</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							91</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/qq_40213457/article/details/82715203" target="_blank" title="logistic回归概率详解">
+							<span class="desc oneline">logistic回归概率详解
+
+
+上一篇我们介绍了线性代数的基本知识，并以PCA作为案例进行了讲解。在本篇中，我们依然按照相同的思路进行开展：首先复习一下概率的相关知识，最后以对率回归（对数几率回归）...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/qq_40213457">来自：	<span class="blog_title"> qq_40213457的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    <div class="recommend-item-box recommend-ad-box"><div id="kp_box_624" data-pid="67" data-track-view='{"mod":"kp_popu_624","con":",,"}'><script type="text/javascript" src="//rabc1.iteye.com/production/api/source/dac3p.js?gbt=yayxyh"></script></div><script>$(function(){csdn.track.viewCheck($("#kp_box_624"));});</script></div>
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/yangzhiyouvl/article/details/53955073,BlogCommendFromBaidu_43"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/yangzhiyouvl/article/details/53955073,BlogCommendFromBaidu_43"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/yangzhiyouvl/article/details/53955073" target="_blank" title="你应该知道的7种回归方法">
+				<h4 class="text-truncate oneline">
+						你应该知道的7种<em>回归</em>方法				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/C/5/5/3_yangzhiyouvl.jpg" alt="yangzhiyouvl" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">yangzhiyouvl</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">12-31</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							1.7万</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/yangzhiyouvl/article/details/53955073" target="_blank" title="你应该知道的7种回归方法">
+							<span class="desc oneline">本文是我从国外网站翻译而来的文章，如有错误之处，敬请指出！ 
+原文标题：7 Types of Regression Techniques you should know! 
+链接：https://ww...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/yangzhiyouvl">来自：	<span class="blog_title"> Steve lock的blog记录之地</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/icefire_tyh/article/details/52064910,BlogCommendFromBaidu_44"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/icefire_tyh/article/details/52064910,BlogCommendFromBaidu_44"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/icefire_tyh/article/details/52064910" target="_blank" title="机器学习(周志华西瓜书) 参考答案 总目录">
+				<h4 class="text-truncate oneline">
+						<em>机器学习</em>(<em>周志华</em>西瓜书) 参考答案 总目录				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/3/7/E/3_icefire_tyh.jpg" alt="icefire_tyh" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">icefire_tyh</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">05-17</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							8.2万</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/icefire_tyh/article/details/52064910" target="_blank" title="机器学习(周志华西瓜书) 参考答案 总目录">
+							<span class="desc oneline">机器学习(周志华西瓜书)参考答案总目录
+
+从刚开始学习机器学习到现在也有几个月了，期间看过PDF，上过MOOC，总感觉知道一点了又不是特别明白，最后趁某东买书大减价弄了几本相关的书来看看，其中一本就是...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/icefire_tyh">来自：	<span class="blog_title"> 我的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/garrulousabyss/article/details/78161732,BlogCommendFromBaidu_45"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/garrulousabyss/article/details/78161732,BlogCommendFromBaidu_45"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/garrulousabyss/article/details/78161732" target="_blank" title="周志华《机器学习》读书笔记（一）">
+				<h4 class="text-truncate oneline">
+						<em>周志华</em>《<em>机器学习</em>》读书笔记（一）				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/B/D/4/3_garrulousabyss.jpg" alt="garrulousabyss" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">garrulousabyss</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">10-05</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							2167</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/garrulousabyss/article/details/78161732" target="_blank" title="周志华《机器学习》读书笔记（一）">
+							<span class="desc oneline">本书前几章讲的都是基本术语，最硬核的数学部分很少，所以比较简单。
+
+
+机器学习的主要内容，是从数据产生模型，再由模型做出相应的判断和预测。
+比如已经知道某房屋所在街区的其他房屋的价格，通过给这些面积，...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/garrulousabyss">来自：	<span class="blog_title"> garrulousabyss的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/baidu_38401528/article/details/79274927,BlogCommendFromBaidu_46"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/baidu_38401528/article/details/79274927,BlogCommendFromBaidu_46"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/baidu_38401528/article/details/79274927" target="_blank" title="周志华机器学习笔记（一）">
+				<h4 class="text-truncate oneline">
+						<em>周志华</em><em>机器学习</em>笔记（一）				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/3/3/2/3_baidu_38401528.jpg" alt="baidu_38401528" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">baidu_38401528</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">02-06</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							676</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/baidu_38401528/article/details/79274927" target="_blank" title="周志华机器学习笔记（一）">
+							<span class="desc oneline">新人一枚，既是机器学习的初学者，也是首次发博客。谨以此记录我的学习体会，做一些总结。望与大家共同学习、共同进步。文中若有内容错误或有措词不严谨之处，望大家不吝指出。谢谢！
+
+
+
+机器学习中的基本概念
+...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/baidu_38401528">来自：	<span class="blog_title"> baidu_38401528的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/thither_shore/article/details/52311282,BlogCommendFromBaidu_47"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/thither_shore/article/details/52311282,BlogCommendFromBaidu_47"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/thither_shore/article/details/52311282" target="_blank" title="机器学习(周志华)习题解答1.1-1.3: 理解假设和版本空间">
+				<h4 class="text-truncate oneline">
+						<em>机器学习</em>(<em>周志华</em>)<em>习题</em><em>解答</em>1.1-1.3: 理解假设和版本空间				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/9/F/F/3_thither_shore.jpg" alt="thither_shore" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">thither_shore</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">08-25</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							1.2万</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/thither_shore/article/details/52311282" target="_blank" title="机器学习(周志华)习题解答1.1-1.3: 理解假设和版本空间">
+							<span class="desc oneline">本文介绍版本空间，假设空间的概念并举例求解。另外介绍和简单证明“没有免费的午餐定理”，是说针对某一域的所有问题，所有算法的期望性能是相同的。即该域的有些问题上算法 A 比 B 好，则其余问题则有 B ...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/thither_shore">来自：	<span class="blog_title"> 走过的都是未来</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    <div class="recommend-item-box recommend-ad-box"><div id="kp_box_625" data-pid="68" data-track-view='{"mod":"kp_popu_625","con":",,"}'><script type="text/javascript" src="//rabc1.iteye.com/common/resource/site/workyo.js?hcuzbz=ybi"></script></div><script>$(function(){csdn.track.viewCheck($("#kp_box_625"));});</script></div>
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/icefire_tyh/article/details/52065224,BlogCommendFromBaidu_48"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/icefire_tyh/article/details/52065224,BlogCommendFromBaidu_48"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/icefire_tyh/article/details/52065224" target="_blank" title="机器学习(周志华) 参考答案 第一章	绪论">
+				<h4 class="text-truncate oneline">
+						<em>机器学习</em>(<em>周志华</em>) 参考答案 第一章	绪论				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/3/7/E/3_icefire_tyh.jpg" alt="icefire_tyh" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">icefire_tyh</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">05-18</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							4万</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/icefire_tyh/article/details/52065224" target="_blank" title="机器学习(周志华) 参考答案 第一章	绪论">
+							<span class="desc oneline">机器学习(周志华) 参考答案 第一章
+
+
+假设空间指的是问题所有假设组成的空间，我们可以把学习过程看作是在假设空间中搜索的过程，搜索目标是寻找与训练集“匹配”的假设。...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/icefire_tyh">来自：	<span class="blog_title"> 我的博客</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    		<div class="recommend-item-box recommend-box-ident type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/qq_27717921/article/details/54773061,BlogCommendFromBaidu_49"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/qq_27717921/article/details/54773061,BlogCommendFromBaidu_49"}'>
+			<div class="content">
+				<a href="https://blog.csdn.net/qq_27717921/article/details/54773061" target="_blank" title="逻辑回归模型推导及梯度下降">
+				<h4 class="text-truncate oneline">
+						逻辑<em>回归</em>模型推导及梯度下降				</h4>
+				<div class="info-box d-flex align-content-center">
+					<!-- <p class="avatar">
+							<img src="https://avatar.csdn.net/C/2/6/3_qq_27717921.jpg" alt="qq_27717921" class="avatar-pic">
+							<span class="namebox">
+								<span class="name">qq_27717921</span>
+								<span class="triangle"></span>
+							</span>
+					</p> -->
+					<p class="date-and-readNum">
+						<span class="date hover-show">01-29</span>
+						<span class="read-num hover-hide">
+							<svg class="icon csdnc-yuedushu" aria-hidden="true">
+								<use xlink:href="#csdnc-m-passwords-visible"></use>
+							</svg>
+							488</span>
+						</p>
+					</div>
+				</a>
+					<p class="content">
+						<a href="https://blog.csdn.net/qq_27717921/article/details/54773061" target="_blank" title="逻辑回归模型推导及梯度下降">
+							<span class="desc oneline">这里的逻辑回归模型，除了重要要放在回归上，还要看到逻辑，所谓的逻辑其实就是正确和错误，因而建立的是分类模型。主要的思想是：根据现有数据对分类边界线建立回归公式，以此来进行分类。而这里的“回归”也是拟合...</span>
+						</a>
+                        						<span class="blog_title_box oneline"><a target="_blank" href="https://blog.csdn.net/qq_27717921">来自：	<span class="blog_title"> 哆啦咪~fo</span></a></span>
+                        					</p>
+			</div>
+					</div>
+	
+    
+	
+    
+    
+
+            <div class="recommend-loading-box">
+                <img src='https://csdnimg.cn/release/phoenix/images/feedLoading.gif'>
+            </div>
+            <div class="recommend-end-box">
+                <p class="text-center">没有更多推荐了，<a href="https://blog.csdn.net/" class="c-blue c-blue-hover c-blue-focus">返回首页</a></p>
+            </div>
+        </div>
+    </main>
+
+    <aside>
+		    <div id="asideProfile" class="aside-box">
+    <!-- <h3 class="aside-title">个人资料</h3> -->
+    <div class="profile-intro d-flex">
+        <div class="avatar-box d-flex justify-content-center flex-column">
+            <a href="https://blog.csdn.net/Snoopy_Yuan">
+                <img src="https://avatar.csdn.net/1/D/7/3_snoopy_yuan.jpg" class="avatar_pic">
+            </a>
+        </div>
+        <div class="user-info d-flex justify-content-center flex-column">
+            <p class="name csdn-tracking-statistics tracking-click" data-mod="popu_379">
+                <a href="https://blog.csdn.net/Snoopy_Yuan" target="_blank" class="" id="uid">Snoopy_Yuan</a>
+            </p>
+                    </div>
+                <div class="opt-box d-flex justify-content-center flex-column">
+            <span  class="csdn-tracking-statistics tracking-click" data-mod="popu_379">
+                <a class="btn btn-sm btn-red-hollow attention" id="btnAttent">关注</a>
+            </span>
+                    </div>
+            </div>
+    <div class="data-info d-flex item-tiling">
+                <dl class="text-center" title="40">
+                        <dt><a href="https://blog.csdn.net/snoopy_yuan?t=1">原创</a></dt>
+            <dd><a href="https://blog.csdn.net/snoopy_yuan?t=1"><span class="count">40</span></a></dd>
+                    </dl>
+        <dl class="text-center" id="fanBox" title="415">
+            <dt>粉丝</dt>
+            <dd><span class="count" id="fan">415</span></dd>
+        </dl>
+        <dl class="text-center" title="70">
+            <dt>喜欢</dt>
+            <dd><span class="count">70</span></dd>
+        </dl>
+        <dl class="text-center" title="130">
+            <dt>评论</dt>
+            <dd><span class="count">130</span></dd>
+        </dl>
+    </div>
+    <div class="grade-box clearfix">
+        <dl>
+            <dt>等级：</dt>
+            <dd>
+                <a href="https://blog.csdn.net/home/help.html#level" title="4级,点击查看等级说明" target="_blank">
+                    <svg class="icon icon-level" aria-hidden="true">
+                        <use xlink:href="#csdnc-bloglevel-4"></use>
+                    </svg>
+                </a>
+            </dd>
+        </dl>
+        <dl>
+            <dt>访问：</dt>
+            <dd title="121688">
+                12万+            </dd>
+        </dl>
+        <dl>
+            <dt>积分：</dt>
+            <dd title="1334">
+                1334            </dd>
+        </dl>
+        <dl title="44598">
+            <dt>排名：</dt>
+            <dd>4万+</dd>
+        </dl>
+    </div>
+        <div class="badge-box d-flex">
+        <span>勋章：</span>
+                        <div class="icon-badge" title="持之以恒">
+            <div class="mouse-box">
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#csdnc-m-lasting"></use>
+                </svg>
+                <div class="icon-arrow"></div>
+            </div>
+            <div class="grade-detail-box">
+                <div class="pos-box">
+                    <div class="left-box d-flex justify-content-center align-items-center flex-column">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#csdnc-m-lasting"></use>
+                        </svg>
+                        <p>持之以恒</p>
+                    </div>
+                    <div class="right-box d-flex justify-content-center align-items-center">
+                        授予每个自然月内发布4篇或4篇以上原创或翻译IT博文的用户。不积跬步无以至千里，不积小流无以成江海，程序人生的精彩需要坚持不懈地积累！
+                    </div>
+                </div>
+            </div>
+        </div>
+                                                <script>
+            (function ($) {
+                setTimeout(function(){
+                    $('div.icon-badge.show-moment').removeClass('show-moment');
+                }, 5000);
+            })(window.jQuery)
+        </script>
+    </div>
+    </div>
+		    <div class="csdn-tracking-statistics mb8 box-shadow" data-pid="blog" data-mod="popu_4" style="height:250px;">
+    <div class="aside-content text-center" id="cpro_u2734133">
+      <div id="kp_box_76" data-pid="56" data-track-view='{"mod":"kp_popu_76","con":",,"}'><script type="text/javascript" src="//rabc1.iteye.com/source/openjs/api/mbxf4.js?b=wocoltly"></script></div><script>$(function(){csdn.track.viewCheck($("#kp_box_76"));});</script>    </div>
+</div>
+		    <!--自定义模块-->
+<div id="asideCustom52445883" class="aside-box custom-box">
+    <h3 class="aside-title">更多信息</h3>
+    <div class="aside-content clearfix">
+        
+<p><span style="color:black; font-size:12px; font-weight:bold">Email:</span> pn_yuan@163.com
+</p>
+<br>
+<p><span style="color:black; font-size:12px; font-weight:bold">GitHub:</span><a title="跳转到我的GitHub" href="https://github.com/PnYuan" target="_blank" style="color:black; font-size:13px"> https://github.com/PnYuan</a></p>
+    </div>
+</div>
+		    <div id="asideNewArticle" class="aside-box">
+    <h3 class="aside-title">最新文章</h3>
+    <div class="aside-content">
+        <ul class="inf_list clearfix csdn-tracking-statistics tracking-click" data-mod="popu_382">
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/Snoopy_Yuan/article/details/80703193" target="_blank">Kaggle滑水 - CTR预估（FM_FFM）</a>
+            </li>
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/Snoopy_Yuan/article/details/80703175" target="_blank">Kaggle滑水 - CTR预估（GBDT-LR）</a>
+            </li>
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/Snoopy_Yuan/article/details/80703136" target="_blank">Kaggle滑水 - CTR预估（LR）</a>
+            </li>
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/Snoopy_Yuan/article/details/80091940" target="_blank">Kaggle滑水 - 泰坦尼克之灾（决策树）</a>
+            </li>
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/Snoopy_Yuan/article/details/80021504" target="_blank">深度学习基础 - 对象检测（CNN+滑窗+YOLO）</a>
+            </li>
+                    </ul>
+    </div>
+</div>
+		    		    <div id="asideArchive" class="aside-box flexible-box">
+    <h3 class="aside-title">归档</h3>
+    <div class="aside-content">
+        <ul class="archive-list">
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/snoopy_yuan/article/month/2018/06">
+                    2018年6月                    <span class="count float-right">3篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/snoopy_yuan/article/month/2018/04">
+                    2018年4月                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/snoopy_yuan/article/month/2018/03">
+                    2018年3月                    <span class="count float-right">3篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/snoopy_yuan/article/month/2017/10">
+                    2017年10月                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/snoopy_yuan/article/month/2017/07">
+                    2017年7月                    <span class="count float-right">6篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/snoopy_yuan/article/month/2017/06">
+                    2017年6月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/snoopy_yuan/article/month/2017/05">
+                    2017年5月                    <span class="count float-right">6篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/snoopy_yuan/article/month/2017/04">
+                    2017年4月                    <span class="count float-right">8篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/snoopy_yuan/article/month/2017/03">
+                    2017年3月                    <span class="count float-right">9篇</span>
+                </a>
+            </li>
+                    </ul>
+    </div>
+        <p class="text-center">
+        <a class="btn btn-link-blue flexible-btn" data-fbox="aside-archive">展开</a>
+    </p>
+    </div>
+		    <div id="asideCategory" class="aside-box flexible-box">
+    <h3 class="aside-title">个人分类</h3>
+    <div class="aside-content">
+        <ul>
+                        <li>
+                <a class="clearfix" href="https://blog.csdn.net/snoopy_yuan/article/category/6788615">
+                    <span class="title oneline">机器学习</span>
+                    <span class="count float-right">33篇</span>
+                </a>
+            </li>
+                        <li>
+                <a class="clearfix" href="https://blog.csdn.net/snoopy_yuan/article/category/6911175">
+                    <span class="title oneline">深度学习</span>
+                    <span class="count float-right">8篇</span>
+                </a>
+            </li>
+                        <li>
+                <a class="clearfix" href="https://blog.csdn.net/snoopy_yuan/article/category/6819210">
+                    <span class="title oneline">概率图</span>
+                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <li>
+                <a class="clearfix" href="https://blog.csdn.net/snoopy_yuan/article/category/6789276">
+                    <span class="title oneline">数据挖掘</span>
+                    <span class="count float-right">9篇</span>
+                </a>
+            </li>
+                        <li>
+                <a class="clearfix" href="https://blog.csdn.net/snoopy_yuan/article/category/6932823">
+                    <span class="title oneline">Hadoop</span>
+                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <li>
+                <a class="clearfix" href="https://blog.csdn.net/snoopy_yuan/article/category/6924508">
+                    <span class="title oneline">天池赛</span>
+                    <span class="count float-right">4篇</span>
+                </a>
+            </li>
+                        <li>
+                <a class="clearfix" href="https://blog.csdn.net/snoopy_yuan/article/category/7622265">
+                    <span class="title oneline">Kaggle</span>
+                    <span class="count float-right">4篇</span>
+                </a>
+            </li>
+                    </ul>
+    </div>
+        <p class="text-center">
+        <a class="btn btn-link-blue flexible-btn" data-fbox="aside-archive">展开</a>
+    </p>
+    </div>
+		    <div id="asideNewComments" class="aside-box">
+    <h3 class="aside-title">最新评论</h3>
+    <div class="aside-content">
+        <ul class="newcomment-list">
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/snoopy_yuan/article/details/63684219#comments">周志华《机器学习》课后习题解答系列...</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/qq_40530372" class="user-name" target="_blank">qq_40530372</a>：利用随机梯度下降法求出的混淆矩阵跟您给出的不一样，用你的GitHub上的源码                </p>
+            </li>
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/snoopy_yuan/article/details/69223240#comments">周志华《机器学习》课后习题解答系列...</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/u012016803" class="user-name" target="_blank">u012016803</a>：CART_watermelon.py源码报错
+&lt;class&gt;
+Traceback (m...                </p>
+            </li>
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/snoopy_yuan/article/details/62045353#comments">周志华《机器学习》课后习题解答系列...</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/huazeci" class="user-name" target="_blank">huazeci</a>：真是有心人                </p>
+            </li>
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/snoopy_yuan/article/details/70846554#comments">周志华《机器学习》课后习题解答系列...</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/catherined" class="user-name" target="_blank">catherined</a>：[reply]liucheng_34[/reply]
+感谢提示！                </p>
+            </li>
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/snoopy_yuan/article/details/62054718#comments">周志华《机器学习》课后习题解答系列...</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/mmm_jsw" class="user-name" target="_blank">mmm_jsw</a>：作者出现了一处笔误，应该是：n1 = (2+1)(3+1)(3+1)+1 = 49种                </p>
+            </li>
+                    </ul>
+    </div>
+</div>
+		<div id="asideFooter">
+			
+		<div class="aside-box">
+			<div id="kp_box_77" data-pid="57" data-track-view='{"mod":"kp_popu_77","con":",,"}'><script type="text/javascript" src="//rabc1.iteye.com/common/web/site/9i6gu.js?av=neunkwb"></script></div><script>$(function(){csdn.track.viewCheck($("#kp_box_77"));});</script>		</div>
+				<div class="aside-box">
+			<div class="persion_article">
+			</div>
+		</div>
+	</div>
+</aside>
+<script src="https://csdnimg.cn/pubfooter/js/publib_footer-1.0.3.js" data-isfootertrack="false" type="text/javascript"></script>
+<script>
+	$("a.flexible-btn").click(function(){
+		$(this).parents('div.aside-box').removeClass('flexible-box');
+		$(this).remove();
+	})
+</script>
+</div>
+<div class="mask-dark"></div>
+<div class="pulllog-box" style="display: block;">
+	<div class="pulllog clearfix">
+		<span class="text float-left">
+            <div id="dmp_ad_69"><div id="kp_box_75" data-pid="69" data-track-view='{"mod":"kp_popu_75","con":",,"}'><div style="float:left;margin-right:5px;border:1px solid #f13d3d;padding:2px 5px 0px 5px;">
+<a href="https://www.csdn.net/2018dev/?utm_source=blogtextlink" target="_blank" style="color:#f13d3d;font-weight:bold;text-decoration:none;font-size:15px;">开发者调查</a>
+</div>
+
+<div style="float:left;margin-right:5px;border:1px solid #000;padding:2px 5px 0px 5px;background:#000;">
+<a href="http://ai2018.csdn.net/?utm_source=bkxxl" target="_blank" style="color:#fff;font-weight:bold;text-decoration:none;font-size:15px;">AI开发者大会日程曝光</a>
+</div>
+
+<div style="float:left;margin-right:5px;border:1px solid #f13d3d;padding:2px 5px 0px 5px;">
+<a href="https://microsoft-smb.cn/office365knj/home.html?code=58D0290D" target="_blank" style="color:#f13d3d;font-weight:bold;text-decoration:none;font-size:15px;">Office 365商业协作版  5折钜惠！ </a>
+</div>
+
+<div style="float:left;">
+<script type="text/javascript" src="//rabc1.iteye.com/common/js/ndr3h.js?b=wosyvccl"></script>
+</div></div><script>$(function(){csdn.track.viewCheck($("#kp_box_75"));});</script></div>            		</span>
+		<div class="pulllog-btn float-right clearfix">
+            <div class="float-left csdn-tracking-statistics tracking-click" data-mod="popu_557">
+                <a class="pulllog-login">登录</a>
+            </div>
+            <div class="pulllog-sigin float-left csdn-tracking-statistics tracking-click" data-mod="popu_558">
+                <a href="https://passport.csdn.net/account/mobileregister" target="_blank">注册</a>
+            </div>
+            <button class="btn-close">
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#csdnc-times"></use>
+                </svg>
+            </button>
+		</div>
+	</div>
+</div>
+<div id="loginWrap" style="display:none"></div>
+<div class="tool-box">
+	<ul class="meau-list">
+		<li class="btn-like-box long-width">
+			<button class=" long-height hover-box btn-like " title="点赞">
+				<svg class="icon active hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-thumbsup-ok"></use>
+				</svg>
+				<svg class="icon no-active hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-thumbsup"></use>
+				</svg>
+				<span class="hover-show text-box text">
+					<span class="no-active">点赞</span>
+					<span class="active">取消点赞</span>
+				</span>
+				<p>4</p>
+			</button>
+		</li>
+		<li class="">
+						<a class="btn-comments long-height hover-box" title="写评论" href="#commentBox">
+				<svg class="icon hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-comments"></use>
+				</svg>
+				<span class="hover-show text">评论</span>
+				<p class="">
+						9				</p>
+			</a>
+		</li>
+		<li class="toc-container-box" id="liTocBox">
+			<button class="btn-toc low-height hover-box" title="目录">
+				<svg class="icon hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-contents"></use>
+				</svg>
+				<span class="hover-show text">目录</span>
+			</button>
+			<div class="toc-container">
+				<div class="pos-box">
+					<div class="icon-arrow"></div>
+					<div class="scroll-box">
+						<div class="toc-box"></div>
+					</div>
+				</div>
+				<div class="opt-box">
+					<button class="btn-opt prev nomore" title="向上">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#csdnc-chevronup"></use>
+						</svg>
+					</button>
+					<button class="btn-opt next">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#csdnc-chevrondown"></use>
+						</svg>
+					</button>
+				</div>
+			</div>
+		</li>
+		<li>
+			<button class="btn-bookmark low-height hover-box" title="收藏">
+				<svg class="icon active hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-bookmark-ok"></use>
+				</svg>
+				<svg class="icon no-active hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-bookmark"></use>
+				</svg>
+					<span class="hover-show text">收藏</span>
+				<!-- <span class="hover-show text-box text">
+					<span class="no-active">收藏</span>
+					<span class="active">取消收藏</span>
+				</span> -->
+			</button>
+		</li>
+				<li class="bdsharebuttonbox">
+			<button class="btn-comments low-height hover-box" >
+				<a href="#" class="bds_weixin clear-share-style" data-cmd="weixin" title="手机看"></a>
+				<svg class="icon hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-usephone"></use>
+				</svg>
+				<span class="hover-show text text3">
+					手机看
+				</span>
+			</button>
+		</li>
+							<li class="widescreen-hide">
+				<a class="btn-comments low-height hover-box" href="https://blog.csdn.net/snoopy_yuan/article/details/62240320" title="周志华《机器学习》课后习题解答系列（三）：Ch2 - 模型评估与选择">
+					<svg class="icon hover-hide" aria-hidden="true">
+						<use xlink:href="#csdnc-chevronleft"></use>
+					</svg>
+					<span class="hover-show text text3">上一篇</span>
+				</a>
+			</li>
+								<li class="widescreen-hide">
+			<a class="btn-comments hover-box low-height" href="https://blog.csdn.net/snoopy_yuan/article/details/64131129" title="周志华《机器学习》课后习题解答系列（四）：Ch3.4 - 交叉验证法练习">
+				<svg class="icon hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-chevronright"></use>
+				</svg>
+				<span class="hover-show text text3">下一篇</span>
+			</a>
+		</li>
+				<li class="bdsharebuttonbox _360_interactive"style="margin-top: 8px;"><div id="kp_box_97" data-pid="73" data-track-view='{"mod":"kp_popu_97","con":",,"}'><script type="text/javascript" src="//cjhd.mediav.com/js/interactive_plugin.js"></script> 
+			<style>
+				#_360_interactive > *{
+					 margin-left: -8px;
+				}
+			</style>
+			<div id="_360_interactive" > 
+				<script> INTERACTIVE_PLUGIN.render({ showid : 'N0ufqn', w: 60, h: 60, type: 'hover', placeholderId: '_360_interactive' }); </script> 
+			</div>
+			<img src="//img-ads.csdn.net/2016/201608021757063065.png" style="margin: 0 auto;display: block;" alt=""></div><script>$(function(){csdn.track.viewCheck($("#kp_box_97"));});</script></li>		<!-- 宽屏更多按钮 -->
+		<li class="widescreen-more">
+			<a class="btn-comments chat-ask-button low-height hover-box" title="快问" href="#chatqa">
+				<svg class="icon hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-more"></use>
+				</svg>
+				<span class="hover-show text">更多</span>
+				
+			</a>
+			<ul class="widescreen-more-box">
+													<li class="widescreen-more">
+						<a class="btn-comments low-height hover-box" href="https://blog.csdn.net/snoopy_yuan/article/details/62240320" title="周志华《机器学习》课后习题解答系列（三）：Ch2 - 模型评估与选择">
+							<svg class="icon hover-hide" aria-hidden="true">
+								<use xlink:href="#csdnc-chevronleft"></use>
+							</svg>
+							<span class="hover-show text text3">上一篇</span>
+						</a>
+					</li>
+																<li class="widescreen-more">
+					<a class="btn-comments hover-box low-height" href="https://blog.csdn.net/snoopy_yuan/article/details/64131129" title="周志华《机器学习》课后习题解答系列（四）：Ch3.4 - 交叉验证法练习">
+						<svg class="icon hover-hide" aria-hidden="true">
+							<use xlink:href="#csdnc-chevronright"></use>
+						</svg>
+						<span class="hover-show text text3">下一篇</span>
+					</a>
+				</li>
+							</ul>
+		</li>
+	</ul>
+</div>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'https://csdnimg.cn/static/api/js/share.js?v=89860594'];</script>
+<script>
+    var recommendCount = 50;
+    recommendCount = recommendCount > 1 ? (recommendCount + (recommendCount>6 ? 2 : 1)) : recommendCount;
+    var articleTit = articleTitles;
+    var ChannelId = 7;
+    var articleId = "63684219";
+    var commentscount = 9;
+    var islock = false;
+    var curentUrl = "https://blog.csdn.net/Snoopy_Yuan/article/details/63684219";
+    var myUrl = "https://my.csdn.net/";
+    //1禁止评论，2正常
+    var commentAuth = 2;
+    //百度搜索
+    var baiduKey = "%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0+matlab+3.3+%E4%B9%A0%E9%A2%98";
+    var needInsertBaidu = true;
+    // 代码段样式
+    var codeStyle = '';
+		var highlight = ["\u5468\u5fd7\u534e","\u673a\u5668\u5b66\u4e60","\u8bfe\u540e","\u4e60\u9898","\u89e3\u7b54","\u7cfb\u5217","ch3.3","\u7f16\u7a0b\u5b9e\u73b0","\u56de\u5f52"];//高亮数组
+		// 相关推荐博主数据
+    var RecommendBlogExpertList = [{"user_name":"Snoopy_Yuan","nick_name":"Snoopy_Yuan","avatar":"https:\/\/avatar.csdn.net\/1\/D\/7\/3_snoopy_yuan.jpg","is_expert":false,"article_count":40},{"user_name":"carson0408","nick_name":"carson0408","avatar":"https:\/\/avatar.csdn.net\/C\/1\/8\/3_carson0408.jpg","is_expert":false,"article_count":166},{"user_name":"sysu_cis","nick_name":"steve_99","avatar":"https:\/\/avatar.csdn.net\/8\/5\/E\/3_sysu_cis.jpg","is_expert":false,"article_count":75},{"user_name":"icefire_tyh","nick_name":"\u56db\u53bb\u516d\u8fdb\u4e00","avatar":"https:\/\/avatar.csdn.net\/3\/7\/E\/3_icefire_tyh.jpg","is_expert":false,"article_count":52},{"user_name":"VictoriaW","nick_name":"CodeTutor","avatar":"https:\/\/avatar.csdn.net\/A\/7\/B\/3_victoriaw.jpg","is_expert":false,"article_count":361},{"user_name":"ccblogger","nick_name":"CC\u4e36Z","avatar":"https:\/\/avatar.csdn.net\/4\/6\/F\/3_ccblogger.jpg","is_expert":false,"article_count":126},{"user_name":"cherryC2015","nick_name":"cherrylmx","avatar":"https:\/\/avatar.csdn.net\/5\/2\/6\/3_cherryc2015.jpg","is_expert":false,"article_count":10},{"user_name":"qilixuening","nick_name":"qilixuening","avatar":"https:\/\/avatar.csdn.net\/F\/0\/A\/3_qilixuening.jpg","is_expert":false,"article_count":39},{"user_name":"catherined","nick_name":"catherined","avatar":"https:\/\/avatar.csdn.net\/1\/E\/5\/3_catherined.jpg","is_expert":false,"article_count":8},{"user_name":"java1573","nick_name":"\u5584\u6218\u9a81\u52c7","avatar":"https:\/\/avatar.csdn.net\/7\/D\/F\/3_java1573.jpg","is_expert":false,"article_count":64}];
+
+		var articleType = 1;
+		var CopyrightContent = '本文为博主原创文章，转载时请注明来源。';
+</script>
+<script src="https://csdnimg.cn/public/sandalstrap/1.4/js/sandalstrap.min.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/vendor/pagination/paging.js"></script>
+<script src='https://csdnimg.cn/public/common/gotop/js/goTop-v1.0.min.js?v201803151422'></script>
+<script>
+    GoTop({
+        right: 8,
+        hasReport: true,
+        reportFun: function() {
+            showReport(false,articleTit);
+        }
+    })
+</script>
+<script src="https://g.csdnimg.cn/login-box/1.0.1/login-box.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/template/js/common-946dc75567.min.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/template/js/detail-1d1ab1c5a6.min.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/themes/skin3-template/skin3-template-9376486353.min.js"></script>
+<script src="//g.csdnimg.cn/fixed-sidebar/1.0.6/fixed-sidebar.js" type="text/javascript"></script>
+<script src="https://csdnimg.cn/search/baidu_search-1.1.2.js?v=201802071056&autorun=true&install=true&keyword=%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0+matlab+3.3+%E4%B9%A0%E9%A2%98"  type="text/javascript"></script>
+</body>
+<!-- 第四范式SDK -->
+
+<!-- 高亮未与 markdown兼容  -->
+	<script type="text/javascript" src="https://csdnimg.cn/release/phoenix/production/markdownCopy-3e5d9ef4b0.js" /></script>
+
+<script type="text/javascript" src="//g.csdnimg.cn/check-adblock/1.0.9/check-adblock.js"></script>
+
+<script type="text/javascript" src="https://static-blog.csdn.net/mdeditor/public/res/bower-libs/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+            "HTML-CSS": {
+                    linebreaks: { automatic: true, width: "94%container" },
+                    imageFont: null
+            },
+            tex2jax: {
+                preview: "none"
+            },
+            mml2jax: {
+                preview: 'none'
+            }
+    });
+</script>
+</html>

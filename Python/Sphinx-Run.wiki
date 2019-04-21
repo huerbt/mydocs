@@ -1,0 +1,186 @@
+Sphinx-Run.wiki             Sphinx 的设置与运行             Oct 9, 2018
+Author: BuJiBuJi HuYi
+Summary:
+        通过 Sphinx 部署一个文档环境，并运行。可通过浏览器检索查看文档
+
+lastUpda: Mar 17, 2019
+
+======================================================================
+
+http://www.sphinx-doc.org/en/master/usage/configuration.html#
+
+== Content ==
+===初始化===
+
+1、一个项目的创之初
+- 在buji目录下新建一个项目，比如bujiStockProject
+- cd bujiStockProject
+- sphinx-quickstart
+    - 询问你是否要切割source和builde文件，选择y切割
+    - 输入必要的项目信息，此处不再描述
+    - 设置语言时使用zh_CN
+    - 其他选项都选y
+- 会在source目录里生成一个conf.py，修改它，把其中的import os 和 import
+  sys注释删掉，在删掉sys.path.insert(0, os.path.abspath('.')的注释
+
+- **在source目录里创建packages文件夹（该文件夹就是代码目录）**
+
+- sphinx-apidoc -f -e -V 1.0.0 -o source/usageDocs/modules
+  /Users/huyi/buji/bujiStockProject/source/packages
+  (关于参数的解释见后面的参数说明）
+  
+- 在source目录下新建一个developer_designDocs、和user_operationsDocs文件夹
+- 在上述的两个新建的文件夹中都新建一个index.rst文件
+- 修改source目录下的index.rst文件，如下：
+
+.. BujiStockProject documentation master file, created by
+   sphinx-quickstart on Sun Mar 17 11:34:33 2019.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Welcome to BujiStockProject's documentation!
+============================================
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   developer_designDocs/index
+   user_operationsDocs/index
+
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
+
+- 修改developer_designDocs/index.rst文件（当某个具体模块的READM.rst写完后再改）
+  解释一下：某个具体模块的READM.rst文件是针对开发者使用的，主要介绍代码使用，代码来历
+  修改形式如下：
+  
+面向开发者，介绍模块设计的思路，与代码来历
+====
+
+.. toctree::
+   :maxdepth: 4
+
+   ./../packages/MarketBuji/docsTest/README
+   在这里增加新的模块的READM（往下盖楼）
+   
+- cd bujiStockProject
+- make clean
+- make html
+- 找到bujiStockProject/build/html/index.html，并打开即可
+
+
+===参数说明===
+
+-o <OUTPUT_PATH>：放置输出文件的目录。如果它不存在，则创建它。
+-f, --force：强制覆盖任何现有生成的文件。
+-l, --follow-links：遵循符号链接。
+-n, --dry-run：不要创建任何文件。
+-s <suffix>：生成源文件的后缀。默认为rst。
+-d <MAXDEPTH>：生成的目录文件的最大深度。
+-T, --no-toc：不要创建目录文件。--full提供时忽略。
+-F, --full：生成一个完整的Sphinx项目。
+-e, --separate：将每个模块的文档放在自己的页面上。
+-E, --no-headings：不要为模块/包创建标题。例如，当文档字符串已包含标题时，这很有用。
+-P, --private：包括“_private”模块。
+--implicit-namespaces：默认情况下，sphinx-apidoc只处理sys.path搜索模块。隐式名称空间允许模块路径搜索。
+-M, --module-first：在子模块文档之前放置模块文档。
+--full指定时使用这些选项：
+-a：将module_path附加到sys.path。
+-H <project>：设置项目名称以放入生成的文件中。
+-A <author>：设置要放入生成文件的作者姓名。
+-V <version>：设置项目版本以放入生成的文件中。
+-R <release>：设置项目发布以放入生成的文件。
+
+===关于相对路径的说明===
+- ./是当前目录
+
+- ../是父级目录
+
+- /是根目录
+
+
+
+
+
+
+
+== Old_Content ==
+=== 初始化===    
+1. 了解一个项目和文档目录的关系
+ 
+|Project    
+|   |----Sphinx将在这里创建目录
+
+2. 使用 cd 命令进入到 Porject 目录
+    - cd ProjecrName
+    - 
+3. 运行 sphinx-quickstart 命令
+    - sphinx-quickstart
+        当你运行这个工具时，系统会询问几个基本问题来完成设置，选择大多数问题的默认答案。在设置语言时使用zh_CN
+        source目录下有以下内容：conf.py  index.rst  _static
+        _templates.其中conf.py是配置文件，index.rst是主框架文件，_static是静态文件存放目录，比如可以放一些图片什么的，_templates是模板存放目录u        builddir 则是放置生成的文档的根目录
+        
+43. 更新 conf.py 文件 
+    - 由于我们的源代码不在文档目录中，所以我们需要将下面这行代码注释掉
+把 conf.py 里的 import os 和 import sys 也打开
+{{{!#python
+#sys.path.insert(0, os.path.abspath('.'))
+}}}
+
+
+
+=== 添加文档 ===
+1. 从项目源代码的文档字符串中抽取文档信息
+    - 在运行之前确保使用 cd 命令进入当前 Project 目录中。
+    - sphinx-apidoc [OPTIONS] -o <OUTPUT_PATH> <MODULE_PATH> [EXCLUDE_PATTERN, …]
+
+    - sphinx-apidoc -f -e -V 1.0.0 -o source/usageDocs/modules
+      /Users/huyi/buji/bujiStockProject/source/packages
+
+      
+        抽取的文档先放到 source指定的目录里，然后再通过后面的操作编译出文档。 
+    - 编译文档，在 html 中查看文档
+    - 在运行之前确保使用 cd 命令进入当前 Project目录中。
+    - make clean
+    - make html
+
+    - sphinx-build source build (如果上述make命令有问题在考虑用这个）
+    - 在 build 目录里打开 html 文件进行查看。
+
+1. 添加其他文档
+    -  在 source 目录中编辑 index.rst 文件
+    -  在toctree 部分中*对齐缩进*，写入文件的名字，不用写扩展名
+        对齐很重要，下面演示如何对齐
+        |Countent
+        |========
+        |.. toctree::
+        |   :maxdepth:3
+        |   
+        |   design/index
+    
+    -  在 toctree 中对应加入的文件，扩展名均是".rst" 的
+    -  在运行之前确保使用 cd 命令进入当前 docs 目录中。
+    -  sphinx-build source build   
+    -  在 build 目录里打开 html 文件进行查看。 
+       
+关于.. toctree::
+
+这个指令会在当前位置插入文档的目录树。关联文档的路径可以使用相对路径或者绝对路径。
+相对路径是指相对于toctree指令所在文件的路径。绝对路径是相对于源文件目录的路径。
+
+==== 添加Buji项目制定文档====
+1、在source 的index.rst中添加
+developer_designDocs/index
+user_operationsDocs/index
+
+2、手工在source中添加developer_designDocs/index.rst  文件夹和文件
+   user_operationsDocs/index.rst 文件夹和文件
+                    
+3、修改developer_designDocs的index.rst文件，指定文件路径

@@ -1,0 +1,15 @@
+
+
+Pandas 是基于 NumPy 的一个开源 Python
+库，它被广泛用于快速分析数据，以及数据清洗和准备等工作。它的名字来源是由“
+Panel data”（面板数据，一个计量经济学名词）两个单词拼成的。简单地说，你可以把
+Pandas 看作是 Python 版的 Excel。
+
+== 安装 ==
+pip3 install pandas
+
+== 数据结构简介：DataFrame和Series ==
+
+在pandas中有两类非常重要的数据结构，即序列Series和数据框DataFrame。Series类似于numpy中的一维数组，除了通吃一维数组可用的函数或方法，而且其可通过索引标签的方式获取数据，还具有索引的自动对齐功能
+
+DataFrame类似于numpy中的二维数组，同样可以通用numpy数组的函数和方法，而且还具有其他灵活应用

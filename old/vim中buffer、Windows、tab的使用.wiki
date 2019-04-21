@@ -1,0 +1,7 @@
+
+== buffer ==
+使用:ls命令可以看到当前所有的buffer
+
+使用:b[count]可以切换到某个buffer
+
+使用:bd[count]可以删除某个buffer

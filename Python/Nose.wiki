@@ -1,0 +1,499 @@
+==参考==
+
+https://www.cnblogs.com/landhu/tag/nose/
+
+== 安装 ==
+pip install nose
+
+== 基本使用 ==
+
+=== nose impor ===
+方式一：import nose
+方式二： from nose.XXX import XXX
+=== 运行 nose ===
+nosetests [options] [(optional) test files or directories]i
+
+==== 直接运行整个包 ====
+nosetests -v 包名
+
+==== 运行某一个模块 ====
+nosetests -v 包名.模块名
+
+==== 运行某一个用例 ====
+nosetests -v 包名.模块名.用例 :debug模式，看到具体情况。
+
+nosetests -s  :调试的 print 默认不会打印，使用-s 可以看到 print
+
+nosetests --collect-only -v :不运行程序，只是搜集并输出各个 case 的名称
+
+nosetests -failed : 只执行上一次失败的 case
+
+
+-V, --version¶
+Output nose version and exit
+
+-p, --plugins
+Output list of available plugins and exit. Combine with higher verbosity for greater detail
+
+-v=DEFAULT, --verbose=DEFAULT
+Be more verbose. [NOSE_VERBOSE]
+
+--verbosity=VERBOSITY
+Set verbosity; –verbosity=2 is the same as -v
+
+-q=DEFAULT, --quiet=DEFAULT
+Be less verbose
+
+-c=FILES, --config=FILES
+Load configuration from config file(s). May be specified multiple times; in that case, all config files will be loaded and combined
+
+-w=WHERE, --where=WHERE
+Look for tests in this directory. May be specified multiple times. The first directory passed will be used as the working directory, in place of the current working directory, which is the default. Others will be added to the list of tests to execute. [NOSE_WHERE]
+
+--py3where=PY3WHERE
+Look for tests in this directory under Python 3.x. Functions the same as ‘where’, but only applies if running under Python 3.x or above. Note that, if present under 3.x, this option completely replaces any directories specified with ‘where’, so the ‘where’ option becomes ineffective. [NOSE_PY3WHERE]
+
+-m=REGEX, --match=REGEX, --testmatch=REGEX
+Files, directories, function names, and class names that match this regular expression are considered tests. Default: (?:\b|_)[Tt]est [NOSE_TESTMATCH]
+
+--tests=NAMES
+Run these tests (comma-separated list). This argument is useful mainly from configuration files; on the command line, just pass the tests to run as additional arguments with no switch.
+
+-l=DEFAULT, --debug=DEFAULT
+Activate debug logging for one or more systems. Available debug loggers: nose, nose.importer, nose.inspector, nose.plugins, nose.result and nose.selector. Separate multiple names with a comma.
+
+--debug-log=FILE
+Log debug messages to this file (default: sys.stderr)
+
+--logging-config=FILE, --log-config=FILE
+Load logging config from this file – bypasses all other logging config settings.
+
+-I=REGEX, --ignore-files=REGEX
+Completely ignore any file that matches this regular expression. Takes precedence over any other settings or plugins. Specifying this option will replace the default setting. Specify this option multiple times to add more regular expressions [NOSE_IGNORE_FILES]
+
+-e=REGEX, --exclude=REGEX
+Don’t run tests that match regular expression [NOSE_EXCLUDE]
+
+-i=REGEX, --include=REGEX
+This regular expression will be applied to files, directories, function names, and class names for a chance to include additional tests that do not match TESTMATCH. Specify this option multiple times to add more regular expressions [NOSE_INCLUDE]
+
+-x, --stop
+Stop running tests after the first error or failure
+
+-P, --no-path-adjustment
+Don’t make any changes to sys.path when loading tests [NOSE_NOPATH]
+
+--exe
+Look for tests in python modules that are executable. Normal behavior is to exclude executable modules, since they may not be import-safe [NOSE_INCLUDE_EXE]
+
+--noexe
+DO NOT look for tests in python modules that are executable. (The default on the windows platform is to do so.)
+
+--traverse-namespace
+Traverse through all path entries of a namespace package
+
+--first-package-wins, --first-pkg-wins, --1st-pkg-wins
+nose’s importer will normally evict a package from sys.modules if it sees a package with the same name in a different location. Set this option to disable that behavior.
+
+--no-byte-compile
+Prevent nose from byte-compiling the source into .pyc files while nose is scanning for and running tests.
+
+-a=ATTR, --attr=ATTR
+Run only tests that have attributes specified by ATTR [NOSE_ATTR]
+
+-A=EXPR, --eval-attr=EXPR
+Run only tests for whose attributes the Python expression EXPR evaluates to True [NOSE_EVAL_ATTR]
+
+-s, --nocapture
+Don’t capture stdout (any stdout output will be printed immediately) [NOSE_NOCAPTURE]
+
+--nologcapture
+Disable logging capture plugin. Logging configuration will be left intact. [NOSE_NOLOGCAPTURE]
+
+--logging-format=FORMAT
+Specify custom format to print statements. Uses the same format as used by standard logging handlers. [NOSE_LOGFORMAT]
+
+--logging-datefmt=FORMAT
+Specify custom date/time format to print statements. Uses the same format as used by standard logging handlers. [NOSE_LOGDATEFMT]
+
+--logging-filter=FILTER
+Specify which statements to filter in/out. By default, everything is captured. If the output is too verbose, use this option to filter out needless output. Example: filter=foo will capture statements issued ONLY to foo or foo.what.ever.sub but not foobar or other logger. Specify multiple loggers with comma: filter=foo,bar,baz. If any logger name is prefixed with a minus, eg filter=-foo, it will be excluded rather than included. Default: exclude logging messages from nose itself (-nose). [NOSE_LOGFILTER]
+
+--logging-clear-handlers
+Clear all other logging handlers
+
+--logging-level=DEFAULT
+Set the log level to capture
+
+--with-coverage
+Enable plugin Coverage: Activate a coverage report using Ned Batchelder’s coverage module. [NOSE_WITH_COVERAGE]
+
+--cover-package=PACKAGE
+Restrict coverage output to selected packages [NOSE_COVER_PACKAGE]
+
+--cover-erase
+Erase previously collected coverage statistics before run
+
+--cover-tests
+Include test modules in coverage report [NOSE_COVER_TESTS]
+
+--cover-min-percentage=DEFAULT
+Minimum percentage of coverage for tests to pass [NOSE_COVER_MIN_PERCENTAGE]
+
+--cover-inclusive
+Include all python files under working directory in coverage report. Useful for discovering holes in test coverage if not all files are imported by the test suite. [NOSE_COVER_INCLUSIVE]
+
+--cover-html
+Produce HTML coverage information
+
+--cover-html-dir=DIR
+Produce HTML coverage information in dir
+
+--cover-branches
+Include branch coverage in coverage report [NOSE_COVER_BRANCHES]
+
+--cover-xml
+Produce XML coverage information
+
+--cover-xml-file=FILE
+Produce XML coverage information in file
+
+--cover-config-file=DEFAULT
+Location of coverage config file [NOSE_COVER_CONFIG_FILE]
+
+--cover-no-print
+Suppress printing of coverage information
+
+--pdb
+Drop into debugger on failures or errors
+
+--pdb-failures
+Drop into debugger on failures
+
+--pdb-errors
+Drop into debugger on errors
+
+--no-deprecated
+Disable special handling of DeprecatedTest exceptions.
+
+--with-doctest
+Enable plugin Doctest: Activate doctest plugin to find and run doctests in non-test modules. [NOSE_WITH_DOCTEST]
+
+--doctest-tests
+Also look for doctests in test modules. Note that classes, methods and functions should have either doctests or non-doctest tests, not both. [NOSE_DOCTEST_TESTS]
+
+--doctest-extension=EXT
+Also look for doctests in files with this extension [NOSE_DOCTEST_EXTENSION]
+
+--doctest-result-variable=VAR
+Change the variable name set to the result of the last interpreter command from the default ‘_’. Can be used to avoid conflicts with the _() function used for text translation. [NOSE_DOCTEST_RESULT_VAR]
+
+--doctest-fixtures=SUFFIX
+Find fixtures for a doctest file in module with this name appended to the base name of the doctest file
+
+--doctest-options=OPTIONS
+Specify options to pass to doctest. Eg. ‘+ELLIPSIS,+NORMALIZE_WHITESPACE’
+
+--with-isolation
+Enable plugin IsolationPlugin: Activate the isolation plugin to isolate changes to external modules to a single test module or package. The isolation plugin resets the contents of sys.modules after each test module or package runs to its state before the test. PLEASE NOTE that this plugin should not be used with the coverage plugin, or in any other case where module reloading may produce undesirable side-effects. [NOSE_WITH_ISOLATION]
+
+-d, --detailed-errors, --failure-detail
+Add detail to error output by attempting to evaluate failed asserts [NOSE_DETAILED_ERRORS]
+
+--with-profile
+Enable plugin Profile: Use this plugin to run tests using the hotshot profiler. [NOSE_WITH_PROFILE]
+
+--profile-sort=SORT
+Set sort order for profiler output
+
+--profile-stats-file=FILE
+Profiler stats file; default is a new temp file on each run
+
+--profile-restrict=RESTRICT
+Restrict profiler output. See help for pstats.Stats for details
+
+--no-skip
+Disable special handling of SkipTest exceptions.
+
+--with-id
+Enable plugin TestId: Activate to add a test id (like #1) to each test name output. Activate with –failed to rerun failing tests only. [NOSE_WITH_ID]
+
+--id-file=FILE
+Store test ids found in test runs in this file. Default is the file .noseids in the working directory.
+
+--failed
+Run the tests that failed in the last test run.
+
+--processes=NUM
+Spread test run among this many processes. Set a number equal to the number of processors or cores in your machine for best results. Pass a negative number to have the number of processes automatically set to the number of cores. Passing 0 means to disable parallel testing. Default is 0 unless NOSE_PROCESSES is set. [NOSE_PROCESSES]
+
+--process-timeout=SECONDS
+Set timeout for return of results from each test runner process. Default is 10. [NOSE_PROCESS_TIMEOUT]
+
+--process-restartworker
+If set, will restart each worker process once their tests are done, this helps control memory leaks from killing the system. [NOSE_PROCESS_RESTARTWORKER]
+
+--with-xunit
+Enable plugin Xunit: This plugin provides test results in the standard XUnit XML format. [NOSE_WITH_XUNIT]
+
+--xunit-file=FILE
+Path to xml file to store the xunit report in. Default is nosetests.xml in the working directory [NOSE_XUNIT_FILE]
+
+--xunit-testsuite-name=PACKAGE
+Name of the testsuite in the xunit xml, generated by plugin. Default test suite name is nosetests.
+
+--xunit-prefix-with-testsuite-name
+Whether to prefix the class name under test with testsuite name. Defaults to false.
+
+--all-modules
+Enable plugin AllModules: Collect tests from all python modules. [NOSE_ALL_MODULES]
+
+--collect-only
+Enable collect-only: Collect and output test names only, don’t run any tests. [COLLECT_ONLY]
+
+
+=== nose 测试用例编写 ===
+
+==== 普通形式 ====
+===== 1、以函数形式写的测试用例 =====
+
+{{{!# python test_case_0002.py
+import nose
+
+def test_learn_3():
+    print("test_leaen_3")
+
+def test_learn_4():
+    print("test_learn_4")
+
+def test_learn_5():
+    print("test_learn_5")
+
+def setUp():
+    print("0002 test setUP")
+
+def tearDown():
+    print("0002 test tearDown")
+
+test_learn_3.teardown = test_learn_5.teardown = tearDown
+
+
+}}}
+
+上述代码最后加了一句
+{{{!#python
+test_learn_3.teardown=test_lean_5.teardown= tearDown
+}}}
+
+{{{! bash 运行
+nosetests -v -s
+}}}
+所以这里运行顺序为：setUp-->test_learn_3-->tearDown-->test_learn_4-->test_learn_5-->tearDown-->tearDown
+因此，在函数或者函数式的用例组织中，setUp和tearDown只会执行一次，分别是开始及结束。
+
+===== 2、以类的形式组织的用例：=====
+
+{{{!# python  类的形式来组织
+import nose
+
+class TestClass():
+    
+    def setUp(self):
+        self.a="!"
+        print("MyTestClass setup")
+
+    def tearDown(self):
+        print("MyTestClass teardown")
+        
+    def Testfunc1(self):
+        print("this is Testfunc1{}".format(self.a))
+        pass
+    
+    def test_func1(self):
+        print("this is test_func1{}".format(self.a))
+        pass 
+    
+    def Testfunc2(self):
+        print("this is Testfunc2".format(self.a))
+        pass 
+    
+    def test_func2(self):
+        print("this is test_func2".format(self.a))
+        pass 
+
+}}}
+
+从运行结果中可以看出，每个用例都会分别执行setUp及tearDown 注：在以类形式运行时，还有setUpClass及tearDownClass两个函数功能，是运行测试时，只运行一次。
+
+===== 3、以整个包的形式运行=====
+
+参见[[https://www.cnblogs.com/landhu/p/5638115.html]]
+
+
+=== 每个用例前使用with_setup来自定义测试用例的setUp及tearDown功能===
+{{{!#python
+from nose.tools import with_setup
+#with_setup is useful only for test functions, not for test methods or inside of TestCase subclasses。就是说只能在测试方法上用，不能放在类里面
+def setup_func():
+    "set up test fixtures"
+
+def teardown_func():
+    "tear down test fixtures"
+
+@with_setup(setup_func, teardown_func)
+def test():
+    "test ..."
+
+}}}
+
+=== nose.tools 测试工具集 ===
+nose.tools模块提供了一些方便工具，以及 assert 的众多功能
+
+- nose.tools.ok_(expr, msg=None)
+{{{!# python
+from nose.tools import ok_
+
+def test_lean_2():
+    print "test_learn_2"
+    ok_(4==3,msg="Error")
+
+}}}
+
+- nose.tools.eq_(a, b, msg=None)
+
+- nose.tools.make_decorator(func)
+Wraps a test decorator so as to properly replicate metadata of the decorated function, including nose’s additional stuff (namely, setup and teardown).
+
+- nose.tools.raises(*exceptions)
+Test must raise one of expected exceptions to pass.
+
+Example use:
+{{{!# python
+@raises(TypeError, ValueError)
+def test_raises_type_error():
+    raise TypeError("This test passes")
+
+@raises(Exception)
+def test_that_fails_by_passing():
+    pass
+}}}
+If you want to test many assertions about exceptions in a single test, you may want to use assert_raises instead.
+
+- nose.tools.set_trace() 单步调试工具，在多个模块，大程序时这个功能好用。内部使用的是pdb.set_trace
+{{{!# python 
+
+from nose.tools import assert_in
+from nose.tools import set_trace
+
+def test_lean_5():
+    set_trace()
+    assert_in("aaa",'bbb',msg="test  in failed")
+}}}
+
+
+- nose.tools.timed(limit) 测试必须在设定的时间内（以秒为单位）完成 ，否则测试失败
+
+- nose.tools.with_setup(setup=None, teardown=None) 测试方法调用独立的 setUp 和
+  tearDown 函数
+Decorator to add setup and/or teardown methods to a test function:
+{{{!# python 
+@with_setup(setup, teardown)
+def test_something():
+    " ... "
+}}}
+
+nose.tools中还有很多assert的函数工具
+
+assert_almost_equal(first,second,places=7,msg=None)
+assert_dict_contains_subset
+assert_dict_equal
+assert_equal
+assert_false
+assert_greater
+assert_greater_equal
+assert_in
+assert_is
+assert_is_instance
+assert_is_none
+assert_is_not
+assert_is_not_none
+assert_items_equal
+assert_less
+assert_less_equal
+assert_list_equal
+assert_multi_line_equal
+assert_not_almost_equal
+assert_not_equal
+assert_not_in
+assert_not_is_instance
+assert_not_regexp_matches
+assert_raises
+assert_raises_regexp
+assert_regexp_matches
+assert_sequence_equal
+assert_set_equal
+assert_true
+assert_tuple_equal
+
+== 内部插件的使用 ==
+=== Attrib 标记，用于筛选用例 ===
+在很多时候，用例可以分不同的等级来运行，在nose中很增加了这个功能，使用attrib将用例进行划分
+{{{!# python
+from nose.plugins.attrib import attr
+@attr(speed='slow')
+def test_big_download():
+    import urllib
+    # commence slowness...
+    pass
+}}}
+
+运行测试
+{{{!# bash
+nosetests -a speed=slow
+}}}
+在实际项目中，属性可以有多个，在使用时：
+{{{!# zsh
+nosetests -a priority=2,status=stable
+}}}
+
+=== Skip:跳过测试 ===
+{{{!# python 
+from nose.plugins.skip import SkipTest
+@attr(mode=1) 
+def test_learn_1():
+    raise SkipTest
+}}}
+
+== 对异常和告警使用断言 ==
+{{{!# python 
+from nose.tools import assert_raises
+
+def mode(dividend,divisor):
+    remainder = dividend % divisor
+    quotient = (dividend - remainder) / dividend
+    return quotient,remainder
+
+class TestRaise():
+    def test_raise(self):
+        assert_raises(ZeroDivisionError, mode,7,0)
+}}}
+注意：里面的引用函数是不带（）的，直接是mode, 异常名的也是不带引号的，如果使用自定义的异常是要先引入的
+
+== 接口测试中常见的用法==
+{{{!# python
+def show_xxxxx(self, id):
+        """查看xxxx，id为参数"""
+        url = "xxxx/%s" % str(volume_id)
+        resp, body = self.get(url)
+        body = json.loads(body)
+        self.expected_success(200, resp.status)  #其中expected_success是自己的封装，里面封装了抛错，这里就不举例了
+        return body
+        
+# 然后在实际测异常参数时，就可以这么写
+def test_get_invalid_xxxxx_id(self):
+        # Negative: Should not be able to get xxxxx with invalid id
+        self.assertRaises(你自己定义的错误类型, self.show_xxxxxx, '#$%%&^&^')
+
+}}}
+
+

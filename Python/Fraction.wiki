@@ -1,0 +1,12 @@
+
+分数计算使用 Fraction 对象
+
+{{{!# python
+>>> from fractions import Fraction
+>>> sugar_cups = Fraction('2.5') # 用字符串创建分数
+>>> scale_factor = Fraction(5,8) # 用整数创建分数
+>>> sugar_cups * scale_factor
+
+Fraction(25,16)
+
+}}}

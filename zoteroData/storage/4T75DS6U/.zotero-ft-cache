@@ -1,0 +1,473 @@
+
+
+原
+决策树原理实例（python代码实现）
+2017年03月26日 23:04:13 a_achengsong 阅读数：22761 标签： python 机器学习 算法
+个人分类： python
+版权声明：本文为博主原创文章，转载请注明来源。 https://blog.csdn.net/csqazwsxedc/article/details/65697652
+
+决策数(Decision Tree)在机器学习中也是比较常见的一种算法，属于监督学习中的一种。看字面意思应该也比较容易理解，相比其他算法比如支持向量机(SVM)或神经网络，似乎决策树感觉“亲切”许多。
+
+    优点：计算复杂度不高，输出结果易于理解，对中间值的缺失值不敏感，可以处理不相关特征数据。
+    缺点：可能会产生过度匹配的问题。
+    使用数据类型：数值型和标称型。
+
+简单介绍完毕，让我们来通过一个例子让决策树“原形毕露”。
+
+一天，老师问了个问题，只根据头发和声音怎么判断一位同学的性别。
+为了解决这个问题，同学们马上简单的统计了7位同学的相关特征，数据如下：
+头发 	声音 	性别
+长 	粗 	男
+短 	粗 	男
+短 	粗 	男
+长 	细 	女
+短 	细 	女
+短 	粗 	女
+长 	粗 	女
+长 	粗 	女
+
+机智的同学A想了想，先根据头发判断，若判断不出，再根据声音判断，于是画了一幅图，如下：
+同学A
+于是，一个简单、直观的决策树就这么出来了。头发长、声音粗就是男生；头发长、声音细就是女生；头发短、声音粗是男生；头发短、声音细是女生。
+原来机器学习中决策树就这玩意，这也太简单了吧。。。
+这时又蹦出个同学B，想先根据声音判断，然后再根据头发来判断，如是大手一挥也画了个决策树：
+同学B
+同学B的决策树：首先判断声音，声音细，就是女生；声音粗、头发长是男生；声音粗、头发长是女生。
+
+那么问题来了：同学A和同学B谁的决策树好些？计算机做决策树的时候，面对多个特征，该如何选哪个特征为最佳的划分特征？
+
+划分数据集的大原则是：将无序的数据变得更加有序。
+我们可以使用多种方法划分数据集，但是每种方法都有各自的优缺点。于是我们这么想，如果我们能测量数据的复杂度，对比按不同特征分类后的数据复杂度，若按某一特征分类后复杂度减少的更多，那么这个特征即为最佳分类特征。
+Claude Shannon 定义了熵（entropy）和信息增益(information gain)。
+用熵来表示信息的复杂度，熵越大，则信息越复杂。公式如下：
+熵
+信息增益(information gain)，表示两个信息熵的差值。
+首先计算未分类前的熵，总共有8位同学，男生3位，女生5位。
+熵（总）=-3/8*log2(3/8)-5/8*log2(5/8)=0.9544
+接着分别计算同学A和同学B分类后信息熵。
+同学A首先按头发分类，分类后的结果为：长头发中有1男3女。短头发中有2男2女。
+熵（同学A长发）=-1/4*log2(1/4)-3/4*log2(3/4)=0.8113
+熵（同学A短发）=-2/4*log2(2/4)-2/4*log2(2/4)=1
+熵（同学A）=4/8*0.8113+4/8*1=0.9057
+信息增益（同学A）=熵（总）-熵（同学A）=0.9544-0.9057=0.0487
+同理，按同学B的方法，首先按声音特征来分，分类后的结果为：声音粗中有3男3女。声音细中有0男2女。
+熵（同学B声音粗）=-3/6*log2(3/6)-3/6*log2(3/6)=1
+熵（同学B声音粗）=-2/2*log2(2/2)=0
+熵（同学B）=6/8*1+2/8*0=0.75
+信息增益（同学B）=熵（总）-熵（同学A）=0.9544-0.75=0.2087
+
+按同学B的方法，先按声音特征分类，信息增益更大，区分样本的能力更强，更具有代表性。
+以上就是决策树ID3算法的核心思想。
+接下来用python代码来实现ID3算法：
+
+ from math import log import operator def calcShannonEnt (dataSet) : # 计算数据的熵(entropy) numEntries=len(dataSet) # 数据条数 labelCounts={} for featVec in dataSet: currentLabel=featVec[- 1 ] # 每行数据的最后一个字（类别） if currentLabel not in labelCounts.keys(): labelCounts[currentLabel]= 0 labelCounts[currentLabel]+= 1 # 统计有多少个类以及每个类的数量 shannonEnt= 0 for key in labelCounts: prob=float(labelCounts[key])/numEntries # 计算单个类的熵值 shannonEnt-=prob*log(prob, 2 ) # 累加每个类的熵值 return shannonEnt def createDataSet1 () : # 创造示例数据 dataSet = [[ '长' , '粗' , '男' ], [ '短' , '粗' , '男' ], [ '短' , '粗' , '男' ], [ '长' , '细' , '女' ], [ '短' , '细' , '女' ], [ '短' , '粗' , '女' ], [ '长' , '粗' , '女' ], [ '长' , '粗' , '女' ]] labels = [ '头发' , '声音' ] #两个特征 return dataSet,labels def splitDataSet (dataSet,axis,value) : # 按某个特征分类后的数据 retDataSet=[] for featVec in dataSet: if featVec[axis]==value: reducedFeatVec =featVec[:axis] reducedFeatVec.extend(featVec[axis+ 1 :]) retDataSet.append(reducedFeatVec) return retDataSet def chooseBestFeatureToSplit (dataSet) : # 选择最优的分类特征 numFeatures = len(dataSet[ 0 ])- 1 baseEntropy = calcShannonEnt(dataSet) # 原始的熵 bestInfoGain = 0 bestFeature = - 1 for i in range(numFeatures): featList = [example[i] for example in dataSet] uniqueVals = set(featList) newEntropy = 0 for value in uniqueVals: subDataSet = splitDataSet(dataSet,i,value) prob =len(subDataSet)/float(len(dataSet)) newEntropy +=prob*calcShannonEnt(subDataSet) # 按特征分类后的熵 infoGain = baseEntropy - newEntropy # 原始熵与按特征分类后的熵的差值 if (infoGain>bestInfoGain): # 若按某特征划分后，熵值减少的最大，则次特征为最优分类特征 bestInfoGain=infoGain bestFeature = i return bestFeature def majorityCnt (classList) : #按分类后类别数量排序，比如：最后分类为2男1女，则判定为男； classCount={} for vote in classList: if vote not in classCount.keys(): classCount[vote]= 0 classCount[vote]+= 1 sortedClassCount = sorted(classCount.items(),key=operator.itemgetter( 1 ),reverse= True ) return sortedClassCount[ 0 ][ 0 ] def createTree (dataSet,labels) : classList=[example[- 1 ] for example in dataSet] # 类别：男或女 if classList.count(classList[ 0 ])==len(classList): return classList[ 0 ] if len(dataSet[ 0 ])== 1 : return majorityCnt(classList) bestFeat=chooseBestFeatureToSplit(dataSet) #选择最优特征 bestFeatLabel=labels[bestFeat] myTree={bestFeatLabel:{}} #分类结果以字典形式保存 del (labels[bestFeat]) featValues=[example[bestFeat] for example in dataSet] uniqueVals=set(featValues) for value in uniqueVals: subLabels=labels[:] myTree[bestFeatLabel][value]=createTree(splitDataSet\ (dataSet,bestFeat,value),subLabels) return myTree if __name__== '__main__' : dataSet, labels=createDataSet1() # 创造示列数据 print(createTree(dataSet, labels)) # 输出决策树模型结果  
+
+输出结果为：
+
+ { '声音' : { '细' : '女' , '粗' : { '头发' : { '短' : '男' , '长' : '女' }}}} 
+
+这个结果的意思是：首先按声音分类，声音细为女生；然后再按头发分类：声音粗，头发短为男生；声音粗，头发长为女生。
+这个结果也正是同学B的结果。
+补充说明：判定分类结束的依据是，若按某特征分类后出现了最终类（男或女），则判定分类结束。使用这种方法，在数据比较大，特征比较多的情况下，很容易造成过拟合，于是需进行决策树枝剪，一般枝剪方法是当按某一特征分类后的熵小于设定值时，停止分类。
+
+ID3算法存在的缺点：
+1. ID3算法在选择根节点和内部节点中的分支属性时，采用信息增益作为评价标准。信息增益的缺点是倾向于选择取值较多是属性，在有些情况下这类属性可能不会提供太多有价值的信息。
+2. ID3算法只能对描述属性为离散型属性的数据集构造决策树 。
+
+为了改进决策树，又提出了ID4.5算法和CART算法。之后有时间会介绍这两种算法。
+
+参考：
+- Machine Learning in Action
+- 统计学习方法
+阅读更多
+发表评论
+添加代码片
+
+    HTML/XML
+    objective-c
+    Ruby
+    PHP
+    C
+    C++
+    JavaScript
+    Python
+    Java
+    CSS
+    SQL
+    其它
+
+还能输入 1000 个字符
+机器学习之 决策树 （Decision Tree）及其 Python 代码实现 - HuangQinJian
+
+02-10 1万
+
+决策树是一个预测模型；他代表的是对象属性与对象值之间的一种映射关系。树中每个节点表示某个对象，而每个分叉路径则代表的某个可能的属性值，而每个叶结点则对应从根节点到该叶节点所经历的路径所表示的对象的值。... 来自： HuangQinJian
+python 3实现 决策树 算法 - huminwudi的博客
+
+11-08 2301
+
+运行平台： Windows Python版本： Python3.x IDE： pycharm 一、决策树         决策树是什么？决策树(decision tree)是一种基本的分类与回... 来自： huminwudi的博客
+Python 3《机器学习实战》学习笔记（二）： 决策树 基础篇之让我们从相亲说起 - Jack-Cui
+
+07-21 2.6万
+
+有读者反映，说我上篇文章Python3《机器学习实战》学习笔记（一）：k-近邻算法(史诗级干货长文)，太长了。一看那么长，读的欲望都降低了。既然如此，决策树的内容，我就分开讲好了。本篇讨论决策树的原理... 来自： Jack-Cui
+Python 机器学习（三）-- 决策树 算法 - alvine008的专栏
+
+07-14 4.6万
+
+一、决策树原理 决策树是用样本的属性作为结点，用属性的取值作为分支的树结构。 决策树的根结点是所有样本中信息量最大的属性。树的中间结点是该结点为根的子树所包含的样本子集中信息量最大的属性。决策树... 来自： alvine008的专栏
+Python 机器学习算法库—— 决策树 （scikit-learn学习 - 决策树 ） - Yeoman92的博客
+
+06-18 6540
+
+决策树决策树(DTs)是一种用于分类和回归的非参数监督学习方法。目标是创建一个模型，通过从数据特性中推导出简单的决策规则来预测目标变量的值。 例如，在下面的例子中，决策树通过一组if-then-el... 来自： Yeoman92的博客
+决策树 原理 及 Python 代码实现 - Flying_sfeng的博客
+
+03-16 1.6万
+
+决策树其实就是按节点分类数据集的一种方法。在本文中，我将讨论数学上如何使用信息论划分数据集，并编写代码构建决策树。 创建决策树进行分类的流程如下： （1）    创建数据集 （2）    计算数据集的... 来自： Flying_sfeng的博客
+Python 教程—机器学习和数据分析
+
+学院
+
+01-01
+
+适合人群：Python有一定基础者,章节：决策树实例-2
+机器学习算法的 Python 实现 (3)： 决策树 剪枝处理 - Will Lin的博客
+
+04-04 1.2万
+
+本文数据参照 机器学习-周志华 一书中的决策树一章。可作为此章课后习题4的答案 代码则参照《机器学习实战》一书的内容，并做了一些修改。 CART决策树 使用基尼指数（Gini Index）来选择划... 来自： Will Lin的博客
+详解 决策树 、 python 实现 决策树 - 仍歌杨柳春风
+
+12-10 6723
+
+决策树模型 定义 决策过程 决策树学习 特征选择 信息增益 计算方法 ID3算法 python实现 验证 决策树模型 定义 分类决策树模型是一种描述对实例进行分类的... 来自： 仍歌杨柳春风
+相关热词
+决策树和if 决策树 信息 决策树 算法 决策树的信息熵 决策树简直
+决策树 的 python 实现 - aliceyangxi1987的博客
+
+05-02 4038
+
+本文结构： 是什么？ 有什么算法？ 数学原理？ 编码实现算法？ 1. 是什么？简单地理解，就是根据一些 feature 进行分类，每个节点提一个问题，通过判断，将数据分为几类，再继续提问。这些问题是根... 来自： aliceyangxi1987的博客
+换一批
+Python 3《机器学习实战》学习笔记（三）： 决策树 实战篇之为自己配个隐形眼镜 - Jack-Cui
+
+07-28 1.9万
+
+上篇文章讲述了机器学习决策树的原理，以及如何选择最优特征作为分类特征。本篇文章将在此基础上进行介绍。主要内容包括：决策树构建、决策树可视化、使用决策树进行分类预测、决策树的存储和读取、sklearn实... 来自： Jack-Cui
+决策树 (Decision Tree) 原理 简述及相关算法(ID3,C4.5) - 新手村
+
+11-11 1.2万
+
+Decision Tree 决策树： 决策树是属于机器学习监督学习分类算法中比较简单的一种，决策树是一个预测模型；他代表的是对象属性与对象值之间的一种映射关系。树中每个节点表示某个对象，而每个分叉路... 来自： 新手村
+Python 写一个简单的爬虫样例（不超过50行代码） - wsbxzz1的专栏
+
+06-10 4.7万
+
+###写在题外的话 爬虫，我还是大三的时候,第一次听说，当时我的学姐给我找的一个勤工俭学的项目，要求是在微博上爬出感兴趣的信息，结果很遗憾，第一次邂逅只是擦肩而过。然后，时间来到4年后的研二，在做信息... 来自： wsbxzz1的专栏
+数据挖掘十大算法之 决策树 详解（1） - 白马负金羁
+
+11-20 6.5万
+
+在2006年12月召开的 IEEE 数据挖掘国际会议上，与会的各位专家选出了当时的十大数据挖掘算法（ top 10 data mining algorithms ）。本博客已经介绍过的位列十大算法之中... 来自： 白马负金羁
+决策树 的典型案例 - kxcc_sx的专栏
+
+10-27 1.4万
+
+   小王是一家著名高尔夫俱乐部的经理。但是他被雇员数量问题搞得心情十分不好。某些天好像所有人都來玩高尔夫，以至于所有员工都忙的团团转还是应付不过来，而有些天不知道什么原因却一个人也不来，俱乐部为雇员... 来自： kxcc_sx的专栏
+决策树 ID3算法的 python 实现 - ggwcr的博客
+
+09-21 250
+
+决策树ID3算法的python实现环境：win7 64位 python3.5熵参考：http://blog.csdn.net/ggwcr/article/details/77964184import ... 来自： ggwcr的博客
+决策树 算法及 python 实现 - huahuazhu的博客
+
+06-13 9366
+
+1 什么是决策树 决策树（Decision Tree）是一种基本的分类与回归方法，本文主要讨论分类决策树。决策树模型呈树形结构，在分类问题中，表示基于特征对数据进行分类的过程。它可以认为是if-th... 来自： huahuazhu的博客
+决策树 算法 原理 及案例 - 千丈之松的专栏
+
+06-12 1.4万
+
+机器学习在各个领域都有广泛的应用，特别在数据分析领域有着深远的影响。决策树是机器学习中最基础且应用最广泛的算法模型。本文介绍了机器学习的相关概念、常见的算法分类和决策树模型及应用。通过一个决策树案例，... 来自： 千丈之松的专栏
+《机器学习实战》学习（三）—— 决策树 实例 - 不系之舟的专栏-QQ讨论群331590339
+
+09-11 7454
+
+实例一 《机器学习》书中4.3习题1、问题描述试编程实现基于信息熵进行划分选择的决策树算法，并为表4.3中数据生成一棵决策树，表4.3数据如下： ‘色泽’,’根蒂’,’敲声’,’纹理’,’脐部’,’触... 来自： 不系之舟的专栏-QQ讨论群331590339
+sklearn浅析（一）——sklearn的组织结构 - 起风之后，只剩沙丘
+
+07-21 1.8万
+
+sklearn是基于numpy和scipy的一个机器学习算法库，设计的非常优雅，它让我们能够使用同样的接口来实现所有不同的算法调用。本文首先介绍下sklearn内的模块组织和算法类的顶层设计图。三大模... 来自： 起风之后，只剩沙丘
+一文搞定BP神经网络——从 原理 到应用（ 原理 篇） - 佐井白白的微笑
+
+10-11 3万
+
+神经网络结构以及前向传播过程 损失函数和代价函数 反向传播 1 矩阵补充知识 11 矩阵求梯度 12 海塞矩阵 13 总结 2 矩阵乘积和对应元素相乘 3 反向传播原理四个基础等式 4 反向传播总结 ... 来自： 佐井白白的微笑
+背包问题、 决策树 及 python 实现 - 青鱼入云的博客
+
+05-16 170
+
+背包问题是最优解问题中的一种，我们先来看一下最优解的定义：在特定要求下，按特定需求得出最优结果。 按照这个定义我们做一下下面的分析，有以下一些特征： 特定要求，比如：某一个... 来自： 青鱼入云的博客
+决策树 的生成-- Python 代码实现 - eye_water的博客
+
+05-11 111
+
+前言 本文思路来源于 How&amp;nbsp;To&amp;nbsp;Implement&amp;nbsp;The&amp;nbsp;Decision&amp;nbsp;Tree&amp;nb... 来自： eye_water的博客
+使用 python 手写 决策树 - CY_TEC的博客
+
+06-08 267
+
+使用 python 自己写一个 决策树 很多复杂的学习方法，明白了其基础之后，一切就变得简单、易懂，并且符合直觉。 我今天打算手写一个决策树，或者说是“分类回归树”。 参考 https:/... 来自： CY_TEC的博客
+python + 决策树 1 - www_buzhidao的专栏
+
+05-14 474
+
+决策树初试 来自： www_buzhidao的专栏
+简单 Python 决策树 可视化 实例 - 学苑新空
+
+08-17 8006
+
+Python决策树可视化实现 来自： 学苑新空
+机器学习实战- python 3 决策树 实例 - tian544556的博客
+
+12-09 501
+
+工具：PythonCharm 书中的代码是python2的，而我用的python3，结合实践过程，这里会标注实践时遇到的问题和针对python3的修改。  实践代码和训练测试数据可以参考这里  htt... 来自： tian544556的博客
+python 实现机器学习之 决策树 - XXiaoLEI的专栏
+
+11-02 8731
+
+这几天在看决策树算法，发现这算法在实际的应用中使用挺多的。所以想总结一下： 这里给出一些我觉得比较好的博客链接： http://blog.jobbole.com/86443/　通俗易懂，同时也讲了... 来自： XXiaoLEI的专栏
+下载
+决策树 的 Python 代码实现 - flying_sfeng
+03-16
+本代码为本人阅读《机器学习实战》后写的关于使用决策树进行分类的完整代码，包括详细的中文注释，编程环境为Python2.7，欢迎下载学习。
+机器学习 python 实例 完成— 决策树 - xietingcandice的专栏
+
+03-05 3747
+
+决策树学习是应用最广泛的归纳推理算法之一，是一种逼近离散值目标函数的方法，在这种方法中学习到的函数被表示为一棵决策树。决策树可以使用不熟悉的数据集合，并从中提取出一系列规则，机器学习算法最终将使用这些... 来自： xietingcandice的专栏
+下载
+使用 Python 实现 决策树 - flying_sfeng
+06-24
+2017年3月16号关于决策树的资源上传错了，这一份才是决策树的Python代码实现，包含详细的中文注释，欢迎下载学习。Python版本为2.7.
+决策树 算法 原理 及实现 - MLee的博客
+
+03-14 696
+
+欢迎大家查看实现的完整代码。。。 决策树模型 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&am... 来自： MLee的博客
+机器学习 -- 决策树 C45算法使用 实例 - Stay focus,Stay Crazy
+
+07-02 2864
+
+机器学习 -- 决策树C45算法使用实例 来自： Stay focus,Stay Crazy
+机器学习算法的 Python 实现 (2)：ID3 决策树 - Will Lin的博客
+
+04-01 1.3万
+
+本文数据参照 机器学习-周志华 一书中的决策树一章。可作为此章课后习题3的答案 代码则参照《机器学习实战》一书的内容，并做了一些修改。 本文使用的Python库包括 numpypandasma... 来自： Will Lin的博客
+决策树 算法及 Python 实现 - Britesun的博客
+
+08-09 73
+
+1 什么是决策树 决策树（Decision Tree）是一种基本的分类与回归方法，本文主要讨论分类... 来自： Britesun的博客
+python 机器学习库sklearn—— 决策树 - 全栈工程师开发手册（原创）
+
+01-03 2716
+
+全栈工程师开发手册 （作者：栾鹏） python数据挖掘系列教程 决策树的相关的知识内容可以参考 http://blog.csdn.net/luanpeng825485697/... 来自： 全栈工程师开发手册（原创）
+python 实现 决策树 实例 - qq_27150893的博客
+
+03-31 631
+
+      今天用python实现了一个决策树模型，python做机器学习有大量的库支持，简洁高效，没有深厚数学与算法基础的人也可以调用库来实现机器学习模型。当然大家想做好机器学习还是要好好积淀深厚的... 来自： qq_27150893的博客
+BP神经网络学习笔记 - jacksonary的博客
+
+12-24 2.1万
+
+在BP神经网络中，输入层和输出层的节点个数都是确定的，而隐含层节点个数是部确定的， 可以根据经验公式来确定： h为隐含层节点的数目，m和n分别是输入层和输出层节点的数目，a为1~10之间的调节... 来自： jacksonary的博客
+sklearn库的学习 - yeal
+
+12-24 2.4万
+
+sklearn入门，sklearn库结构 来自： yeal
+BP神经网络（完整的理论和经验公式） - kebu12345678的博客
+
+02-07 2.4万
+
+http://blog.csdn.net/runatworld/article/details/50774215 BP神经网络 2016-03-01 17:27 271人阅读 评... 来自： kebu12345678的博客
+sklearn简介 - minning的博客
+
+12-12 1.8万
+
+sklearn是机器学习中一个常用的python第三方模块，网址：http://scikit-learn.org/stable/index.html ，里面对一些常用的机器学习方法进行了封装，在进行机... 来自： minning的博客
+BP神经网络 - ACdreamer
+
+03-26 14.2万
+
+今天来讲BP神经网络，神经网络在机器学习中应用比较广泛，比如函数逼近，模式识别，分类，数据压缩，数据 挖掘等领域。接下来介绍BP神经网络的原理及实现。   Contents     1. BP神经网络... 来自： ACdreamer
+决策树 算法 原理 及Spark MLlib调用 实例 （Scala/Java/ python ） - liulingyuan6的博客
+
+12-01 4110
+
+决策树 算法介绍：         决策树以及其集成算法是机器学习分类和回归问题中非常流行的算法。因其易解释性、可处理类别特征、易扩展到多分类问题、不需特征缩放等性质被广泛使用。树集成算法如随机森林以... 来自： liulingyuan6的博客
+决策树 之鸢尾花卉 实例 解析 - rongrongyaofeiqi的博客
+
+10-20 4808
+
+以sklearn数据集中的鸢尾花卉Iris数据集为例，解析决策树。 来自： rongrongyaofeiqi的博客
+决策树 的先剪枝和后剪枝 - t15600624671的博客
+
+12-25 2976
+
+转载自：http://blog.csdn.net/u014697805/article/details/78636135 https://www.jianshu.com/p/794d08199e5e... 来自： t15600624671的博客
+干货｜从 决策树 到随机森林：树型算法的实现 原理 与 Python 示例 - yunqishequ1的博客
+
+08-03 2227
+
+原文地址 基于树（Tree based）的学习算法在数据科学竞赛中是相当常见的。这些算法给预测模型赋予了准确性、稳定性以及易解释性。和线性模型不同，它们对非线性关系也能进行很好的映射。常见的... 来自： yunqishequ1的博客
+下载
+python 决策树 代码 - 四去六进一
+01-16
+python决策树代码
+python 实现 决策树 算法 - RSon的学习笔记
+
+01-17 912
+
+python实现决策树算法 摘要：本文首先对决策树算法进行简单介绍，然后利用python一步步构造决策树，并通过matplotlib工具包直观的绘制树形图，最后在数据集对算法进行测试。 关键词：机... 来自： RSon的学习笔记
+决策树 的 Python 实现 - Summit的专栏
+
+10-07 2647
+
+决策树的Python实现决策树理解　　 　　最近研读《机器学习实战》这本书，一方面想深入学习一下机器学习的思想，因为之前使用过一些机器学习方法在图像或者字符识别分类方面，但是使用的大多是OpenCV... 来自： Summit的专栏
+Head First Python (第二版)
+
+09-10
+
+你是不是想学习Python语言但又不想那么费劲地翻阅手册？利用这本《Head First Python（第二版）》，你能很快掌握Python的基础知识，并处理内置数据结构和函数。接下来你将构建你自己的Web应用，研究数据库管理、异常处理，...
+
+没有更多推荐了， 返回首页
+
+a_achengsong
+关注
+
+原创
+    23 
+
+粉丝
+    242 
+
+喜欢
+    78 
+
+评论
+    157 
+
+等级：
+
+访问：
+    31万+ 
+
+积分：
+    2258 
+
+排名：
+    2万+
+
+最新文章
+
+    爬虫--爬取csdn消息并邮箱通知（python3）
+    本人联系方式
+    bagging和boosting(python代码实现)
+    支持向量机SVM通俗理解（python代码实现）
+    逻辑回归原理（python代码实现）
+
+个人分类
+
+    数据挖掘实战应用 4篇
+    kaggle数据挖掘 5篇
+    数据挖掘 12篇
+    python 10篇
+
+归档
+
+    2018年2月 1篇
+    2018年1月 1篇
+    2017年5月 2篇
+    2017年4月 2篇
+    2017年3月 5篇
+    2016年8月 4篇
+    2016年7月 2篇
+    2016年6月 1篇
+    2016年5月 7篇
+    2016年4月 1篇
+
+展开
+热门文章
+
+    信用卡评分模型（R语言）
+
+    阅读量： 65652
+    5分钟，6行代码教你写爬虫！（python）
+
+    阅读量： 44798
+    支持向量机SVM算法原理及应用（R）
+
+    阅读量： 24229
+    决策树原理实例（python代码实现）
+
+    阅读量： 22722
+    K-means算法原理以及应用（R）
+
+    阅读量： 18029
+
+最新评论
+
+    逻辑回归原理（python代码实现）
+
+    studyaenjoy ：[reply]csqazwsxedc[/reply] 不好意思啊，最近一直用手机登录，也没找到查看...
+    爬虫--爬取csdn消息并邮箱通知...
+
+    qq_43281792 ：可以写成爬取你的博客更新发到我邮箱吗
+    支持向量机SVM通俗理解（pyth...
+
+    binbigdata ：你好，怎么出现了编码解码的问题？UnicodeDecodeError: 'utf-8' codec...
+    支持向量机SVM通俗理解（pyth...
+
+    qq_27099569 ：[reply]weixin_40637594[/reply] 数据文件的第一行去掉，那是属性说明
+    支持向量机SVM通俗理解（pyth...
+
+    qq_27099569 ：[reply]yalier_68[/reply] 记得把csv第一行删掉
+
+开发者调查
+Python学习路线！
+Office 365商业协作版 5折钜惠！
+登录
+注册
+
+    点赞 取消点赞
+
+    15
+    评论
+
+    3
+    目录
+    收藏
+    手机看
+    上一篇
+    下一篇
+    更多
+        上一篇
+        下一篇
+
+猿学习
+
+    人工智能工程师免费试听
+    Python全栈工程师免费试听
+    Python 爬虫和数据分析实战
+    人工智能工程师
+

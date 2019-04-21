@@ -1,0 +1,119 @@
+
+== 创建一个项目的必要准备 ==
+1. Sphinx已安装
+2. git已安装
+3. cd buji_Code 目录下
+4. mkdir newProjectName
+5. cd newProjectName 目录下
+6. mkdir Docs
+7. mkdir Src
+8. cd Docs
+9. sphinx-quickstart
+    - 切割为source和build 选择y
+    - 输入项目所需的信息
+    - 设置语言为zh_CN
+    - 其他选线为y
+10. cd source 目录下
+11. vim conf.py
+    - 会在source目录里生成一个conf.py，修改它，把其中的import os 和 import
+  sys注释删掉，在删掉sys.path.insert(0, os.path.abspath('.')的注释
+  
+  然后修改路径，将原来的. 改成'./../../Src'
+  
+  sys.path.insert(0, os.path.abspath('./../../Src'))
+  
+  关于相对路径的说明：
+    >>> os.path.abspath('.')
+    '/Users/huyi/bujiCode/BackTest_A/source'
+    >>> os.path.abspath('../..')
+    '/Users/huyi/bujiCode'
+    >>> os.path.abspath('..')
+    '/Users/huyi/bujiCode/BackTest_A'
+
+12. 在 source 目录下 mkdir ApiNotes  各模块的Api文档
+13. 继续 mkdir DesignNotes  面向开发者说的代码来历
+14. 继续 mkdir UserManual  面向用户的手册
+15. cd UserManual
+16. touch TermsTable.rst  专业术语表
+17. cd ..
+18. cd... 
+19. cd Src 进入Src目录下 mkdir EnvProjectName 用来存放环境变量
+20. cd EnvProjectName 目录下
+    - touch __init__.py
+    - touch EnvProjectName.py 
+    - vim EnvProjectName.py
+      {{{#!python 
+      from os import path
+      
+      """ 定义项目主目录"""
+      root_drive = path.expanduser('~')
+      g_project_root = path.join(root_drive,'buji_code/newProjectName')
+      
+      }}}
+21. 创建自己的第一个包。如果包是自己写的，就要在模包字后加上AuthorName：buji
+    - 在Src目录下
+    - makdir PackageNameBuji
+    - cd PackageNameBuji
+    - touch __init__.py
+    - mkdir docsTest 用来放这个模块的代码来历，并与Docs/DesignNotes关联
+    - cd docsTest
+    - touch README.rst
+    - cd ..
+    - mkdir tests
+    - cd test
+    - touch __init__.py
+    - touch test_sampleBuji.py
+22. 关联DesignNotes
+    - cd Docs/source/DesignNotes目录下
+    - touch index.rst
+    - vim index.rst
+{{{
+===============================================
+面向开发者，介绍模块设计的思路，与代码来历
+===============================================
+
+.. toctree::
+   :maxdepth: 2
+
+.. include:: ./../../../Src/MarketBuji/docsTest/README.rst
+}}}
+
+    - *每次添加新的模块重复17条*
+23. 关联UserManual
+    - cd Docs/source/UserManual 目录下
+    - touch index.rst
+    - vim index.rst
+{{{
+===============================================
+面向使用者，介绍如何操作使用
+===============================================
+
+.. toctree::
+   :maxdepth: 4
+
+   ./TermsTable
+                   
+}}}
+    - *每次添加新的模块重复17条*
+24. cd Docs/source
+25. vim index.rst
+26. 增加DesignNotes和UserManual目录如下
+{{{
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+   
+   DesignNotes/index
+   UserManual/index
+
+}}}
+
+28. 关联ApiNotes
+    - cd newProjectName/Docs目录下
+    - sphinx-apidoc -o ./source/ApiNotes ../Src
+29. 生成html
+    - 在newProjectName/Docs目录下 make clean
+    - make html
+30. 查看html
+    - 在build/html/index.html中查看
+

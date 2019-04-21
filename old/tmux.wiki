@@ -1,0 +1,205 @@
+tmux 的基本特性，包括使用会话，窗口和面板管理你的程序
+== 创建命名回话 ==
+tmux new -s 回话名字
+退出可用 exit 命令
+
+
+=== 分离回话 ===
+tmux 最大的优势就是分离会话，在其他终端中关闭会话就杀掉了程序，但在 tmux
+中可以分离会话，这样就可以让会话不实际关闭，需要时再链接回来就可以
+
+    由于我们的程序是在 tmux 环境里运行的，因此需要一种方式来告诉 tmux
+    当前所输入的命令是为了让 tmux 去执行而不是 tmux 里的应用程序去执行，这就是
+    CTRL-b 组合键的作用。*我把前缀命令改成 CTRL-a了*
+
+当我们想要从 tmux 会话中分离时，可以先按 CTRL-b 键，然后再按 d 键（d=detach
+分离）
+
+    有一点非常重要：并不是把前缀键和命令键一起按下，而是先同时按下 CTRL 键和 b 键，然后松开这两个键，然后再快速地按下要让 tmux 执行的命令键。
+    
+
+=== 重新链接已有会话===
+我们之前新建了一个 tmux 会话，在会话中运行了一个程序，然后从这个会话中分离出来，最后甚至关闭了终端窗口，但是这个 tmux 会话依然在运行
+
+1、列出当前存在的 tmux 会话：
+tmux ls
+
+2、要想连接到这个会话，可以使用 attach 命令
+tmux attach (只有一个会话，就会直接链接）
+tmux attach -t 会话名（有多个会话，使用-t 参数）
+
+=== 杀死会话===
+可以在一个会话中使用 exit 命令来杀死这个会话，也可以使用 kill-session 命令杀死指定会话：
+
+== 窗口==   
+tmux new -s windows -n shell 创建一个命名为 shell 的窗口
+在当前会话创建一个新窗口 PREFIX c 
+窗口重命名 PREFIX ，（前缀+ 逗号），然后状态栏出现重命名界面
+窗口之间的切换
+方式一：PREFIX n 或者 p 
+方式二：PREFIX 数字 窗口的序列号
+方式三：PREFIX w 可视化窗口列表
+
+关闭窗口 PREFIX & 会在状态栏提示是否确认关闭
+
+== 面板==
+创建面板 tmux new -s  panes
+PREFIX % 左右各一半
+PREFIX " 上下各一半
+
+PREFIX o 或箭头工具在面板中切换
+
+关闭面板在面板里输入 exit 或 PREFIX X（大写 X）
+
+
+== 自定义配置文件==
+0、PREFIX 定义为 CTRL a
+
+1、PREFIX r 重新加载配置文件
+    bind r source-file ~/.tmux.conf 使用 bind 命令还是需要在实际中先按下 PREFIX
+    键，然后在按 r 键
+    
+2、分割面板
+把左右分割定义为 PREFIX | 键，把上下分割定义为 PREFIX -
+    bind | split-window -h
+    bind - split-window -v
+    
+3、把 tmux 里的移动键映射为 Vim 的操作方式
+    bind h select-pane -L
+    bind j select-pane -D
+    bind k select-pane -U
+    bind l select-pane -R
+ 
+4、调整面板大小
+把光标移动到 Pane 1 里然后按下 PREFIX J
+键，那么水平分割线就会向下移动。如果按下 PREFIX
+K，就会让水平分割线向上移动。通过使用-r 参数，可以只需要按下前缀键一次，然后就可以在最大重复限制范围内持续地按下定义的命令键
+
+== 使用脚本和tmuxinator定制开发环境==
+1、安装 tmuxinator 
+gem install tmuxinator
+
+2、在 zsh 的配置文件里设置编辑器
+export EDITOR=vim
+
+3、tmxuinator 可以设置管理脚本，运行简单的名利就可以直接打开布局好的页面。
+- 提供 zsh 的 tab 补全功能
+-   1、在~/.tmuxinator/.tmuxinator.zsh中修改
+-   2、
+
+
+在 zsh 中给 tmuxinator 提供别名mux
+    1、在.zshrc中增加
+        alias mux='tmuxinator'
+        
+> mux n ws      # 创建工程ws
+> mux o ws      # 打开工程ws的配置文件
+> mux e ws      # 同上
+> mux c ws ws1  # 复制ws工程到ws1
+> mux d ws      # 删除ws工程
+> mux l         # 显示所有工程
+> mux ws        # 开启ws工程
+
+
+name: ws # session名称
+root: ~/ # 工程根目录，活动pane会首先cd到此目录
+
+windows:
+  - editor: # 第1个名为editor的window
+      layout: main-vertical # pane的布局
+      panes: # 各个pane
+        - vim # 第一个pane运行vim命令
+        - guard # 第二个pane运行guard命令
+  - server: bundle exec rails s # 第2个名为server的window，运行命令为bundle
+  - logs: tail -f log/development.log # 第3个名为logs的window，运行命令为tail
+
+
+工程配置中的layout项，有5个默认的值。
+
+even-horizontal
+even-vertical
+main-horizontal
+main-vertical
+tiled
+
+如果不满足layout默认值，layout项可以自定义值。 
+首先调整好窗口的Pane，prefix d关闭Session。
+
+> tmux list-windows
+1: bash* (4 panes) [211x47] [layout 9a0a,211x47,0,0{110x47,0,0,12,100x47,111,0[100x23,111,0,13,100x23,111,24{49x23,111,24,14,50x23,161,24,15}]}] @3 (active)
+1
+2
+将上述layout之后的信息(到最后一个]前)，复制到工程配置中的layout项即可。注意pane的个数必须与执行命令的个数对应。
+
+windows:
+  - editor:
+      layout: 9a0a,211x47,0,0{110x47,0,0,12,100x47,111,0[100x23,111,0,13,100x23,111,24{49x23,111,24,14,50x23,161,24,15}]}
+        - # empty
+        - # empty
+        - # empty
+        - # empty
+
+多命令
+
+当某个Pane需要执行多命令时，官方不推荐使用&&或;的形式。可以采用如下方式发送命令。
+
+windows:
+  - editor:
+      layout: main-vertical
+      panes:
+        - list: # 多命令方式
+          - cd ~/temp
+          - ls -la
+        - # empty
+
+
+tmuxinator list	列出当前的项目
+tmuxinator copy [source] [destination]	复制一个项目配置文件
+tmuxinator delete [name]	删除指定的项目
+tmuxinator implode	删除当前所有的项目
+tmuxinator doctor	使用 tmuxinator 和系统配置查找问题
+
+
+== 复制模式==
+yPREFIX [ 进入复制模式，然后用 hjkl 控制选择的范围。回车退出复制模式
+可以使用 Ctrl b 向上翻滚一屏或是使用 Ctrl f 向下翻滚一屏，使用 g 键跳转到缓冲区历史的最顶部，也可以使用 G 键跳转到缓冲区历史的最底部。
+
+要复制文本，需要先进入复制模式然后把光标移动到要选择的文本的开始处。然后按下 SPACE 键（空格键，译者注）然后移动光标到文本的尾部。当我们按下 ENTER 键后，这段被选择的文本就会被复制到一个粘贴缓存区中。
+
+要粘贴刚才捕捉的内容，则切换到粘贴模式然后按下 PREFIX ] 键。
+
+*注意* 复制时，把左边的目录树关闭
+
+?? 但是为啥复制会把行号也复制了？？
+
+
+== 最大化和恢复面板==
+PREFIX z 最大化当前面板
+PREFIX z 最小化当前面板
+
+== 常用命令==
+注意这里的 b，已经被自定义为 a
+C-b ? 显示快捷键帮助
+C-b C-o 调换窗口位置，类似与vim 里的C-w
+C-b 空格键 采用下一个内置布局
+C-b ! 把当前窗口变为新窗口
+C-b “ 横向分隔窗口
+C-b % 纵向分隔窗口
+C-b q 显示分隔窗口的编号
+C-b o 跳到下一个分隔窗口
+C-b 上下键 上一个及下一个分隔窗口
+C-b C-方向键 调整分隔窗口大小
+C-b c 创建新窗口
+C-b 0~9 选择几号窗口
+C-b c 创建新窗口
+C-b n 选择下一个窗口
+C-b l 切换到最后使用的窗口
+C-b p 选择前一个窗口
+C-b w 以菜单方式显示及选择窗口
+C-b t 显示时钟
+C-b ; 切换到最后一个使用的面板
+C-b x 关闭面板
+C-b & 关闭窗口
+C-b s 以菜单方式显示和选择会话
+C-b d 退出tumx，并保存当前会话，这时，tmux仍在后台运行，可以通过tmux attach进入
+到指定的会话
