@@ -1,0 +1,288 @@
+
+
+==pytest 简介==
+
+- 易用: 用例编写简单, 断言方便
+- 强大: 全能的mark, 强大的fixtures
+- 灵活: 灵活的执行控制及丰富的插件
+
+ 举个例子，原来在 nose 中每次写测试都要写很多重复的 setUp，利用 pytest 的
+ fixtures 可以减少重复代码，提高效率。
+==pytest 安装==
+
+
+===pytest 安装===
+
+pip3 install pytest
+
+===pytest 插件安装===
+
+1.  用来标记用例执行顺序的插件（pytest-ordering）
+2. 
+
+
+== pytest 测试目录的建立==
+ 所有测试文件都放在 tests 文件里，与包含源程序的 src 文件夹分开。这并非是 pytest
+ 的硬性要求，而是一个很好的习惯。
+ 
+ project/
+ |-----CHANGELOG.rst
+ |-----README.srt
+ |-----setup.py
+ |-----src
+ |  |---__init__.py
+ |  |--- subpackage1
+ |-----tests
+    |---conftest.py ( 可选的，他是 pytest 的本地插件库, 在 tests
+    的每个子目录也可以有这个文件)
+    |---pytest.ini(可选的，保存了 pytest 在该项目下的特定配置）
+    |---func （功能测试，检查单个系统的功能测试）
+    |   |---__init__.py
+    |   |---test_func1.py
+    |___unit( 单元测试，检查一个函数或一个类的测试）
+        |---__init__.py
+        |---test_task1.py
+
+ 功能测试和单元测试放在不同的目录下，这也不是硬性规定，但这样可以让你更方便的运行两类测试，同时因为功能测试只会在改变系统功能时才可能发生中断异常，而单元测试在代码重构、业务逻辑实现期间都有可能发生。
+ 
+==撰写测试的技巧== 
+
+=== 测试函数思路梳理小技巧===
+1.  在每个测试用例中使用 GIVEN（假设，预置条件）WHEN（操作步骤）THEN（验证及清理）
+    的注释方法，来组织测试结构，从而让模糊的逻辑变得更清晰，且总是在 fixture
+    中尽量多写 GIVEN。
+    
+    
+=== 测试函数命名的技巧===
+
+1.  在测试用例中名字包含_raises,可以使用-k 来测试所有名字中包含_raises 的测试
+    
+     pytest -v -k _raise
+     
+=== 预期异常===
+
+{{{#! python
+
+def test_xxx_raises():
+    with pytest.raises(错误类型，比如TypeError):
+        函数调用，给出会发生异常的值
+}}}
+
+当异常发生时测试通过
+
+===mark 的使用===
+
+- 在测试方法上使用**自定义 marker**，一个测试函数可以有多个 marker，一个 marker
+ 也可以用来标记多个测试函数
+ 
+ 在运行测试时，可以只运行标记了某种 marker 的测试用例。
+ 
+ 在需要标记的测试函数上使用装饰器
+ @pytest.mark. 标记名称
+ 
+ 运行测试时这样运行
+ pytest -v -m '标记名称'
+ 
+ -m 后也可使用表达式，可在标记之间使用 and、or、not 关键字
+  pytest -v -m 'maker1 and marker2'
+  
+- 使用系统内置的 maker
+    
+    - skip - 始终跳过该测试方法
+        @pytest.mark.skip(reason='XXX')可以添加理由
+    - skipif - 遇到特定情况跳过该测试方法
+        @pytes.mark.skipif(判断条件可以是任何 python 表达式)
+    - xfail - 遇到特定情况，产生一个“期望失败”输出
+    
+- 通过插件使用 mark
+    
+    - 标记用例执行顺顺序pytest.mark.run(order=1) (需安装pytest-ordering)  
+
+===fixture 的使用===
+
+====fixture 的好处====
+pytest fixture比经典的xUnit setUp/tearDown方法有着显着的改进：
+
+- fixtures具有明确的名称，在测试方法/类/模块或整个项目中通过声明使用的fixtures名称来使用。
+- fixtures以模块化方式实现，因为每个fixture名称都会触发调用fixture函数，该fixture函数本身可以使用其它的fixtures。
+- 从简单的单元测试到复杂的功能测试，fixtures的管理允许根据配置和组件选项对fixtures和测试用例进行参数化，或者在测试方法/类/模块或整个测试会话范围内重复使用该fixture。
+
+另外，fixture 可以完成任务，也可以返回数据。
+
+====fixture 存放于共享====
+
+如果你希望多个测试文件共享 fixture ，可以在某个公共目录下新建一个 conftest.py
+文件，将 fixture 放在其中。（可供所在目录及其子目录下的测试使用）
+
+**conftest.py 是 python 模块，但是他不能被测试文件导入**
+
+如果你希望 fixture 的作用域仅限于某个测试文件，那么将它写在该测试文件里。
+
+==== 声明一个函数是 fixture====
+
+@pytest.fixture()装饰器 用于声明一个函数是 fixture
+
+==== 调用一个 fixture====
+
+def test_a_func(fixture 的函数名):
+
+====实现类似 setUp 和 tearDown 的功能====
+
+在定义的 fixture 函数中，增加一个 yield，在 yield 之前的代码是 setUp，之后就是
+tearDown。
+
+
+====利用 fixture 传递测试数据====
+{{{#! python 
+import pytest
+# 声明一个 fixture
+@pytest.fixture()
+def a_tuple():
+    return (1,'fpp',None,{'bar':23})
+    
+# 测试函数获得测试数据
+def test_a_tuple(a_tuple):
+    assert a_tuple[3]['bar'] == 32
+
+
+}}}
+
+====fixture嵌套 fixture====
+
+假设有一个已经写好的 fixture 是创建数据库（task_db)。 新写一个在数据库增加数据
+fixture（db_with_3_tasks())
+
+可以这么写
+
+@pytest.fixture()
+def db_with_3_tasks(task_db):
+
+
+db_with_3_tasks 的参数里可以根据需要写多个已经存在的 fixture。参数里的 fixture
+会先运行。
+
+
+==== 指定 fixture 作用范围====
+
+
+高范围的fixture函数优先实例化
+
+{{{#! python 
+import pytest
+
+# 函数级别的作用域，每个测试函数只需要运行一次
+@pytest.fixture(scope='function')
+def func():
+# 模块级别的作用域，每个模块只需要运行一次
+@pytest.fixture(scope='module')
+def mod_scope():
+# 会话级别的作用域，每次会话只需要运行一次
+@pytest.fixture(scope='session')
+def sess_scope():
+# 类级别的作用域，每个测试类只需要运行一次
+@pytest.fixture(scope='class')
+def class_scope():
+}}}
+
+==== 内置的 fixture====
+- tmpdir 创建删除临时目录 --单个测试，函数级别的
+- tmpdir_factory 创建删除临时目录，--多个测试使用，会话级别
+
+=== 参数化测试===
+
+ 仅仅使用一组数据是无法充分测试函数功能的，参数化测试允许传递多组数据，每组数据均被测试。
+
+==== 对测试函数参数化====
+
+ 在测试函数的上面使用参数化装饰器
+ 
+{{{#! python
+# 在一个具体的测试文件中对一个测试函数进行参数化
+import pytest
+import Task
+@pytest.mark.parametrize(task,
+                        [Task(a,b,c),
+                        Task(e,f,g),
+                        Task(h,i,j)])
+def test_XXX(task):
+}}}
+ 通过调用参数名，使得测试函数 test_XXX
+ 可以使用参数列表，并对列表中的对象依依进行测试。
+
+==== 对 fixture 进行参数化====
+ 为了更进一步减少代码重复，可以给 fixture 做参数化
+ 
+ 在 fixture 的位置使用参数化装饰器
+ 
+{{{#! python
+# 假设在 conftest.py 文件中存储了一个 fixture
+
+# 定义一个参数列表变量
+task=(Task(a,b,c),
+      Task(d,e,f),
+      Task(g,h,i))
+
+@pytet.fixture(params=task)
+def XXX(request):
+    return request.param
+}}}
+
+ 其中 params 和 request 都是系统关键字，返回的是 request.param
+ 也是固定的（注意返回值的 param 没有 s）
+
+
+=== assert的技巧===
+
+==== 使用比较函数====
+
+==运行 pytest 的技巧==
+
+=== 命令行参数的选择===
+- --collect-only：展示在给定的配置下哪些测试用例会被测试
+- -k：允许你用表达式指定希望云新的测试用例
+- -m：运行指定标记名的测试，多个标记名可以使用 -m "mark1 and mark2"
+- -x：在 debug 时希望遇到失败立即停止整个会话
+- -maxfail=num：num 为次数，指允许失败几次后才停止
+- -v：输出更详细的信息
+- -lf：（last failed）定位到最后一个失败的测试用例重新运行
+- -q：简化输出信息，常与--tb=no 配合使用，
+- l：测试失败时会打印出局部变量名和它们的值，这样可以避免一些不必要的 print
+- --tb= ：决定失败是输出信息的方式，等号后面有（short、line、no) 等方式
+        --tb=no:屏蔽全部回溯信息
+        --tb=line：告诉我们错误的位置
+        --tb=short：告诉我们错的上下文
+- duration=N：它会显示最慢的 N 个阶段，耗时越长越靠前，如果
+  n=0，就会将所有阶段按耗时从长到短排序
+  
+
+===  指定测试某个目录、文件、类中的测试===
+1. 测试单个目录
+    pytest tests/func 
+2. 测试单个文件/模块
+    pytest tests/func/test_XXX.py
+3. 测试单个函数
+     pytest tests/func/test_XXX.py::test_XXXXX 函数名
+4. 测试单个类
+    pytest test/func/test_XXX.py::TESTXXX
+5. 测试单个类中的单个测试方法
+    pytest test/func/test_XXX.py::TESTXXX::test_XXX
+    
+===Skip 跳过某个测试===
+1.  在测试函数上使用 Skip装饰器
+ @pytest.mark.skip(reason=" 跳过的理由")
+2. 在某个条件下才跳过
+ @pytest.mar.skipif( 条件表达式,reason='') # 当表达式成立下面的测试跳过
+ 
+
+===与其他工具的配合运行===
+====与pdb调试工具的配合====
+在pytest里，你可以使用--pdb选项，在测试失败时开启调试
+pdb 提示符出现后，可以使用下面命令和pdb交互                                
+- p 输出表达式的值                                                         
+- l 列出错误并显示 错误之前和之后的5行代码                                 
+- l begin,end 列出错误，并指定行号，显示
+- a 打印当前函数的参数列表
+- u 移动到堆栈的上一层
+- d 移动到堆栈的下一层
+- q 退出当前调试会话
+**因为是从assert语句开始的，其他控制断点移动的命令（如step和next暂时用不上）**

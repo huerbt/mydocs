@@ -1,4 +1,8 @@
 
+== 存在的问题==
+
+- [ ] 回测用的买入价格是全天的均价，而实盘是开盘价，应该用开盘价回测一下
+- [ ] 在确认重写的回测后，去掉 B股
 == MarketBuji_ToDo Tasks ==
 - [O] README.rst
     - [O] SymbolPdBuji
@@ -18,8 +22,11 @@
 
 == FactorBuyBuji_ToDo Tasks ==
 
-- [.] FactorBuyBaseBuji
+- [o] FactorBuyBaseBuji
     - [O] TradeBuji.OrderBuji.Order
-    - [ ] TradeBuji.MlFeature.MlFeature
-    - [ ] UmpBuji.UmpManagerBuji.UmpManager
-    - [.] BetaBuji.AtrPositionBuji.AtrPosition
+    - [O] TradeBuji.MlFeature.MlFeature
+    - [O] UmpBuji.UmpManagerBuji.UmpManager
+    - [ ] BetaBuji.AtrPositionBuji.AtrPosition
+        - [ ] 2019-4-19收盘后的数据出现买入信号，
+              sh603608,资金量36420.17,买入数量1400,可做对比试验了
+        - [ ] 如何以列表形式进行测量（补文档）
