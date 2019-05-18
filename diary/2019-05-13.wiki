@@ -1,0 +1,69 @@
+=分析如何使用 mock 测试 factorBuy=
+
+==mock 的相关知识==
+
+===已知1===
+它的主要功能是使用mock对象替代掉指定的Python对象，以达到模拟对象的行为
+
+=== 已知 2===
+
+找到你要替换的对象，这个对象可以是一个类，或者是一个函数，或者是一个类实例。
+
+===
+
+==问题与方案验证==
+
+=== 问题 1：如何 mock 掉要测试的对象的初始化方法，只用原对象部分方法===
+方案：写个样例，不用考虑继承的问题
+
+{{{#! python
+class Sample():
+    def __init__(self):
+        self.a = 1
+
+    def sum(self):
+        return self.a + 10
+
+
+class MockSample(Sample):
+    def __init__(self):
+        self.a = 20
+
+
+def test_sample():
+    sample = MockSample()
+    
+    assert sample.sum()  == 30 
+
+}}}  
+
+结论：如果要改写初始化函数，就直接定义一个子类，继承要测试的类，然后复写初始化方法。即可，不用
+mock 了。
+
+== 如何测试买入因子基类==
+
+===已知 1===
+ 基类需要测试的方法有：
+   +_position_class_init(self, **kwargs) :  检查是否是AtrPosition 对象
+   +_slippage_class_init(self, **kwargs) : 检查是否是用 SlippageBuyMean 对象
+   +buy_today(self) : 检查买入订单的数据是否是今天的
+   +buy_tomorrow(self) : 检查买入订单的数据是否是明天的
+   +make_buy_order(self, day_ind=-1) :  检查订单格式是否正确，包含了应该的字段
+   +read_fit_day(self, today) :  检查获取的 today数据的 today_ind 值是否正确
+   
+其余方法暂时先不测
+=== 问题与方案验证===
+====1 position====
+问题 1：如何传递的 position 参数？
+ - 已知：买入因子在原阿布程序中实例化是在 ABuPickTimeWorker.py中的
+ init_buy_factors 方法中。
+ 
+ - 方案：实例化一个继承了 FactorBuyBase的测试基类, 使用 pdb
+ 暂停到_position_class_init()方法，看是否调用了该内容
+ 
+ - 结论 1：在 FactorBuyBase 的类初始化方法中调用了_position_class_init 方法
+  
+ - 方案：删除关于多个仓位管理的代码，只保留了默认的仓位方法即 AtrPosition 
+ 
+  问题 1的 结论：只使用默认的 AtrPosition 仓位管理的方法
+  

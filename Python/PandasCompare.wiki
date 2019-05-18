@@ -1,0 +1,3 @@
+
+== 判断两个 DataFrame 某个字段下的数据是否一致==
+df['close'].equals(df2['close'])

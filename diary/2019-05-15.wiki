@@ -1,0 +1,8 @@
+ 昨天发现 Market 有个 Bug。DataCacheBuji   取回来的数是正确的
+ 
+ 但是从 SymbolPdBuji 取回来的数据有问题，表现的现象是最初的 10
+ 多天开盘价、收盘价、最高价、最低价都是一个值
+ 
+ 需要先测试 DataSourceBuji 的 kline_pd 是否正确
+ 
+    1、设置不同的 fetch_mode，获取数据，与 DataCachBuji 取到的收盘价，开盘价比较
